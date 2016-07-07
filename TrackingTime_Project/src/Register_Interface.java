@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class Register_Interface extends JFrame {
@@ -58,6 +60,11 @@ public class Register_Interface extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnOk = new JButton("Ok");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnOk.setBounds(119, 126, 93, 23);
 		contentPane.add(btnOk);
 		
