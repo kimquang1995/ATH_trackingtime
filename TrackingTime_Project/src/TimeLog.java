@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -26,9 +28,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Locale;
 
 import net.proteanit.sql.DbUtils;
+import net.sourceforge.jtds.jdbc.DateTime;
 
 public class TimeLog extends JFrame {
 	private JPanel contentPane1;
@@ -40,7 +45,10 @@ public class TimeLog extends JFrame {
 	private JPanel contentPane;
 	ResultSet rs;
 	String TagName;
+	String SelectedId;
 	DatabaseConnection db = new DatabaseConnection();
+	String id_tag;
+
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +69,12 @@ public class TimeLog extends JFrame {
 	 * Create the frame.
 	 */
 	public TimeLog() {
-		
+		try {
+			db.Connect();
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		setTitle("Time Log");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 562, 540);
@@ -104,49 +117,45 @@ public class TimeLog extends JFrame {
 		cmb.setBounds(167, 128, 223, 22);
 		cmb.addItem("All");
 		contentPane1.add(cmb);
-		try {
-			db.Connect();
-			PreparedStatement query = db.getConnection().prepareStatement("Select * from Tag");
+		try {			
+			PreparedStatement query = db.getConnection().prepareStatement(
+					"Select * from Tag");
 			ResultSet rs = query.executeQuery();
-			while(rs.next())
-			{
+			while (rs.next()) {
 				cmb.addItem(rs.getString("Name"));
 			}
-			
-		} catch (Exception e) {
-			  JOptionPane.showMessageDialog(null, "ERROR");
-		}
-		
-		cmb.addItemListener(new ItemListener() {
 
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-            	TagName = cmb.getSelectedItem().toString();
-            	try
-                {
-            		
-            		db.Connect();
-            		PreparedStatement subquery = db.getConnection().prepareStatement("Select Id from Tag where Name LIKE '"+TagName+"%'");
-        			ResultSet subrs = subquery.executeQuery();
-        			PreparedStatement query = db.getConnection().prepareStatement("Select Name,Hours,Id_Tag from TimeLog Where Id_Tag LIKE '"+subrs+"%'");
-        			ResultSet rs = query.executeQuery();
-        			table.setModel(DbUtils.resultSetToTableModel(rs));
-        			table.repaint();
-                   /* while(rs.next())
-                    {  
-                        Object[] row = new Object[columns];
-                        for (int i = 1; i <= columns; i++)
-                        {  
-                            row[i - 1] = rs.getObject(i);
-                        }
-                        ((DefaultTableModel) table.getModel()).insertRow(rs.getRow()-1,row);
-                    }*/
-                }
-                catch(Exception e1)
-                {
-                }
-            }
-        });
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "No connection to server");
+		}
+
+		cmb.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				TagName = cmb.getSelectedItem().toString();
+				try {
+					if (TagName != "All") {
+						PreparedStatement subquery = db.getConnection()
+								.prepareStatement(
+										"Select top 1 * from Tag where Name LIKE '"
+												+ TagName + "'");
+						ResultSet subrs = subquery.executeQuery();
+						while (subrs.next()) {
+							id_tag = subrs.getString("Id");
+							System.out.println(id_tag);
+							Load("Select * from TimeLog Where Id_Tag LIKE '"
+									+ id_tag + "'");							
+						}
+					} if(TagName.equals("All")){
+						Load("Select * from TimeLog");
+						id_tag=null;
+					System.out.println(id_tag);
+					}
+
+				} catch (Exception e1) {
+				}
+			}
+		});
 
 		txtName = new JTextField();
 		txtName.setBounds(167, 170, 223, 22);
@@ -157,28 +166,41 @@ public class TimeLog extends JFrame {
 		txtHours.setBounds(167, 212, 223, 22);
 		contentPane1.add(txtHours);
 		txtHours.setColumns(10);
-
+		// Add Button
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				
 				String name = txtName.getText();
 				Double hours = Double
 						.parseDouble(txtHours.getText().toString());
 				try {
-					db.Connect();
-					PreparedStatement query = db.getConnection().prepareStatement("Insert into TimeLog (Name,Hours,Date,Id_Tag) values ('"+name+"','"+hours+"',GetDate(),1)");
-					ResultSet rs = query.executeQuery();
-					rs.close();
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-					table.repaint();
-        			JOptionPane.showMessageDialog(null, "Success");
+					if (id_tag != null) {
+						String now = LocalDate.now().toString();
+						System.out.println(id_tag);
+						int id_tagI = Integer.parseInt(id_tag);
+						String queryS="Insert into TimeLog"
+						+ "(Name,Hours,Date,Id_Tag)"
+						+"values"
+						+ "('"+name+"','"+hours+"','"+now+"','"+id_tagI+"')";
+						PreparedStatement query = db.getConnection()
+								.prepareStatement(queryS);
+										
+						query.executeUpdate();
+						// ResultSet rs = query.executeQuery();
+						// rs.close();
+						// table.setModel(DbUtils.resultSetToTableModel(rs));
+						table.repaint();
+						JOptionPane.showMessageDialog(null, "Success");
+						Load("Select * from TimeLog");
+					}else {
+						JOptionPane.showConfirmDialog(null, "All Sao ADD", "Error", 1);
+						Load("Select * from TimeLog");
+					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				
-    			
+
 				txtName.setText(null);
 				txtHours.setText(null);
 
@@ -186,7 +208,7 @@ public class TimeLog extends JFrame {
 		});
 		btnAdd.setBounds(422, 127, 97, 25);
 		contentPane1.add(btnAdd);
-
+		// Edit Button
 		JButton btnEdit = new JButton("Edit");
 		btnEdit.setEnabled(false);
 		btnEdit.addActionListener(new ActionListener() {
@@ -194,24 +216,31 @@ public class TimeLog extends JFrame {
 				String name = txtName.getText();
 				Double hours = Double.parseDouble(txtHours.getText());
 				try {
-					db.Connect();
-					PreparedStatement query = db.getConnection().prepareStatement("Update TimeLog set Name='"+name+"',Hours='"+hours+"'");
-					ResultSet rs = query.executeQuery();
-					rs.close();
-					table.setModel(DbUtils.resultSetToTableModel(rs));
+
+					PreparedStatement query = db.getConnection()
+							.prepareStatement(
+									"Update TimeLog set Name='" + name
+											+ "',Hours='" + hours
+											+ "' where id ='" + SelectedId
+											+ "'");
+					query.executeUpdate();
+					// rs.close();
+					// table.setModel(DbUtils.resultSetToTableModel(rs));
 					table.repaint();
-        			JOptionPane.showMessageDialog(null, "Success");
+					JOptionPane.showMessageDialog(null, "Success");
+					Load("Select * from TimeLog");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				
-    			
+
 				txtName.setText(null);
 				txtHours.setText(null);
 			}
 		});
 		btnEdit.setBounds(422, 169, 97, 25);
 		contentPane1.add(btnEdit);
+
+		// Delete Button
 
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setEnabled(false);
@@ -220,16 +249,27 @@ public class TimeLog extends JFrame {
 				txtName.setText(null);
 				txtHours.setText(null);
 				try {
-					db.Connect();
-					PreparedStatement query = db.getConnection().prepareStatement("Delete from TimeLog where Name='"+txtName.getText().toString()+"'");
-					ResultSet rs = query.executeQuery();
-					rs.close();
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-					table.repaint();
-        			JOptionPane.showMessageDialog(null, "Success");
+
+					PreparedStatement query = db.getConnection()
+							.prepareStatement(
+									"Delete from TimeLog where Id='"
+											+ SelectedId + "'");
+					query.executeUpdate();
+					JOptionPane.showMessageDialog(null, "Success");
+					DefaultTableModel a = (DefaultTableModel) table.getModel();
+
+					while (a.getRowCount() > 0) {
+						for (int i = 0; i < a.getRowCount(); ++i) {
+							a.removeRow(i);
+						}
+					}
+					table.setModel(a);
+					Load("Select * from TimeLog");
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+
 			}
 		});
 		btnDelete.setBounds(422, 211, 97, 25);
@@ -241,43 +281,89 @@ public class TimeLog extends JFrame {
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		try {
-			db.Connect();
-			PreparedStatement query = db.getConnection().prepareStatement("Select Name,Hours,Id_Tag from TimeLog");
-			ResultSet rs = query.executeQuery();
-			table.setModel(DbUtils.resultSetToTableModel(rs));
-			for (Class c: Arrays.asList(String.class, String.class, String.class)) {
-			    TableCellEditor ce = table.getDefaultEditor(c);
-			    if (ce instanceof DefaultCellEditor) {
-			            ((DefaultCellEditor) ce).setClickCountToStart(Integer.MAX_VALUE);
-			    }
-			    
-			}
-			 
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
+		Load("Select * from TimeLog");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFont(new Font("Arial", Font.PLAIN, 18));
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
-		ListSelectionModel SelectionModel = table.getSelectionModel();
-		SelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		SelectionModel.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
+		table.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
 				btnEdit.setEnabled(true);
 				btnDelete.setEnabled(true);
 				row = table.getSelectedRow();
 				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				String SelectedName = (String) model.getValueAt(row, 0);
-				Double SelectedHours = (Double) model.getValueAt(row, 1);
+				String SelectedName = model.getValueAt(row, 1).toString();
+				Double SelectedHours = Double.parseDouble(model.getValueAt(row,
+						2).toString());
 				txtName.setText(SelectedName);
 				txtHours.setText(SelectedHours.toString());
-
+				SelectedId = (model.getValueAt(row, 0)).toString();
 			}
 		});
+		/*
+		 * ListSelectionModel SelectionModel = table.getSelectionModel();
+		 * SelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		 * SelectionModel.addListSelectionListener(new ListSelectionListener() {
+		 * public void valueChanged(ListSelectionEvent e) {
+		 * btnEdit.setEnabled(true); btnDelete.setEnabled(true); row =
+		 * table.getSelectedRow(); DefaultTableModel model = (DefaultTableModel)
+		 * table.getModel(); String SelectedName = model.getValueAt(row,
+		 * 1).toString(); Double SelectedHours =
+		 * Double.parseDouble(model.getValueAt(row,2).toString());
+		 * txtName.setText(SelectedName);
+		 * txtHours.setText(SelectedHours.toString()); SelectedId =
+		 * (model.getValueAt(row, 0)).toString(); }
+		 * 
+		 * });
+		 */
+	}
 
+	public void Load(String queryExe) {
+		try {
+			DefaultTableModel model = new DefaultTableModel(new String[] {
+					"Id", "Name", "Hours", "Id_Tag" }, 0);
+			PreparedStatement query = db.getConnection().prepareStatement(
+					queryExe);
+			ResultSet rs = query.executeQuery();
+			Object[] row = new Object[4];
+			while (rs.next()) {
+				row[0] = rs.getString("Id");
+				row[1] = rs.getString("Name");
+				row[2] = rs.getString("Hours");
+				row[3] = rs.getString("Id_Tag");
+				model.addRow(row);
+			}
+			table.setModel(model);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 }
