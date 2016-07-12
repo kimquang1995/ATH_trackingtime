@@ -19,7 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 
 
-public class main_frame extends JFrame implements ActionListener {
+public class Main_frame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -37,7 +37,7 @@ public class main_frame extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					main_frame frame = new main_frame();
+					Main_frame frame = new Main_frame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class main_frame extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public main_frame() {
+	public Main_frame() {
 		setTitle("MainFrame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 619, 384);
