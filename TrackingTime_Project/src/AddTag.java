@@ -20,7 +20,7 @@ public class AddTag extends JFrame  implements ActionListener {
 			
 	}
 		if (btnN.getActionCommand().equals("CANCEL")) {
-			System.exit(0);
+			this.setVisible(false);
 		}
 	}
 	DatabaseConnection db = new DatabaseConnection();
