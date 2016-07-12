@@ -1,4 +1,3 @@
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,8 +7,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -21,19 +22,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 
-import java.sql.*;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Locale;
 
-import net.proteanit.sql.DbUtils;
-import net.sourceforge.jtds.jdbc.DateTime;
 
 public class TimeLog extends JFrame {
 	private JPanel contentPane1;
@@ -170,12 +162,26 @@ public class TimeLog extends JFrame {
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				String name = txtName.getText();
-				Double hours = Double
-						.parseDouble(txtHours.getText().toString());
+				
+				String hourscheck = txtHours.getText().toString();
+				boolean result = false;  
+				Pattern patternName = Pattern.compile("^[a-zA-Z_0-9]+$");  
+				Matcher matcherName = patternName.matcher(name); // Your String should come here
+				Pattern patternHours = Pattern.compile("^[0-9\\.]+$");  
+				Matcher matcherHours = patternHours.matcher(hourscheck);
+				if(matcherName.find() && matcherHours.find() )  
+				    result = true;// There is only Alphabets in your input string
+				else{  
+				    result = false;// your string Contains some number/special char etc..
+				}
+				if(result == true){
 				try {
+					
 					if (id_tag != null) {
+						Double hours = Double
+								.parseDouble(txtHours.getText().toString());
 						String now = LocalDate.now().toString();
 						System.out.println(id_tag);
 						int id_tagI = Integer.parseInt(id_tag);
@@ -187,23 +193,23 @@ public class TimeLog extends JFrame {
 								.prepareStatement(queryS);
 										
 						query.executeUpdate();
-						// ResultSet rs = query.executeQuery();
-						// rs.close();
-						// table.setModel(DbUtils.resultSetToTableModel(rs));
 						table.repaint();
-						JOptionPane.showMessageDialog(null, "Success");
-						Load("Select * from TimeLog");
+						JOptionPane.showMessageDialog(null,"Thêm công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
+						Load("Select * from TimeLog Where Id_Tag LIKE '"
+								+ id_tag + "'");
+						txtName.setText(null);
+						txtHours.setText(null);
 					}else {
-						JOptionPane.showMessageDialog(null, "Add Failure", "Add Error", JOptionPane.OK_OPTION);
+						JOptionPane.showMessageDialog(null,"Vui lòng chọn Tag bạn muốn thêm công việc.", "Lỗi",  JOptionPane.OK_OPTION);
 						Load("Select * from TimeLog");
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-
-				txtName.setText(null);
-				txtHours.setText(null);
-
+			
+				}else{
+					JOptionPane.showMessageDialog(null,"Tên công việc và số giờ không được để trống."+"\n"+"\n"+"Tên công việc chỉ được chứa ký tự chữ và số."+"\n"+"\n"+"Số giờ chỉ được chứa ký tự số và 1 dấu chấm.", "Lỗi", JOptionPane.OK_OPTION);
+				}
 			}
 		});
 		btnAdd.setBounds(422, 127, 97, 25);
@@ -214,9 +220,22 @@ public class TimeLog extends JFrame {
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = txtName.getText();
-				Double hours = Double.parseDouble(txtHours.getText());
+				
+				String hourscheck = txtHours.getText().toString();
+				boolean result = false;  
+				Pattern patternName = Pattern.compile("^[a-zA-Z_0-9]+$");  
+				Matcher matcherName = patternName.matcher(name); // Your String should come here
+				Pattern patternHours = Pattern.compile("^[0-9\\.]+$");  
+				Matcher matcherHours = patternHours.matcher(hourscheck);
+				if(matcherName.find() && matcherHours.find() )  
+				    result = true;// There is only Alphabets in your input string
+				else{  
+				    result = false;// your string Contains some number/special char etc..
+				}
+				if(result == true){
+				
 				try {
-
+					Double hours = Double.parseDouble(txtHours.getText());
 					PreparedStatement query = db.getConnection()
 							.prepareStatement(
 									"Update TimeLog set Name='" + name
@@ -224,17 +243,17 @@ public class TimeLog extends JFrame {
 											+ "' where id ='" + SelectedId
 											+ "'");
 					query.executeUpdate();
-					// rs.close();
-					// table.setModel(DbUtils.resultSetToTableModel(rs));
 					table.repaint();
-					JOptionPane.showMessageDialog(null, "Success");
+					JOptionPane.showMessageDialog(null,"Sửa công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
 					Load("Select * from TimeLog");
+					txtName.setText(null);
+					txtHours.setText(null);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-
-				txtName.setText(null);
-				txtHours.setText(null);
+				}else{
+					JOptionPane.showMessageDialog(null,"Tên công việc và số giờ không được để trống."+"\n"+"\n"+"Tên công việc chỉ được chứa ký tự chữ và số."+"\n"+"\n"+"Số giờ chỉ được chứa ký tự số và 1 dấu chấm.", "Lỗi", JOptionPane.OK_OPTION);
+				}
 			}
 		});
 		btnEdit.setBounds(422, 169, 97, 25);
@@ -246,6 +265,8 @@ public class TimeLog extends JFrame {
 		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa công việc này không?", "Xác Nhận",
+				        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 				txtName.setText(null);
 				txtHours.setText(null);
 				try {
@@ -255,7 +276,8 @@ public class TimeLog extends JFrame {
 									"Delete from TimeLog where Id='"
 											+ SelectedId + "'");
 					query.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Success");
+					
+	
 					DefaultTableModel a = (DefaultTableModel) table.getModel();
 
 					while (a.getRowCount() > 0) {
@@ -265,12 +287,12 @@ public class TimeLog extends JFrame {
 					}
 					table.setModel(a);
 					Load("Select * from TimeLog");
-
+					JOptionPane.showMessageDialog(null,"Xóa công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-
-			}
+				btnDelete.setEnabled(false);
+			}}
 		});
 		btnDelete.setBounds(422, 211, 97, 25);
 		contentPane1.add(btnDelete);
@@ -289,30 +311,7 @@ public class TimeLog extends JFrame {
 		table.setDefaultRenderer(String.class, centerRenderer);
 		table.addMouseListener(new MouseListener() {
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+		
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
@@ -327,29 +326,38 @@ public class TimeLog extends JFrame {
 				txtHours.setText(SelectedHours.toString());
 				SelectedId = (model.getValueAt(row, 0)).toString();
 			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
-		/*
-		 * ListSelectionModel SelectionModel = table.getSelectionModel();
-		 * SelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		 * SelectionModel.addListSelectionListener(new ListSelectionListener() {
-		 * public void valueChanged(ListSelectionEvent e) {
-		 * btnEdit.setEnabled(true); btnDelete.setEnabled(true); row =
-		 * table.getSelectedRow(); DefaultTableModel model = (DefaultTableModel)
-		 * table.getModel(); String SelectedName = model.getValueAt(row,
-		 * 1).toString(); Double SelectedHours =
-		 * Double.parseDouble(model.getValueAt(row,2).toString());
-		 * txtName.setText(SelectedName);
-		 * txtHours.setText(SelectedHours.toString()); SelectedId =
-		 * (model.getValueAt(row, 0)).toString(); }
-		 * 
-		 * });
-		 */
+		
 	}
 
 	public void Load(String queryExe) {
 		try {
 			DefaultTableModel model = new DefaultTableModel(new String[] {
-					"Id", "Name", "Hours", "Id_Tag" }, 0);
+					"Id", "Name", "Hours"}, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
@@ -358,7 +366,7 @@ public class TimeLog extends JFrame {
 				row[0] = rs.getString("Id");
 				row[1] = rs.getString("Name");
 				row[2] = rs.getString("Hours");
-				row[3] = rs.getString("Id_Tag");
+		
 				model.addRow(row);
 			}
 			table.setModel(model);
