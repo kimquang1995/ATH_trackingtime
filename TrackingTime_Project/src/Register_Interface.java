@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.mail.MessagingException;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,7 @@ public class Register_Interface extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -31,11 +32,12 @@ public class Register_Interface extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 	/**
 	 * Create the frame.
 	 */
 	public Register_Interface() {
+		SendEmail sendmail = new SendEmail();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 457, 229);
 		contentPane = new JPanel();
@@ -61,7 +63,16 @@ public class Register_Interface extends JFrame {
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+			try {
+				sendmail.sendSSLMessage(textField.getText().toString()
+						,"Thư Chúc Mừng", "Chúc Mừng Bạn Đã Đăng Ký "
+								+ "Thành Công Account Tracking Time của AthenaTeam"
+								,textField.getText().toString());
+				System.out.println("Send thành công");
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			}
 		});
 		btnOk.setBounds(119, 126, 93, 23);

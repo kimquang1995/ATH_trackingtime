@@ -1,66 +1,63 @@
 import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		private static String SMPT_HOSTNAME = "";
-	    private static String USERNAME = "";
-	    private static String PASSWORD = "";
+	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
+	private static final String SMTP_PORT = "465";
 
-	    public static void main(String[] args) {
+	private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
-	        // Recipient's email ID needs to be mentioned.
-	        String to = "abcd@gmail.com";
+	/*
+	 * public static void main(String args[]) throws Exception {
+	 * 
+	 * Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+	 * 
+	 * new GoogleTest().sendSSLMessage(sendTo, emailSubjectTxt,emailMsgTxt,
+	 * emailFromAddress);
+	 * System.out.println("Sucessfully Sent mail to All Users"); }
+	 */
 
-	        // Sender's email ID needs to be mentioned
-	        String from = "web@gmail.com";
+	public void sendSSLMessage(String recipients, String subject, String message, String from)
+			throws MessagingException {
+		boolean debug = true;
 
-	        // Assuming you are sending email from localhost
-	        // String host = "localhost";
+		Properties props = new Properties();
+		props.put("mail.smtp.host", SMTP_HOST_NAME);
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.debug", "true");
+		props.put("mail.smtp.port", SMTP_PORT);
+		props.put("mail.smtp.socketFactory.port", SMTP_PORT);
+		props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+		props.put("mail.smtp.socketFactory.fallback", "false");
 
-	        // Get system properties
-	        Properties properties = System.getProperties();
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 
-	        // Setup mail server
-	        properties.setProperty("mail.smtp.host", SMPT_HOSTNAME);
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("devathenateam.2016@gmail.com", "Dev123456");
+			}
+		});
 
-	        // Get the default Session object.
-	        // Session session = Session.getDefaultInstance(properties);
+		session.setDebug(debug);
 
-	        // create a session with an Authenticator
-	        Session session = Session.getInstance(properties, new Authenticator() {
-	            @Override
-	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication(USERNAME, PASSWORD);
-	            }
-	        });
+		Message msg = new MimeMessage(session);
+		InternetAddress addressFrom = new InternetAddress(from);
+		msg.setFrom(addressFrom);
 
-	        try {
-	            // Create a default MimeMessage object.
-	            MimeMessage message = new MimeMessage(session);
+		InternetAddress addressTo = new InternetAddress();
+		addressTo = new InternetAddress(recipients);
+		msg.setRecipient(Message.RecipientType.TO, addressTo);
 
-	            // Set From: header field of the header.
-	            message.setFrom(new InternetAddress(from));
-
-	            // Set To: header field of the header.
-	            message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-	                    to));
-
-	            // Set Subject: header field
-	            message.setSubject("This is the Subject Line!");
-
-	            // Now set the actual message
-	            message.setText("This is actual message");
-
-	            // Send message
-	            Transport.send(message);
-	            System.out.println("Sent message successfully....");
-	        } catch (MessagingException mex) {
-	            mex.printStackTrace();
-	        }
-	    }
+		// Setting the Subject and Content Type
+		msg.setSubject(subject);
+		msg.setContent(message, "text/plain");
+		Transport.send(msg);
 	}
-
 }
