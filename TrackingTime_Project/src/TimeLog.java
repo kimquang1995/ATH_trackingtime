@@ -52,7 +52,7 @@ public class TimeLog extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -63,7 +63,7 @@ public class TimeLog extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -194,7 +194,7 @@ public class TimeLog extends JFrame {
 						JOptionPane.showMessageDialog(null, "Success");
 						Load("Select * from TimeLog");
 					}else {
-						JOptionPane.showConfirmDialog(null, "All Sao ADD", "Error", 1);
+						JOptionPane.showMessageDialog(null, "Add Failure", "Add Error", JOptionPane.OK_OPTION);
 						Load("Select * from TimeLog");
 					}
 				} catch (Exception e1) {

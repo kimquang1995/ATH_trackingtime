@@ -26,30 +26,35 @@ public class Main_frame extends JFrame implements ActionListener {
 		JButton tmp= (JButton) e.getSource();
 		if (tmp.getActionCommand().equals("Log Out")){
 		System.exit(0);
+	}
+	if (tmp.getActionCommand().equals("TIME LOG")){
+		new TimeLog().setVisible(true);	
 	}}
 
+	
 	private JPanel contentPane;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main_frame frame = new Main_frame();
+					Main_frame frame = new Main_frame(userName);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
+	} */
 
 	/**
 	 * Create the frame.
 	 */
-	public Main_frame() {
+	public Main_frame(String userName) {
+		
 		setTitle("MainFrame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 619, 384);
@@ -63,7 +68,7 @@ public class Main_frame extends JFrame implements ActionListener {
 		lbl1.setBounds(178, 11, 200, 50);
 		contentPane.add(lbl1);
 		
-		JLabel lbl2 = new JLabel("Welcome ATHENA");
+		JLabel lbl2 = new JLabel("Hello "+userName);
 		lbl2.setBounds(22, 39, 200, 32);
 		contentPane.add(lbl2);
 		
@@ -91,6 +96,7 @@ public class Main_frame extends JFrame implements ActionListener {
 		JButton btn_main_tlog = new JButton("TIME LOG");
 		btn_main_tlog.setBounds(171, 146, 117, 35);
 		contentPane.add(btn_main_tlog);
+		btn_main_tlog.addActionListener(this);
 		
 		JButton btn_main_sta = new JButton("STATISTIC");
 		btn_main_sta.setBounds(305, 146, 134, 35);
