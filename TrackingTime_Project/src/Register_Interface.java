@@ -81,5 +81,13 @@ public class Register_Interface extends JFrame {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.setBounds(239, 126, 93, 23);
 		contentPane.add(btnCancel);
+		btnCancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dispose();
+			}
+		});
 	}
 }

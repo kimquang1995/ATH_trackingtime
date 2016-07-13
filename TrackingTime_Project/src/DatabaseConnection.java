@@ -24,11 +24,11 @@ public class DatabaseConnection {
                     + "databaseName=" + db + ";user=" + un + ";password="
                     + pass + ";";
             connection = (Connection) DriverManager.getConnection(S_url);
-            System.out.println("Thanh cong");
+            System.out.println("Ket Noi Database Thanh cong");
         } catch (ClassNotFoundException e) {
-           System.out.println("Khong tim thay Class");
+           System.out.println(e.toString());
         } catch (SQLException e) {
-        	 System.out.println("Khong tim thay SQL");
+        	 System.out.println(e.toString());
         }
     
     }
