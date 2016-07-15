@@ -32,6 +32,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.DefaultComboBoxModel;
 
 public class Statistics extends JFrame {
 
@@ -66,7 +70,7 @@ public class Statistics extends JFrame {
 		}
 		setTitle("Statistics");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 
 		// contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,8 +78,8 @@ public class Statistics extends JFrame {
 		// weeks
 		// -*--------------------------------------------********************************************************************************************
 
-		JButton btnWeeks = new JButton("Weeks");
-		btnWeeks.setBounds(146, 10, 84, 29);
+		JButton btnWeeks = new JButton("Show");
+		btnWeeks.setBounds(243, 73, 84, 29);
 
 		btnWeeks.addMouseListener(new MouseAdapter() {
 			@Override
@@ -149,8 +153,8 @@ public class Statistics extends JFrame {
 		contentPane.add(btnWeeks);
 		// years-------------------------------------------------*****************************************************************************************
 
-		JButton btnYears = new JButton("Years");
-		btnYears.setBounds(242, 10, 78, 29);
+		JButton btnYears = new JButton("Show");
+		btnYears.setBounds(580, 73, 78, 29);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -190,58 +194,48 @@ public class Statistics extends JFrame {
 		contentPane.setLayout(null);
 
 		contentPane.add(btnYears);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Weeks", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"}));
+		comboBox.setName("");
+		comboBox.setBounds(163, 73, 70, 29);
+		contentPane.add(comboBox);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Years", "2016", "2017", "2018", "2019", "2020"}));
+		comboBox_1.setBounds(500, 73, 70, 29);
+		contentPane.add(comboBox_1);
+		
+		JLabel lblStatistics = new JLabel("STATISTICS");
+		lblStatistics.setForeground(new Color(60, 179, 113));
+		lblStatistics.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStatistics.setFont(new Font("Corbel", Font.BOLD, 25));
+		lblStatistics.setBounds(343, 11, 129, 29);
+		contentPane.add(lblStatistics);
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Years", "2016", "2017", "2018", "2019", "2020"}));
+		comboBox_2.setBounds(83, 73, 70, 29);
+		contentPane.add(comboBox_2);
+		
+		JLabel lblShowDate = new JLabel("Show date");
+		lblShowDate.setBounds(163, 113, 164, 14);
+		contentPane.add(lblShowDate);
+		
+		JLabel lblByWeeks = new JLabel("By Weeks");
+		lblByWeeks.setFont(new Font("Corbel", Font.PLAIN, 14));
+		lblByWeeks.setBounds(83, 50, 70, 14);
+		contentPane.add(lblByWeeks);
+		
+		JLabel lblByYears = new JLabel("By Years");
+		lblByYears.setFont(new Font("Corbel", Font.PLAIN, 14));
+		lblByYears.setBounds(500, 50, 57, 14);
+		contentPane.add(lblByYears);
 		// tag in
 		// years-----------------------------------*****************************************************************************************
 
-		JButton btnTagInYears = new JButton("Tag in Years");
-		btnTagInYears.setBounds(325, 10, 121, 29);
-		btnTagInYears.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// create data
-				DefaultPieDataset dataset3 = new DefaultPieDataset();
-				dataset3.setValue("Study", 324);
-				dataset3.setValue("Relax", 234);
-				dataset3.setValue("Work", 123);
-				dataset3.setValue("Sleep", 890);
-				// Create the custom label generator
-				final PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
-						"{0} = {2}");
-
-				JFreeChart chart3 = ChartFactory.createPieChart("Tag in Years",
-						dataset3, true, false, false);
-				PiePlot P = (PiePlot) chart3.getPlot();
-				P.setLabelGenerator(labelGenerator);
-
-				// P.setForegroundAlpha(0);
-				P.setCircular(true);
-				ChartPanel frame = new ChartPanel(chart3);
-
-				// frame.setVisible(true);
-				// frame.setBounds(500, 300, 300, 200);
-
-				// frame.setSize(300,200);
-				contentPane.setLayout(new java.awt.BorderLayout());
-				// contentPane.add(frame, BorderLayout.AFTER_LAST_LINE);
-				// contentPane.add(frame, new Dimension (200,200));
-				// frame.setSize(500, 500);
-
-				contentPane.add(frame, BorderLayout.SOUTH);
-				contentPane.validate();
-
-			}
-		});
-		contentPane.setLayout(null);
-
-		contentPane.add(btnTagInYears);
-
-		JLabel lblAthena = new JLabel("athena");
-		lblAthena.setBounds(31, 25, 61, 16);
-		contentPane.add(lblAthena);
-
-		JLabel lblAbc = new JLabel("abc");
-		lblAbc.setBounds(31, 106, 61, 16);
-		contentPane.add(lblAbc);
+		
+		
 	}
 }
 
