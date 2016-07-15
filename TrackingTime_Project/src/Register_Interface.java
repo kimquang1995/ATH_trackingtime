@@ -1,22 +1,18 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-
 import java.awt.Font;
-
-import javax.swing.JTextField;
-import javax.mail.MessagingException;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class Register_Interface extends JFrame {
 
@@ -75,9 +71,21 @@ public class Register_Interface extends JFrame {
 			DatabaseConnection db = new DatabaseConnection();
 
 			public void actionPerformed(ActionEvent arg0) {
+				String name = txtName.getText().trim();
+				String email = txtEmail.getText().trim();
+				boolean result;  
+				Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");  
+				Matcher matcherName = patternName.matcher(name);
+				Pattern patternEmail = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+						  + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+				Matcher matcherEmail = patternEmail.matcher(email);
+				if(matcherName.find() && matcherEmail.find() )  
+				    result = true;
+				else result = false;
+				
+				if(result == true){
 				try {
-					String name = txtName.getText();
-					String email = txtEmail.getText().trim();
+					
 					String pass = "123";
 					String massage;
 					db.Connect();
@@ -94,12 +102,17 @@ public class Register_Interface extends JFrame {
 						PreparedStatement exQuery = db.getConnection()
 								.prepareStatement(Squery);
 						exQuery.executeUpdate();
+						JOptionPane.showMessageDialog(null,
+								"Đăng ký thành công."+"\n"+"\n"+"Mật khẩu sẽ được gửi đến Email của bạn.",
+								"Thành công", JOptionPane.INFORMATION_MESSAGE);
+						
 						System.out.println("Insert Complete");
 						massage = "Dear " + name + "\r\n" + "Your pass is: "
 								+ pass;
 						sendmail.sendSSLMessage(email, "Register Account",
 								massage, email);
 						System.out.println("Send Mail Complete");
+						
 					} else {
 						JOptionPane.showMessageDialog(null,
 								"Email Exist! Please Input Other Email",
@@ -108,6 +121,8 @@ public class Register_Interface extends JFrame {
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}}else{
+					JOptionPane.showMessageDialog(null,"Địa chỉ Email và Tên không được trống."+"\n"+"\n"+"Địa chỉ Email phải có định dạng abc@abc.abc"+"\n"+"\n"+"Tên chỉ chứa ký tự chữ và khoảng trắng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

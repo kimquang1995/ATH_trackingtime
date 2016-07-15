@@ -302,6 +302,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(scrollPane);
 
 		table = new JTable();
+		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
 		Load("Select * from TimeLog");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
