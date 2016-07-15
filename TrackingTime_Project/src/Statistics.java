@@ -129,22 +129,7 @@ public class Statistics extends JFrame {
 					System.out.println(e1.toString());
 				}
 
-				// lay du lieu tu db
-				/*
-				 * DefaultPieDataset dataset1 = new DefaultPieDataset();
-				 * dataset1.setValue(tagname, 48); dataset1.setValue("gdfg",
-				 * 25); dataset1.setValue("Work", 25);
-				 * dataset1.setValue("Sleep", 25); // Create the custom label
-				 * generator final PieSectionLabelGenerator labelGenerator = new
-				 * StandardPieSectionLabelGenerator("{0} = {2}"); JFreeChart
-				 * chart1 = ChartFactory.createPieChart("Weeks", dataset1, true,
-				 * false, false); PiePlot P = (PiePlot) chart1.getPlot();
-				 * P.setLabelGenerator(labelGenerator);
-				 * //P.setForegroundAlpha(0); P.setCircular(true); ChartPanel
-				 * frame = new ChartPanel(chart1); contentPane.setLayout(new
-				 * java.awt.BorderLayout()); contentPane.add(frame,
-				 * BorderLayout.SOUTH); contentPane.validate();
-				 */
+				
 			}
 		});
 
