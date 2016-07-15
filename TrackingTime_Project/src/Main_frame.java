@@ -1,12 +1,15 @@
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Menu;
+import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
@@ -28,11 +31,7 @@ DatabaseConnection db = new DatabaseConnection();
 			Login_Interface lg= new Login_Interface();
 			Main_frame cur=new Main_frame(""+lg);
 			this.dispose();
-			lg.setVisible(true);
-			
-		
-		  
-			
+			lg.setVisible(true);			
 	}
 	if (tmp.getActionCommand().equals("TIME LOG")){
 		new TimeLog().setVisible(true);	
@@ -41,37 +40,7 @@ DatabaseConnection db = new DatabaseConnection();
 	
 	private JPanel contentPane;
 	private JTable jtable;
-
-	/**
-	 * Launch the application.
-	 */
-		public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				Main_frame frame = new Main_frame( "userName");
-				frame.setVisible(true);
-				JTable jtable = new JTable();
-				
-				
-				
-				DefaultTableModel tableModel = new DefaultTableModel();
-				jtable.setModel(tableModel);
-				try {
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					String []colsName = {"Mã hàng", "Tên hàng"};
-			        tableModel.setColumnIdentifiers(colsName);  // d?t tiêu d? c?t cho tableModel
-			        jtable.setModel(tableModel);    // k?t n?i jtable v?i tableModel
-			         
-			   //     initComponent();    // Kh?i t?o các components trên JFrame
-			        DatabaseConnection db=new DatabaseConnection();
-			        
-			      
-				}
-			}
-		});
-	} 	
+	private MenuBar menuBar;
 
 	/**
 	 * Create the frame.
@@ -86,10 +55,17 @@ DatabaseConnection db = new DatabaseConnection();
 		setTitle("MainFrame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 619, 384);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		menuBar = new MenuBar();
+		Menu menu = new Menu("A Menu");
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "The only menu in this program that has menu items");
+		menuBar.add(menu);
+		
 		
 		JLabel lbl1 = new JLabel("TRACKING TIME");
 		lbl1.setBounds(178, 11, 200, 50);

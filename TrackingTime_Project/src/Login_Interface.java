@@ -26,8 +26,7 @@ public class Login_Interface extends JFrame {
 	private JTextField txtUsername;
 	private JButton btnForgotPassword;
 	private JButton btnOk;
-	private JButton btnCancel;
-	private JTextField pwdPassword;
+	private JPasswordField txtPass;
 	public String userName;
 
 	/**
@@ -49,6 +48,7 @@ public class Login_Interface extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("deprecation")
 	public Login_Interface() {
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,11 +85,10 @@ public class Login_Interface extends JFrame {
 		txtUsername.setBounds(99, 91, 228, 23);
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
-		
-		pwdPassword = new JPasswordField();
-		pwdPassword.setBounds(99, 123, 228, 23);
-		contentPane.add(pwdPassword);
-	
+
+		txtPass = new JPasswordField();
+		txtPass.setBounds(99, 123, 228, 23);
+		contentPane.add(txtPass);
 
 		btnOk = new JButton("Login");
 		btnOk.addActionListener(new ActionListener() {
@@ -97,7 +96,7 @@ public class Login_Interface extends JFrame {
 
 				try {
 					String email = txtUsername.getText();
-					String pass = pwdPassword.getText();
+					String pass = txtPass.getText();
 					if (email.length() > 0 && pass.length() > 0) {
 						DatabaseConnection db = new DatabaseConnection();
 						db.Connect();
@@ -106,21 +105,28 @@ public class Login_Interface extends JFrame {
 										"Select * from Users where Email='"
 												+ email + "'");
 						ResultSet rs = query.executeQuery();
-						while (rs.next()) {
-							if (pass.equals(rs.getString("Pass"))) {
-								userName = rs.getString("Name").toUpperCase();
-								Main_frame mtag = new Main_frame(userName);
-								mtag.setVisible(true);
-							} else
-								JOptionPane.showMessageDialog(null,
-										"Login Fail", "Login Error",
-										JOptionPane.CLOSED_OPTION);
+
+						if (!rs.isBeforeFirst()) {
+							JOptionPane.showMessageDialog(null,
+									"Email not exist ! Please Register",
+									"Login Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							while (rs.next()) {
+								if (pass.equals(rs.getString("Pass"))) {
+									userName = rs.getString("Name")
+											.toUpperCase();
+									Main_frame mtag = new Main_frame(userName);
+									mtag.setVisible(true);
+								} else
+									JOptionPane.showMessageDialog(null,
+											"Login Fail", "Login Error",
+											JOptionPane.ERROR_MESSAGE);
+							}
 						}
-					}
-					else
+					} else
 						JOptionPane.showMessageDialog(null,
-								"Please Input Email and Password !", "Login Error",
-								JOptionPane.CLOSED_OPTION);
+								"Please Input Email and Password !",
+								"Login Error", JOptionPane.ERROR_MESSAGE);
 
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.toString());
@@ -146,12 +152,12 @@ public class Login_Interface extends JFrame {
 		});
 		btnOk.setBounds(99, 155, 227, 50);
 		contentPane.add(btnOk);
-		
+
 		JButton btnReg = new JButton("Register");
 		btnReg.setBounds(99, 210, 113, 23);
 		contentPane.add(btnReg);
 		btnReg.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -159,12 +165,12 @@ public class Login_Interface extends JFrame {
 				reg_inf.setVisible(true);
 			}
 		});
-	
+
 		btnForgotPassword = new JButton("Forgot Password");
 		btnForgotPassword.setBounds(212, 210, 113, 23);
 		contentPane.add(btnForgotPassword);
 		btnForgotPassword.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -172,7 +178,84 @@ public class Login_Interface extends JFrame {
 				forgot_Int.setVisible(true);
 			}
 		});
-		
+		if (txtUsername.getText().length() == 0
+				|| txtPass.getText().length() == 0) {
+			btnOk.setEnabled(false);
+		}
+		txtUsername.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (txtUsername.getText().length() == 0
+						|| txtPass.getText().length() == 0) {
+					btnOk.setEnabled(false);
+				} else {
+					btnOk.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		txtPass.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (txtUsername.getText().length() == 0
+						|| txtPass.getText().length() == 0) {
+					btnOk.setEnabled(false);
+				} else {
+					btnOk.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 	}
 }
