@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -148,33 +149,72 @@ public class Statistics extends JFrame {
 		btnYears.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				DefaultPieDataset dataset2 = new DefaultPieDataset();
-				dataset2.setValue("Study", 23);
-				dataset2.setValue("Relax", 75);
-				dataset2.setValue("Work", 324);
-				dataset2.setValue("Sleep", 23);
-				// Create the custom label generator
-				final PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
-						"{0} = {2}");
-				JFreeChart chart2 = ChartFactory.createPieChart("Years",
-						dataset2, true, false, false);
-				PiePlot P = (PiePlot) chart2.getPlot();
-				// P.setForegroundAlpha(0);
-				P.setLabelGenerator(labelGenerator);
+				try {
+					DefaultPieDataset dataset2 = new DefaultPieDataset();
+					int year = Integer.parseInt(cbSta_Year.getSelectedItem()
+							.toString());
+					String Squery = "Select * from Tag";
+					PreparedStatement query = db.getConnection()
+							.prepareStatement(Squery);
+					ResultSet rs = query.executeQuery();
+					if (!rs.isBeforeFirst()) {
+					} else {
+						while (rs.next()) {
+							String name = "";
+							float hours = 0;
+							name = rs.getString("Name").toString();
+							String squery = "Select * from Plans where Year ='"
+									+ year + "' " + "and Id_Tag ='"
+									+ Integer.parseInt(rs.getString("Id"))
+									+ "'";
+							PreparedStatement queryPlan = db.getConnection()
+									.prepareStatement(squery);
+							ResultSet rsPlan = queryPlan.executeQuery();
+							if (!rsPlan.isBeforeFirst()) {
+								dataset2.setValue("No value", 0);
+							} else {
+								while (rsPlan.next()) {
+									hours = hours
+											+ Float.parseFloat(rsPlan
+													.getString("Hour")
+													.toString());
+								}
+								dataset2.setValue(name, hours);
+							}
 
-				P.setCircular(true);
-				ChartPanel frame = new ChartPanel(chart2);
-				// frame.setVisible(true);
-				// frame.setBounds(100, 300, 300, 200);
-				// frame.setSize(200,200);
-				// contentPane.add(frame);
-				contentPane.setLayout(new java.awt.BorderLayout());
-				// contentPane.add(frame, BorderLayout.AFTER_LAST_LINE);
-				// contentPane.add(frame, new Dimension (200,200));
-				// frame.setSize(200, 200);
+						}
 
-				contentPane.add(frame, BorderLayout.SOUTH);
-				contentPane.validate();
+						final PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
+								"{0} = {2}");
+						JFreeChart chart2 = ChartFactory.createPieChart(
+								"Years", dataset2, true, false, false);
+						PiePlot P = (PiePlot) chart2.getPlot();
+						// P.setForegroundAlpha(0);
+						P.setLabelGenerator(labelGenerator);
+
+						P.setCircular(true);
+						ChartPanel frame = new ChartPanel(chart2);
+						// frame.setVisible(true);
+						// frame.setBounds(100, 300, 300, 200);
+						// frame.setSize(200,200);
+						// contentPane.add(frame);
+						contentPane.setLayout(new java.awt.BorderLayout());
+						// contentPane.add(frame,
+						// BorderLayout.AFTER_LAST_LINE);
+						// contentPane.add(frame, new Dimension (200,200));
+						// frame.setSize(200, 200);
+
+						contentPane.add(frame, BorderLayout.SOUTH);
+						contentPane.validate();
+
+					}
+					// /---------------------------------------------
+
+					// Create the custom label generator
+
+				} catch (Exception e2) {
+					System.out.println(e2.toString());
+				}
 			}
 		});
 		contentPane.setLayout(null);
