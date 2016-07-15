@@ -5,18 +5,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.JTextField;
 import javax.mail.MessagingException;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 
 public class Register_Interface extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
 	
 	/**
 	 * Launch the application.
@@ -37,6 +41,7 @@ public class Register_Interface extends JFrame {
 	 * Create the frame.
 	 */
 	public Register_Interface() {
+		setTitle("Register Acccount");
 		SendEmail sendmail = new SendEmail();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 457, 229);
@@ -52,34 +57,59 @@ public class Register_Interface extends JFrame {
 		
 		JLabel lblEmailAddress = new JLabel("Email address");
 		lblEmailAddress.setFont(new Font("SimSun", Font.PLAIN, 20));
-		lblEmailAddress.setBounds(22, 78, 150, 25);
+		lblEmailAddress.setBounds(22, 80, 150, 25);
 		contentPane.add(lblEmailAddress);
 		
-		textField = new JTextField();
-		textField.setBounds(165, 78, 234, 23);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		JLabel lblName = new JLabel("Your Name");
+		lblName.setFont(new Font("SimSun", Font.PLAIN, 20));
+		lblName.setBounds(22,110 , 150, 25);
+		contentPane.add(lblName);
+		
+		JTextField txtName = new JTextField();
+		txtName.setBounds(165, 110, 234, 23);
+		contentPane.add(txtName);
+		txtName.setColumns(10); 
+		
+		JTextField txtEmail = new JTextField();
+		txtEmail.setBounds(165, 80, 234, 23);
+		contentPane.add(txtEmail);
+		txtEmail.setColumns(10);
 		
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
+			DatabaseConnection db= new DatabaseConnection();
 			public void actionPerformed(ActionEvent arg0) {
 			try {
-				sendmail.sendSSLMessage(textField.getText().toString()
-						,"Thư Chúc Mừng", "Chúc Mừng Bạn Đã Đăng Ký "
-								+ "Thành Công Account Tracking Time của AthenaTeam"
-								,textField.getText().toString());
-				System.out.println("Send thành công");
-			} catch (MessagingException e) {
+				String name = txtName.getText();
+				String email = txtEmail.getText();
+				String pass = "123";
+				String massage;
+				db.Connect();
+				String Squery="Insert into Users"
+						+ "(Email,Pass,Name,Status)"
+						+"values"
+						+ "('"+email+"','"+pass+"','"+name+"','True')";
+				PreparedStatement query = db.getConnection()
+						.prepareStatement(Squery);			
+				query.executeUpdate();
+				System.out.println("Insert Complete");
+				massage = "Dear " + name
+						+ "\r\n" + "Your pass is: "
+						+ pass;
+				sendmail.sendSSLMessage(email,
+						"Register Account", massage, email);
+				System.out.println("Send Mail Complete");
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			}
 		});
-		btnOk.setBounds(119, 126, 93, 23);
+		btnOk.setBounds(165, 140, 90, 23);
 		contentPane.add(btnOk);
 		
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(239, 126, 93, 23);
+		btnCancel.setBounds(305, 140, 93, 23);
 		contentPane.add(btnCancel);
 		btnCancel.addActionListener(new ActionListener() {
 			

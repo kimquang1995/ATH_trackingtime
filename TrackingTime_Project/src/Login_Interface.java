@@ -50,6 +50,7 @@ public class Login_Interface extends JFrame {
 	 * Create the frame.
 	 */
 	public Login_Interface() {
+		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 430, 300);
 		contentPane = new JPanel();
@@ -167,7 +168,8 @@ public class Login_Interface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JOptionPane.showConfirmDialog(null, "Nothing", "Information",JOptionPane.CLOSED_OPTION);
+				ForgotPass_Interface forgot_Int = new ForgotPass_Interface();
+				forgot_Int.setVisible(true);
 			}
 		});
 		
