@@ -1,24 +1,25 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-
 import java.awt.Font;
-
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JPasswordField;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class Login_Interface extends JFrame {
 
@@ -117,6 +118,15 @@ public class Login_Interface extends JFrame {
 											.toUpperCase();
 									Main_frame mtag = new Main_frame(userName);
 									mtag.setVisible(true);
+									File file = new File("resources/userInfor.txt");
+									System.out.println(file.getAbsolutePath());
+									Charset charset = Charset.forName("UTF-8");
+									String s = "";
+									/*try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
+									    writer.write(s, 0, s.length());
+									} catch (IOException x) {
+									    System.err.format("IOException: %s%n", x);
+									}*/
 								} else
 									JOptionPane.showMessageDialog(null,
 											"Login Fail", "Login Error",

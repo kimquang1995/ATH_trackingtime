@@ -80,36 +80,31 @@ public class Register_Interface extends JFrame {
 					String email = txtEmail.getText().trim();
 					String pass = "123";
 					String massage;
-					boolean flag = false;
 					db.Connect();
-					String UserQuery = "Select * from Users";
-					PreparedStatement queryUser = db.getConnection()
-							.prepareStatement(UserQuery);
-					ResultSet rs = queryUser.executeQuery();
-					while (rs.next()) {
-						if (email.equals(rs.getString("Email")))
-							;
-						flag = true;
-					}
-					if (flag == false) {
+					PreparedStatement query = db.getConnection()
+							.prepareStatement(
+									"Select * from Users where Email='"
+											+ email + "'");
+					ResultSet rs = query.executeQuery();
+					if (!rs.isBeforeFirst()) {
 						String Squery = "Insert into Users"
 								+ "(Email,Pass,Name,Status)" + "values" + "('"
 								+ email + "','" + pass + "','" + name
-								+ "','True'a" + ")";
-						PreparedStatement query = db.getConnection()
+								+ "','True'" + ")";
+						PreparedStatement exQuery = db.getConnection()
 								.prepareStatement(Squery);
-						query.executeUpdate();
+						exQuery.executeUpdate();
 						System.out.println("Insert Complete");
 						massage = "Dear " + name + "\r\n" + "Your pass is: "
 								+ pass;
 						sendmail.sendSSLMessage(email, "Register Account",
 								massage, email);
 						System.out.println("Send Mail Complete");
-					}
-					else
+					} else {
 						JOptionPane.showMessageDialog(null,
-								"Email Exist! Please Input Other Email", "Register Error",
-								JOptionPane.ERROR_MESSAGE);
+								"Email Exist! Please Input Other Email",
+								"Register Error", JOptionPane.ERROR_MESSAGE);
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
