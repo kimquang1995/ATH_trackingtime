@@ -1,3 +1,4 @@
+import java.awt.Checkbox;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -6,11 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,7 +31,8 @@ public class Login_Interface extends JFrame {
 	private JButton btnOk;
 	private JPasswordField txtPass;
 	public String userName;
-
+	private String pathSave = "./userInfor.txt";
+	private Checkbox cbSavePass;
 	/**
 	 * Launch the application.
 	 */
@@ -82,20 +85,21 @@ public class Login_Interface extends JFrame {
 		lblPass.setBounds(10, 123, 228, 23);
 		contentPane.add(lblPass);
 
-		txtUsername = new JTextField();
+		txtUsername = new JTextField(ReadFile(pathSave)[0]);
 		txtUsername.setBounds(99, 91, 228, 23);
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
-
-		txtPass = new JPasswordField();
+		
+		txtPass = new JPasswordField(ReadFile(pathSave)[1]);
 		txtPass.setBounds(99, 123, 228, 23);
 		contentPane.add(txtPass);
-
+		
 		btnOk = new JButton("Login");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
+					
 					String email = txtUsername.getText();
 					String pass = txtPass.getText();
 					if (email.length() > 0 && pass.length() > 0) {
@@ -106,7 +110,6 @@ public class Login_Interface extends JFrame {
 										"Select * from Users where Email='"
 												+ email + "'");
 						ResultSet rs = query.executeQuery();
-
 						if (!rs.isBeforeFirst()) {
 							JOptionPane.showMessageDialog(null,
 									"Email not exist ! Please Register",
@@ -118,15 +121,18 @@ public class Login_Interface extends JFrame {
 											.toUpperCase();
 									Main_frame mtag = new Main_frame(userName);
 									mtag.setVisible(true);
-									File file = new File("resources/userInfor.txt");
-									System.out.println(file.getAbsolutePath());
-									Charset charset = Charset.forName("UTF-8");
-									String s = "";
-									/*try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
-									    writer.write(s, 0, s.length());
-									} catch (IOException x) {
-									    System.err.format("IOException: %s%n", x);
-									}*/
+									if(cbSavePass.getState())
+									{
+									WriteFile(pathSave, email
+											+ "|\r\n" + pass);
+									System.out.println("Write Complete");									
+									}
+									else
+									{
+										WriteFile(pathSave,"");
+										System.out.println("Write Complete");	
+									}
+
 								} else
 									JOptionPane.showMessageDialog(null,
 											"Login Fail", "Login Error",
@@ -160,11 +166,15 @@ public class Login_Interface extends JFrame {
 				 */
 			}
 		});
-		btnOk.setBounds(99, 155, 227, 50);
+		cbSavePass = new Checkbox("Remember Password");
+		cbSavePass.setBounds(99,150,226,20);
+		contentPane.add(cbSavePass);
+		
+		btnOk.setBounds(99, 170, 227, 50);
 		contentPane.add(btnOk);
 
 		JButton btnReg = new JButton("Register");
-		btnReg.setBounds(99, 210, 113, 23);
+		btnReg.setBounds(99, 220, 113, 23);
 		contentPane.add(btnReg);
 		btnReg.addActionListener(new ActionListener() {
 
@@ -177,7 +187,7 @@ public class Login_Interface extends JFrame {
 		});
 
 		btnForgotPassword = new JButton("Forgot Password");
-		btnForgotPassword.setBounds(212, 210, 113, 23);
+		btnForgotPassword.setBounds(212, 220, 113, 23);
 		contentPane.add(btnForgotPassword);
 		btnForgotPassword.addActionListener(new ActionListener() {
 
@@ -268,4 +278,44 @@ public class Login_Interface extends JFrame {
 		});
 
 	}
+
+	private static String[] ReadFile(String path) {
+		String text = "";
+		String sLine;
+		  String aTemp[];
+		  String[] infor = new String[2];
+		  int index = 0;
+		try {
+			File fOpen = new File(path);
+			Scanner fileReader = new Scanner(fOpen);
+			while (fileReader.hasNextLine()) {
+				sLine = fileReader.nextLine().trim();
+			    aTemp = sLine.split("\\|");
+			    infor[index]=aTemp[0];
+			    index++;
+			}
+		} catch (FileNotFoundException e) {
+			System.out.print("File Not Found");
+		}
+		return infor;
+	}
+
+	private static void WriteFile(String path, String content) {
+		try {
+			File file = new File(path);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.close();
+		}
+
+		catch (Exception e) {
+			System.out.print("File Not Found");
+		}
+
+	}
+
 }
