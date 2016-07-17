@@ -19,11 +19,11 @@ public class MainFrame_Demo2 {
     JLabel Addtag = new JLabel("noi dung 2");  
     JLabel Statistics = new JLabel("noi dung 3");  
     JLabel Logout = new JLabel("noi dung 4");  
-    Icon icon0 = new ImageIcon("C:/Users/john/Desktop/Images/file-icon.png");  
-    Icon icon1 = new ImageIcon("C:/Users/john/Desktop/Images/time-icon.png");  
-    Icon icon2 = new ImageIcon("C:/Users/john/Desktop/Images/addition-icon.png");  
-    Icon icon3 = new ImageIcon("C:/Users/john/Desktop/Images/flow-market-icon.png");  
-    Icon icon4 = new ImageIcon("C:/Users/john/Desktop/Images/inside-logout-icon.png");  
+    Icon icon0 = new ImageIcon("Images/file-icon.png");  
+    Icon icon1 = new ImageIcon("Images/time-icon.png");  
+    Icon icon2 = new ImageIcon("Images/addition-icon.png");  
+    Icon icon3 = new ImageIcon("Images/flow-market-icon.png");  
+    Icon icon4 = new ImageIcon("Images/inside-logout-icon.png");  
 
     JTabbedPane tab = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.WRAP_TAB_LAYOUT); 
       
@@ -48,15 +48,11 @@ public class MainFrame_Demo2 {
                 System.out.println(tab.getSelectedIndex());  
             }  
         });  
-          
         f.add(tab);  
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
         f.pack();  
         f.setVisible(true);  
-    }  
-    
-
-    
+    }   
     public static void main(String[] args) {  
         // TODO Auto-generated method stub  
     	 try {

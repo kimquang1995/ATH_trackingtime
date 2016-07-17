@@ -43,7 +43,7 @@ public class Statistics extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -55,7 +55,7 @@ public class Statistics extends JFrame {
 			}
 		});
 	}
-
+*/
 	/**
 	 * Create the frame.
 	 */
@@ -73,7 +73,7 @@ public class Statistics extends JFrame {
 		// contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		// weeks
-		// -*--------------------------------------------********************************************************************************************
+		// -*--------------------------------------------
 
 		JButton btnWeeks = new JButton("Show");
 		btnWeeks.setBounds(192, 73, 110, 25);
@@ -138,7 +138,7 @@ public class Statistics extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.setLayout(null);
 		contentPane.add(btnWeeks);
-		// years-------------------------------------------------*****************************************************************************************
+		// years-------------------------------------------------
 
 		JButton btnYears = new JButton("Show");
 		btnYears.setBounds(580, 73, 78, 25);
@@ -291,7 +291,7 @@ public class Statistics extends JFrame {
 		lblByYears.setBounds(500, 50, 57, 14);
 		contentPane.add(lblByYears);
 		// tag in
-		// years-----------------------------------*****************************************************************************************
+		// years-----------------------------------
 
 	}
 

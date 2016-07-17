@@ -28,7 +28,7 @@ public class Login_Interface extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JButton btnForgotPassword;
-	private JButton btnOk;
+	private JButton btnLogin;
 	private JPasswordField txtPass;
 	public String userName;
 	private String pathSave = "./userInfor.txt";
@@ -94,8 +94,8 @@ public class Login_Interface extends JFrame {
 		txtPass.setBounds(99, 123, 228, 23);
 		contentPane.add(txtPass);
 		
-		btnOk = new JButton("Login");
-		btnOk.addActionListener(new ActionListener() {
+		btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
@@ -119,8 +119,10 @@ public class Login_Interface extends JFrame {
 								if (pass.equals(rs.getString("Pass"))) {
 									userName = rs.getString("Name")
 											.toUpperCase();
+									//Open main frame
 									Main_frame mtag = new Main_frame(userName);
 									mtag.setVisible(true);
+									
 									if(cbSavePass.getState())
 									{
 									WriteFile(pathSave, email
@@ -170,8 +172,8 @@ public class Login_Interface extends JFrame {
 		cbSavePass.setBounds(99,150,226,20);
 		contentPane.add(cbSavePass);
 		
-		btnOk.setBounds(99, 170, 227, 50);
-		contentPane.add(btnOk);
+		btnLogin.setBounds(99, 170, 227, 50);
+		contentPane.add(btnLogin);
 
 		JButton btnReg = new JButton("Register");
 		btnReg.setBounds(99, 220, 113, 23);
@@ -200,7 +202,7 @@ public class Login_Interface extends JFrame {
 		});
 		if (txtUsername.getText().length() == 0
 				|| txtPass.getText().length() == 0) {
-			btnOk.setEnabled(false);
+			btnLogin.setEnabled(false);
 		}
 		txtUsername.addMouseListener(new MouseListener() {
 
@@ -221,9 +223,9 @@ public class Login_Interface extends JFrame {
 				// TODO Auto-generated method stub
 				if (txtUsername.getText().length() == 0
 						|| txtPass.getText().length() == 0) {
-					btnOk.setEnabled(false);
+					btnLogin.setEnabled(false);
 				} else {
-					btnOk.setEnabled(true);
+					btnLogin.setEnabled(true);
 				}
 			}
 
@@ -258,9 +260,9 @@ public class Login_Interface extends JFrame {
 				// TODO Auto-generated method stub
 				if (txtUsername.getText().length() == 0
 						|| txtPass.getText().length() == 0) {
-					btnOk.setEnabled(false);
+					btnLogin.setEnabled(false);
 				} else {
-					btnOk.setEnabled(true);
+					btnLogin.setEnabled(true);
 				}
 			}
 
