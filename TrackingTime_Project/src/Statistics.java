@@ -141,7 +141,7 @@ public class Statistics extends JFrame {
 		// years-------------------------------------------------
 
 		JButton btnYears = new JButton("Show");
-		btnYears.setBounds(580, 73, 78, 25);
+		btnYears.setBounds(366, 73, 78, 25);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
