@@ -12,13 +12,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class MainFrame_Demo2 {  
-  
+ 
     JFrame f = new JFrame("Tracking Time"); 
-    JLabel Plan = new JLabel("noi dung 0");  
-    JLabel Timelog = new JLabel("noi dung 1");  
-    JLabel Addtag = new JLabel("noi dung 2");  
-    JLabel Statistics = new JLabel("noi dung 3");  
-    JLabel Logout = new JLabel("noi dung 4");  
+    
+  //  JLabel Plan = new JLabel("noi dung 0");  
+   // JLabel Timelog = new JLabel("noi dung 1");  
+  //  JLabel Addtag = new JLabel("noi dung 2");  
+   // JLabel Statistics = new JLabel("noi dung 3");  
+ //   JLabel Logout = new JLabel("noi dung 4");  
     Icon icon0 = new ImageIcon("Images/file-icon.png");  
     Icon icon1 = new ImageIcon("Images/time-icon.png");  
     Icon icon2 = new ImageIcon("Images/addition-icon.png");  
@@ -26,20 +27,22 @@ public class MainFrame_Demo2 {
     Icon icon4 = new ImageIcon("Images/inside-logout-icon.png");  
 
     JTabbedPane tab = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.WRAP_TAB_LAYOUT); 
-      
+    Statistics stat = new Statistics();
+    ManageTag Addtag = new ManageTag();
+    TimeLog Timelog  = new TimeLog();
     public void init()  
     {          
-    	Plan.setPreferredSize(new Dimension(600, 340));  
+    	//Plan.setPreferredSize(new Dimension(600, 340));  
         Timelog.setPreferredSize(new Dimension(600, 340));  
         Addtag.setPreferredSize(new Dimension(600, 340));  
-        Statistics.setPreferredSize(new Dimension(600, 340));  
-        Logout.setPreferredSize(new Dimension(600, 340));  
+      //  Statistics.setPreferredSize(new Dimension(600, 340));  
+       // Logout.setPreferredSize(new Dimension(600, 340));  
 
-        tab.addTab("Plan", icon0, Plan, "Plan");     
-        tab.addTab("TimeLog", icon1, Timelog, "TimeLog");    
-        tab.addTab("  Add Tag", icon2, Addtag, "Add Tag");  
-        tab.addTab("Statistics", icon3, Statistics, "Statistics");  
-        tab.addTab("    Logout", icon4, Logout, "bookDesc");  
+       // tab.addTab("Plan", icon0, Plan, "Plan");     
+        tab.addTab("TimeLog", icon1, Timelog.getContentPane(), "TimeLog");    
+        tab.addTab("  Add Tag", icon2, Addtag.getContentPane(), "Add Tag");  
+        tab.addTab("Statistics", icon3, stat.getContentPane(), "Statistics");  
+    //    tab.addTab("    Logout", icon4, Logout, "bookDesc");  
 
         tab.addChangeListener(new ChangeListener() {          //Tab change
             @Override  

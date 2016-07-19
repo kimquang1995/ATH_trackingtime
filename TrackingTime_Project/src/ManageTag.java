@@ -168,7 +168,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManageTag frame = new ManageTag("username");
+					ManageTag frame = new ManageTag();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -180,7 +180,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ManageTag(String username) {
+	public ManageTag() {
 
 		try {
 			db.Connect();
@@ -195,12 +195,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// add label
-		JLabel lblHello = new JLabel("Hello " + username);
-		lblHello.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblHello.setBounds(243, 11, 90, 25);
-		contentPane.add(lblHello);
-
+	
 		JLabel lblNewLabel = new JLabel("MANAGE TAG");
 		lblNewLabel.setBounds(82, 27, 251, 60);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
