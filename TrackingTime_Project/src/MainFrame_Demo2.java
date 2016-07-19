@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -32,12 +33,16 @@ public class MainFrame_Demo2 {
     TimeLog Timelog  = new TimeLog();
     public void init()  
     {          
+    	 Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+    	    int x = (int) ((dimension.getWidth() - tab.getWidth()) / 2);
+    	    int y = (int) ((dimension.getHeight() - tab.getHeight()) / 2);
     	//Plan.setPreferredSize(new Dimension(600, 340));  
-        Timelog.setPreferredSize(new Dimension(600, 340));  
-        Addtag.setPreferredSize(new Dimension(600, 340));  
+    	    tab.contains(x, y);
+     //  Addtag.setLocation(x, y);
+     //   Addtag.setPreferredSize(new Dimension(x,y));  
       //  Statistics.setPreferredSize(new Dimension(600, 340));  
        // Logout.setPreferredSize(new Dimension(600, 340));  
-
+    	
        // tab.addTab("Plan", icon0, Plan, "Plan");     
         tab.addTab("TimeLog", icon1, Timelog.getContentPane(), "TimeLog");    
         tab.addTab("  Add Tag", icon2, Addtag.getContentPane(), "Add Tag");  
@@ -54,7 +59,7 @@ public class MainFrame_Demo2 {
         f.add(tab);  
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
         f.pack();  
-        Dimension d = new Dimension(750, 600);
+        Dimension d = new Dimension(850, 600);
 
         f.setSize(d);
 

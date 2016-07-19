@@ -39,23 +39,18 @@ public class Statistics extends JFrame {
 	private JComboBox cbWeek;
 	private JComboBox cbYear;
 	private JComboBox cbSta_Year;
+	int iCurentyear = Calendar.getInstance().get(Calendar.YEAR);
+	int iCurentDate = Calendar.getInstance().get(Calendar.DATE);
 
 	/**
 	 * Launch the application.
 	 */
-/*	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Statistics frame = new Statistics();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { Statistics frame = new
+	 * Statistics(); frame.setVisible(true); } catch (Exception e) {
+	 * e.printStackTrace(); } } }); }
+	 */
 	/**
 	 * Create the frame.
 	 */
@@ -141,7 +136,7 @@ public class Statistics extends JFrame {
 		// years-------------------------------------------------
 
 		JButton btnYears = new JButton("Show");
-		btnYears.setBounds(366, 73, 78, 25);
+		btnYears.setBounds(580, 73, 78, 25);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -230,7 +225,9 @@ public class Statistics extends JFrame {
 		cbSta_Year = new JComboBox();
 		cbSta_Year.setModel(new DefaultComboBoxModel(year));
 		cbSta_Year.setBounds(500, 73, 70, 25);
+		cbSta_Year.setSelectedItem("" + iCurentyear);
 		contentPane.add(cbSta_Year);
+	
 
 		contentPane.add(btnYears);
 
@@ -249,27 +246,16 @@ public class Statistics extends JFrame {
 		cbYear = new JComboBox();
 		cbYear.setModel(new DefaultComboBoxModel(year));
 		cbYear.setBounds(83, 73, 95, 25);
+		cbYear.setSelectedItem("" + iCurentyear);
 		contentPane.add(cbYear);
+		FillComboboxWeek();
+		cbWeek.setModel(new DefaultComboBoxModel(week));
 		cbYear.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String iWeek1 = "";
-					String iWeek2 = "";
-					int iYearSelected = Integer.parseInt(cbYear
-							.getSelectedItem().toString());
-					for (int i = 0; i < 52; i++) {
-						if (i == 0) {
-							iWeek1 = Add_FirstWeek(iYearSelected);
-							week[i] = "WEEK " + (i + 1) + " : " + "1-1-"
-									+ iYearSelected + "->" + iWeek1;
-						} else {
-							week[i] = "WEEK " + (i + 1) + " : " + iWeek1 + "->"
-									+ Add_LasttWeek(iWeek1);
-							iWeek1 = Add_LasttWeek(iWeek1);
-						}
-					}
+					FillComboboxWeek();
 
 					cbWeek.setModel(new DefaultComboBoxModel(week));
 
@@ -326,5 +312,22 @@ public class Statistics extends JFrame {
 			e.printStackTrace();
 		}
 		return newday;
+	}
+
+	private void FillComboboxWeek() {
+		String iWeek1 = "";
+		int iYearSelected = Integer.parseInt(cbYear.getSelectedItem()
+				.toString());
+		for (int i = 0; i < 52; i++) {
+			if (i == 0) {
+				iWeek1 = Add_FirstWeek(iYearSelected);
+				week[i] = "WEEK " + (i + 1) + " : " + "1-1-" + iYearSelected
+						+ "->" + iWeek1;
+			} else {
+				week[i] = "WEEK " + (i + 1) + " : " + iWeek1 + "->"
+						+ Add_LasttWeek(iWeek1);
+				iWeek1 = Add_LasttWeek(iWeek1);
+			}
+		}
 	}
 }
