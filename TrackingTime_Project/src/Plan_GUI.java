@@ -84,7 +84,7 @@ public class Plan_GUI extends JFrame {
         formatter.setOverwriteMode(true);
 
         spinner.setEditor(editor);
-		spinner.setBounds(275, 180, 100, 30);
+		spinner.setBounds(275, 150, 100, 30);
 		JLabel lblPlan = new JLabel("PLAN");
 		lblPlan.setForeground(new Color(0, 204, 255));
 		lblPlan.setFont(new Font("Roboto", Font.BOLD, 26));
@@ -142,16 +142,28 @@ public class Plan_GUI extends JFrame {
 		JComboBox comboBox_3 = new JComboBox();
 		comboBox_3.setFont(new Font("Roboto", Font.PLAIN, 15));
 		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"Study", "Work ", "Relax"}));
-		comboBox_3.setBounds(105, 180, 100, 30);
+		comboBox_3.setBounds(105, 150, 100, 30);
 		contentPane.add(comboBox_3);
 		
 		JLabel lblTags = new JLabel("Tags");
 		lblTags.setFont(new Font("Roboto", Font.PLAIN, 17));
-		lblTags.setBounds(55, 180, 50, 30);
+		lblTags.setBounds(55, 150, 50, 30);
 		contentPane.add(lblTags);
 		
 		JLabel lblODayLa = new JLabel("o day la table voi 2 cot \"Tag\" va \"Total hours\"");
 		lblODayLa.setBounds(231, 334, 218, 58);
 		contentPane.add(lblODayLa);
+		
+		JButton btnNewButton = new JButton("ADD");
+		btnNewButton.setBounds(105, 210, 100, 30);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("DELETE");
+		btnNewButton_1.setBounds(275, 210, 100, 30);
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("UPDATE");
+		btnNewButton_2.setBounds(445, 210, 100, 30);
+		contentPane.add(btnNewButton_2);
 	}
 }
