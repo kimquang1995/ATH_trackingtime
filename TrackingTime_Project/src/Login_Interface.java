@@ -120,8 +120,9 @@ public class Login_Interface extends JFrame {
 									userName = rs.getString("Name")
 											.toUpperCase();
 									//Open main frame
-									Main_frame mtag = new Main_frame(userName);
+									Main_GUI mtag = new Main_GUI(userName);
 									mtag.setVisible(true);
+									setVisible(false);
 									
 									if(cbSavePass.getState())
 									{

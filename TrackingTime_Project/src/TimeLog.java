@@ -71,7 +71,7 @@ public class TimeLog extends JFrame {
 			e1.printStackTrace();
 		}
 		setTitle("Time Log");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 650, 650);
 		contentPane1 = new JPanel();
 		contentPane1.setBorder(new EmptyBorder(5, 5, 5, 5));

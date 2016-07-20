@@ -166,7 +166,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManageTag frame = new ManageTag("username");
+					ManageTag frame = new ManageTag();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -178,7 +178,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ManageTag(String username) {
+	public ManageTag() {
 		setTitle("Manage Tag");
 		setAutoRequestFocus(false);
 
@@ -196,10 +196,6 @@ public class ManageTag extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		// add label
-		JLabel lblHello = new JLabel("Hello " + username);
-		lblHello.setBounds(564, 11, 150, 50);
-		lblHello.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		contentPane.add(lblHello);
 
 		JLabel lblNewLabel = new JLabel("MANAGE TAG");
 		lblNewLabel.setBounds(300, 71, 276, 60);
