@@ -240,6 +240,8 @@ public class Statistics extends JFrame {
 		lblStatistics.setBounds(250, 11, 145, 30);
 		contentPane.add(lblStatistics);
 
+
+
 		// WEEK
 		cbWeek = new JComboBox();
 		cbWeek.setName("");

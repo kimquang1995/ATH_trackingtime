@@ -46,7 +46,7 @@ public class Plan_GUI extends JFrame {
 		     
 				try {
 					Plan_GUI frame = new Plan_GUI();
-										frame.setVisible(true);
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
