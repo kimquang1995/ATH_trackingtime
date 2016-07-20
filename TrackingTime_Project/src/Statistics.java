@@ -71,7 +71,8 @@ public class Statistics extends JFrame {
 		// -*--------------------------------------------
 
 		JButton btnWeeks = new JButton("Show");
-		btnWeeks.setBounds(180, 70, 100, 25);
+		btnWeeks.setFont(new Font("Roboto", Font.PLAIN, 12));
+		btnWeeks.setBounds(180, 100, 100, 30);
 
 		btnWeeks.addMouseListener(new MouseAdapter() {
 			@Override
@@ -136,7 +137,8 @@ public class Statistics extends JFrame {
 		// years-------------------------------------------------
 
 		JButton btnYears = new JButton("Show");
-		btnYears.setBounds(470, 71, 100, 25);
+		btnYears.setFont(new Font("Roboto", Font.PLAIN, 12));
+		btnYears.setBounds(470, 100, 100, 30);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -224,7 +226,7 @@ public class Statistics extends JFrame {
 		}
 		cbSta_Year = new JComboBox();
 		cbSta_Year.setModel(new DefaultComboBoxModel(year));
-		cbSta_Year.setBounds(350, 70, 100, 25);
+		cbSta_Year.setBounds(350, 100, 100, 30);
 		cbSta_Year.setSelectedItem("" + iCurentyear);
 		contentPane.add(cbSta_Year);
 	
@@ -232,20 +234,20 @@ public class Statistics extends JFrame {
 		contentPane.add(btnYears);
 
 		JLabel lblStatistics = new JLabel("STATISTICS");
-		lblStatistics.setForeground(new Color(60, 179, 113));
+		lblStatistics.setForeground(new Color(0, 204, 255));
 		lblStatistics.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStatistics.setFont(new Font("Corbel", Font.BOLD, 25));
-		lblStatistics.setBounds(250, 11, 130, 30);
+		lblStatistics.setFont(new Font("Roboto", Font.BOLD, 26));
+		lblStatistics.setBounds(250, 11, 145, 30);
 		contentPane.add(lblStatistics);
 
 		// WEEK
 		cbWeek = new JComboBox();
 		cbWeek.setName("");
-		cbWeek.setBounds(60, 108, 220, 25);
+		cbWeek.setBounds(60, 135, 220, 30);
 		contentPane.add(cbWeek);
 		cbYear = new JComboBox();
 		cbYear.setModel(new DefaultComboBoxModel(year));
-		cbYear.setBounds(60, 70, 100, 25);
+		cbYear.setBounds(60, 100, 100, 30);
 		cbYear.setSelectedItem("" + iCurentyear);
 		contentPane.add(cbYear);
 		FillComboboxWeek();
@@ -268,13 +270,13 @@ public class Statistics extends JFrame {
 		});
 
 		JLabel lblByWeeks = new JLabel("By Weeks");
-		lblByWeeks.setFont(new Font("Corbel", Font.PLAIN, 14));
-		lblByWeeks.setBounds(60, 50, 70, 14);
+		lblByWeeks.setFont(new Font("Roboto", Font.PLAIN, 14));
+		lblByWeeks.setBounds(60, 75, 70, 15);
 		contentPane.add(lblByWeeks);
 
 		JLabel lblByYears = new JLabel("By Years");
-		lblByYears.setFont(new Font("Corbel", Font.PLAIN, 14));
-		lblByYears.setBounds(350, 50, 57, 14);
+		lblByYears.setFont(new Font("Roboto", Font.PLAIN, 14));
+		lblByYears.setBounds(350, 75, 57, 15);
 		contentPane.add(lblByYears);
 		// tag in
 		// years-----------------------------------

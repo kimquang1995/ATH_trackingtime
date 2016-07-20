@@ -59,7 +59,7 @@ public class MainFrame_Demo2 {
         f.add(tab);  
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
         f.pack();  
-        Dimension d = new Dimension(750, 650);
+        Dimension d = new Dimension(770, 650);
         f.setSize(d);
 
         f.setResizable(false);
