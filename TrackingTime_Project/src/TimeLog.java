@@ -7,7 +7,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +72,7 @@ public class TimeLog extends JFrame {
 		}
 		setTitle("Time Log");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 562, 540);
+		setBounds(100, 100, 650, 650);
 		contentPane1 = new JPanel();
 		contentPane1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane1);
@@ -77,36 +80,40 @@ public class TimeLog extends JFrame {
 
 		JLabel lblTitle = new JLabel("Time Log");
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
-		lblTitle.setBounds(213, 13, 123, 29);
+		lblTitle.setBounds(240, 13, 123, 30);
 		contentPane1.add(lblTitle);
 
 		JLabel lblDay = new JLabel("Day :");
 		lblDay.setFont(new Font("Arial", Font.BOLD, 22));
-		lblDay.setBounds(167, 55, 56, 29);
+		lblDay.setBounds(204, 55, 56, 30);
 		contentPane1.add(lblDay);
 
-		JLabel lblChoseDay = new JLabel("New label");
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String strDate =sdf.format(date);
+		JLabel lblChoseDay = new JLabel();
+		lblChoseDay.setText(strDate);
 		lblChoseDay.setFont(new Font("Arial", Font.BOLD, 22));
-		lblChoseDay.setBounds(233, 55, 200, 29);
+		lblChoseDay.setBounds(270, 55, 200, 30);
 		contentPane1.add(lblChoseDay);
 
 		JLabel lblTag = new JLabel("Tag");
 		lblTag.setFont(new Font("Arial", Font.BOLD, 20));
-		lblTag.setBounds(37, 123, 45, 29);
+		lblTag.setBounds(57, 125, 45, 30);
 		contentPane1.add(lblTag);
 
 		JLabel lblName = new JLabel("Task Name");
 		lblName.setFont(new Font("Arial", Font.BOLD, 20));
-		lblName.setBounds(37, 165, 111, 29);
+		lblName.setBounds(57, 167, 111, 30);
 		contentPane1.add(lblName);
 
 		JLabel lblHours = new JLabel("Hours");
 		lblHours.setFont(new Font("Arial", Font.BOLD, 20));
-		lblHours.setBounds(37, 207, 65, 29);
+		lblHours.setBounds(57, 209, 65, 30);
 		contentPane1.add(lblHours);
 
 		JComboBox cmb = new JComboBox();
-		cmb.setBounds(167, 128, 223, 22);
+		cmb.setBounds(187, 128, 223, 25);
 		cmb.addItem("All");
 		contentPane1.add(cmb);
 		try {			
@@ -150,12 +157,12 @@ public class TimeLog extends JFrame {
 		});
 
 		txtName = new JTextField();
-		txtName.setBounds(167, 170, 223, 22);
+		txtName.setBounds(187, 170, 223, 25);
 		contentPane1.add(txtName);
 		txtName.setColumns(10);
 
 		txtHours = new JTextField();
-		txtHours.setBounds(167, 212, 223, 22);
+		txtHours.setBounds(187, 212, 223, 25);
 		contentPane1.add(txtHours);
 		txtHours.setColumns(10);
 		// Add Button
@@ -212,7 +219,7 @@ public class TimeLog extends JFrame {
 				}
 			}
 		});
-		btnAdd.setBounds(422, 127, 97, 25);
+		btnAdd.setBounds(442, 127, 100, 25);
 		contentPane1.add(btnAdd);
 		// Edit Button
 		JButton btnEdit = new JButton("Edit");
@@ -256,7 +263,7 @@ public class TimeLog extends JFrame {
 				}
 			}
 		});
-		btnEdit.setBounds(422, 169, 97, 25);
+		btnEdit.setBounds(442, 169, 100, 25);
 		contentPane1.add(btnEdit);
 
 		// Delete Button
@@ -294,11 +301,11 @@ public class TimeLog extends JFrame {
 				btnDelete.setEnabled(false);
 			}}
 		});
-		btnDelete.setBounds(422, 211, 97, 25);
+		btnDelete.setBounds(442, 211, 100, 25);
 		contentPane1.add(btnDelete);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(37, 261, 482, 194);
+		scrollPane.setBounds(57, 261, 482, 300);
 		contentPane1.add(scrollPane);
 
 		table = new JTable();
