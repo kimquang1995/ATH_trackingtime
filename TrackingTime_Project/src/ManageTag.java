@@ -2,6 +2,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +13,6 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,11 +21,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ManageTag extends JFrame implements ActionListener {
 	private JPanel contentPane;
@@ -47,7 +46,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			boolean reslt = false;
 			String name = txt_tag_name.getText();
 			row = table.getSelectedRow();
-			SelectedId = (model.getValueAt(row, 2)).toString();
+			
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
 			Pattern patternname = Pattern.compile(".*\\D.*");
 			Matcher matchername = patternname.matcher(name);
@@ -56,14 +55,14 @@ public class ManageTag extends JFrame implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(null, "Vui Lòng nhập lại!",
 						"Lỗi", JOptionPane.ERROR_MESSAGE);
-				
+
 			}
 			if (reslt == true) {
 
 				try {
 
-					String sql = "Insert into Tag" + "(Name,Status)" + "values"
-							+ "('" + name + "','" + SelectedId + "')";
+					String sql = "Insert into Tag" + "(Name)" + "values" + "('"
+							+ name + "')";
 					PreparedStatement query = db.getConnection()
 							.prepareStatement(sql);
 					query.executeUpdate();
@@ -105,11 +104,10 @@ public class ManageTag extends JFrame implements ActionListener {
 			if (reslt == true) {
 
 				try {
-					PreparedStatement query = db.getConnection()
+					PreparedStatement query = db
+							.getConnection()
 							.prepareStatement(
-									"Update Tag set Name='" + name
-											+ "',Status='" + 0 + "' where Id='"
-											+ SelectedId + "'");
+									"Update Tag set Name='" +name+ "' where Id='" +SelectedId +"'");
 					query.executeUpdate();
 					table.repaint();
 					JOptionPane.showMessageDialog(null,
@@ -168,7 +166,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManageTag frame = new ManageTag();
+					ManageTag frame = new ManageTag("username");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -180,7 +178,9 @@ public class ManageTag extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public ManageTag() {
+	public ManageTag(String username) {
+		setTitle("Manage Tag");
+		setAutoRequestFocus(false);
 
 		try {
 			db.Connect();
@@ -190,32 +190,32 @@ public class ManageTag extends JFrame implements ActionListener {
 		}
 		//
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 374, 492);
+		setBounds(100, 100, 750, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-	
+		// add label
+		JLabel lblHello = new JLabel("Hello " + username);
+		lblHello.setBounds(564, 11, 150, 50);
+		lblHello.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		contentPane.add(lblHello);
+
 		JLabel lblNewLabel = new JLabel("MANAGE TAG");
-		lblNewLabel.setBounds(82, 27, 251, 60);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblNewLabel.setBounds(300, 71, 276, 60);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 40));
 		contentPane.add(lblNewLabel);
 
 		JLabel lblName = new JLabel("NAME");
-		lblName.setBounds(10, 92, 53, 31);
+		lblName.setVerticalAlignment(SwingConstants.TOP);
+		lblName.setBounds(119, 0, 0, 571);
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblName);
 
-		JLabel lblStatus = new JLabel("STATUS");
-		lblStatus.setBounds(10, 144, 66, 14);
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		JLabel lblStatus = new JLabel("NAME :");
+		lblStatus.setBounds(308, 159, 89, 50);
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		contentPane.add(lblStatus);
-		// add combobox
-		JComboBox cbb_tag_status = new JComboBox();
-		cbb_tag_status.setBounds(82, 140, 94, 25);
-		contentPane.add(cbb_tag_status);
-		cbb_tag_status.addItem("True");
-		cbb_tag_status.addItem("False");
 		/*
 		 * if(cbb_tag_status.getSelectedItem().equals("True")){ status=1; }else{
 		 * status=0; }
@@ -225,34 +225,35 @@ public class ManageTag extends JFrame implements ActionListener {
 		ImageIcon idelete = new ImageIcon("Images/Managetag_Delete.png");
 
 		txt_tag_name = new JTextField();
-
-		txt_tag_name.setBounds(82, 96, 137, 25);
+		txt_tag_name.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txt_tag_name.setBounds(407, 163, 221, 36);
 		contentPane.add(txt_tag_name);
 		txt_tag_name.setColumns(10);
 		// add buton
 		JButton btn_tag_add = new JButton("ADD", iadd);
-		btn_tag_add.setBounds(20, 176, 79, 71);
+		btn_tag_add.setBounds(256, 231, 79, 71);
 		contentPane.add(btn_tag_add);
 		// add action for btn add
 		btn_tag_add.addActionListener(this);
 
 		JButton btn_tag_update = new JButton("UPDATE", iaupdate);
-		btn_tag_update.setBounds(109, 176, 89, 71);
+		btn_tag_update.setBounds(385, 231, 89, 71);
 		contentPane.add(btn_tag_update);
 		// /add action for btn update
 		btn_tag_update.addActionListener(this);
 
 		JButton btn_tag_delete = new JButton("DELETE", idelete);
-		btn_tag_delete.setBounds(208, 176, 89, 71);
+		btn_tag_delete.setBounds(539, 231, 89, 71);
 		contentPane.add(btn_tag_delete);
 		// add action for btn delete
 		btn_tag_delete.addActionListener(this);
 		// addscrollpane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 258, 287, 179);
+		scrollPane.setBounds(153, 326, 561, 224);
 		contentPane.add(scrollPane);
 
 		table = new JTable();
+		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -296,15 +297,15 @@ public class ManageTag extends JFrame implements ActionListener {
 	public void Load(String queryExe) {
 		try {
 			DefaultTableModel model = new DefaultTableModel(new String[] {
-					"Id", "Name", "Status" }, 0);
+					"Id", "Name" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
-			Object[] row = new Object[3];
+			Object[] row = new Object[2];
 			while (rs.next()) {
 				row[0] = rs.getString("Id");
 				row[1] = rs.getString("Name");
-				row[2] = rs.getString("Status");
+				;
 
 				model.addRow(row);
 			}
