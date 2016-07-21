@@ -30,10 +30,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Plan_GUI extends JFrame {
 
 	private JPanel contentPane;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -67,7 +70,7 @@ public class Plan_GUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		//create hours picker*********************************************************************************************************
-		Calendar calendar = Calendar.getInstance();
+	/*	Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 24); // 24 == 12 PM == 00:00:00
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -84,7 +87,7 @@ public class Plan_GUI extends JFrame {
         formatter.setOverwriteMode(true);
 
         spinner.setEditor(editor);
-		spinner.setBounds(275, 150, 100, 30);
+		spinner.setBounds(275, 150, 100, 30); */
 		JLabel lblPlan = new JLabel("PLAN");
 		lblPlan.setForeground(new Color(0, 204, 255));
 		lblPlan.setFont(new Font("Roboto", Font.BOLD, 26));
@@ -95,7 +98,7 @@ public class Plan_GUI extends JFrame {
 		
 		
 		contentPane.add(lblPlan);
-		contentPane.add(spinner);
+	//	contentPane.add(spinner);
 		
 		
 		JComboBox comboBox = new JComboBox();
@@ -165,5 +168,29 @@ public class Plan_GUI extends JFrame {
 		JButton btnNewButton_2 = new JButton("UPDATE");
 		btnNewButton_2.setBounds(445, 210, 100, 30);
 		contentPane.add(btnNewButton_2);
+		
+		textField = new JTextField();
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				 char c = e.getKeyChar();
+		           if ((!Character.isDigit(c) ||
+		              (c == KeyEvent.VK_BACK_SPACE) ||
+		              (c == KeyEvent.VK_DELETE))) {
+		                e.consume();
+		              }
+			}
+		});
+		
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(275, 150, 100, 30);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblHours = new JLabel("Hours");
+		lblHours.setFont(new Font("Roboto", Font.PLAIN, 17));
+		lblHours.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHours.setBounds(219, 150, 50, 30);
+		contentPane.add(lblHours);
 	}
 }
