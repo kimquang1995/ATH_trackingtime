@@ -171,6 +171,7 @@ public class Login_Interface extends JFrame {
 		});
 		cbSavePass = new Checkbox("Remember Password");
 		cbSavePass.setBounds(99,150,226,20);
+		cbSavePass.setState(true);
 		contentPane.add(cbSavePass);
 		
 		btnLogin.setBounds(99, 170, 227, 50);

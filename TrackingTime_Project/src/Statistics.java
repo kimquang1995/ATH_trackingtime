@@ -85,10 +85,6 @@ public class Statistics extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				int year = Integer
-						.parseInt(cbYear.getSelectedItem().toString());
-				int week = cbWeek.getSelectedIndex() + 1;
-
 				try {
 					DefaultPieDataset dataset1 = new DefaultPieDataset();
 					String sQuery = "Select * from Plans where Year=" + year
@@ -155,8 +151,6 @@ public class Statistics extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				try {
 					DefaultPieDataset dataset2 = new DefaultPieDataset();
-					int year = Integer.parseInt(cbSta_Year.getSelectedItem()
-							.toString());
 					String Squery = "Select * from Tag";
 					PreparedStatement query = db.getConnection()
 							.prepareStatement(Squery);
@@ -241,7 +235,7 @@ public class Statistics extends JFrame {
 		lblStatistics.setFont(new Font("Roboto", Font.BOLD, 26));
 		lblStatistics.setBounds(250, 11, 145, 30);
 		contentPane.add(lblStatistics);
-		FillComboboxWeek();
+		//FillComboboxWeek();
 
 		JLabel lblByWeeks = new JLabel("From");
 		lblByWeeks.setFont(new Font("Roboto", Font.PLAIN, 14));
@@ -312,7 +306,7 @@ public class Statistics extends JFrame {
 		return newday;
 	}
 
-	private void FillComboboxWeek() {
+	/*private void FillComboboxWeek() {
 		String iWeek1 = "";
 		for (int i = 0; i < 52; i++) {
 			if (i == 0) {
@@ -325,5 +319,5 @@ public class Statistics extends JFrame {
 				iWeek1 = Add_LasttWeek(iWeek1);
 			}
 		}
-	}
+	}*/
 }

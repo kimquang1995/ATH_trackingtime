@@ -63,7 +63,7 @@ public class TimeLog extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TimeLog() {
+	public TimeLog(String selectDate) {
 		try {
 			db.Connect();
 
@@ -89,7 +89,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(lblDay);
 
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat(selectDate);
 		String strDate =sdf.format(date);
 		JLabel lblChoseDay = new JLabel();
 		lblChoseDay.setText(strDate);

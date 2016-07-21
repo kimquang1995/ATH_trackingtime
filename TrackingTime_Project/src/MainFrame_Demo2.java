@@ -30,7 +30,7 @@ public class MainFrame_Demo2 {
     JTabbedPane tab = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.WRAP_TAB_LAYOUT); 
     Statistics stat = new Statistics();
     ManageTag Addtag = new ManageTag();
-    TimeLog Timelog  = new TimeLog();
+    TimeLog Timelog  = new TimeLog("");
     public void init()  
     {          
     	 Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
