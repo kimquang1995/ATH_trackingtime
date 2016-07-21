@@ -29,6 +29,16 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.omg.CORBA.PUBLIC_MEMBER;
+import com.toedter.calendar.JDayChooser;
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.components.JSpinField;
+import com.toedter.calendar.JYearChooser;
+import javax.swing.border.MatteBorder;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.awt.Dimension;
 
 public class Statistics extends JFrame {
 
@@ -36,9 +46,6 @@ public class Statistics extends JFrame {
 	private String[] year = new String[100];
 	private String[] week = new String[52];
 	DatabaseConnection db = new DatabaseConnection();
-	private JComboBox cbWeek;
-	private JComboBox cbYear;
-	private JComboBox cbSta_Year;
 	int iCurentyear = Calendar.getInstance().get(Calendar.YEAR);
 	int iCurentDate = Calendar.getInstance().get(Calendar.DATE);
 
@@ -72,7 +79,7 @@ public class Statistics extends JFrame {
 
 		JButton btnWeeks = new JButton("Show");
 		btnWeeks.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnWeeks.setBounds(180, 100, 100, 30);
+		btnWeeks.setBounds(119, 150, 100, 30);
 
 		btnWeeks.addMouseListener(new MouseAdapter() {
 			@Override
@@ -138,7 +145,7 @@ public class Statistics extends JFrame {
 
 		JButton btnYears = new JButton("Show");
 		btnYears.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnYears.setBounds(470, 100, 100, 30);
+		btnYears.setBounds(410, 150, 100, 30);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -224,11 +231,6 @@ public class Statistics extends JFrame {
 				year[i] = "" + (startYear + i);
 
 		}
-		cbSta_Year = new JComboBox();
-		cbSta_Year.setModel(new DefaultComboBoxModel(year));
-		cbSta_Year.setBounds(350, 100, 100, 30);
-		cbSta_Year.setSelectedItem("" + iCurentyear);
-		contentPane.add(cbSta_Year);
 	
 
 		contentPane.add(btnYears);
@@ -239,47 +241,39 @@ public class Statistics extends JFrame {
 		lblStatistics.setFont(new Font("Roboto", Font.BOLD, 26));
 		lblStatistics.setBounds(250, 11, 145, 30);
 		contentPane.add(lblStatistics);
-
-
-
-		// WEEK
-		cbWeek = new JComboBox();
-		cbWeek.setName("");
-		cbWeek.setBounds(60, 135, 220, 30);
-		contentPane.add(cbWeek);
-		cbYear = new JComboBox();
-		cbYear.setModel(new DefaultComboBoxModel(year));
-		cbYear.setBounds(60, 100, 100, 30);
-		cbYear.setSelectedItem("" + iCurentyear);
-		contentPane.add(cbYear);
 		FillComboboxWeek();
-		cbWeek.setModel(new DefaultComboBoxModel(week));
-		cbYear.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					FillComboboxWeek();
-
-					cbWeek.setModel(new DefaultComboBoxModel(week));
-
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-
-				}
-			}
-		});
-
-		JLabel lblByWeeks = new JLabel("By Weeks");
+		JLabel lblByWeeks = new JLabel("From");
 		lblByWeeks.setFont(new Font("Roboto", Font.PLAIN, 14));
-		lblByWeeks.setBounds(60, 75, 70, 15);
+		lblByWeeks.setBounds(10, 107, 40, 15);
 		contentPane.add(lblByWeeks);
-
-		JLabel lblByYears = new JLabel("By Years");
-		lblByYears.setFont(new Font("Roboto", Font.PLAIN, 14));
-		lblByYears.setBounds(350, 75, 57, 15);
-		contentPane.add(lblByYears);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(60, 90, 100, 40);
+		contentPane.add(dateChooser);
+		
+		
+		
+		JYearChooser yearChooser = new JYearChooser();
+		yearChooser.getSpinner().setMinimumSize(new Dimension(50, 30));
+		yearChooser.getSpinner().setPreferredSize(new Dimension(50, 30));
+		yearChooser.setHorizontalAlignment(0);
+		yearChooser.setStartYear(2010);
+		yearChooser.setFont(new Font("Roboto", Font.PLAIN, 18));
+		yearChooser.setBorder(new MatteBorder(1, 2, 2, 1, (Color) Color.LIGHT_GRAY));
+		yearChooser.setBounds(400, 90, 100, 40);
+		contentPane.add(yearChooser);
+		yearChooser.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{yearChooser.getSpinner()}));
+		
+		JLabel lblTo = new JLabel("To");
+		lblTo.setBounds(170, 108, 46, 14);
+		contentPane.add(lblTo);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(191, 90, 100, 40);
+		contentPane.add(dateChooser_1);
+		
+		
 		// tag in
 		// years-----------------------------------
 
@@ -320,8 +314,6 @@ public class Statistics extends JFrame {
 
 	private void FillComboboxWeek() {
 		String iWeek1 = "";
-		int iYearSelected = Integer.parseInt(cbYear.getSelectedItem()
-				.toString());
 		for (int i = 0; i < 52; i++) {
 			if (i == 0) {
 				iWeek1 = Add_FirstWeek(iYearSelected);

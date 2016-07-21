@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="LIB/servlet.jar"/>
 	<classpathentry kind="lib" path="LIB/smtp.jar"/>
 	<classpathentry kind="lib" path="LIB/swtgraphics2d.jar"/>
+	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

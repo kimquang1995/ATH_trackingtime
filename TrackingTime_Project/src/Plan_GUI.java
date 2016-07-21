@@ -98,44 +98,12 @@ public class Plan_GUI extends JFrame {
 		
 		
 		contentPane.add(lblPlan);
-	//	contentPane.add(spinner);
 		
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setFont(new Font("Roboto", Font.PLAIN, 12));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"2016", "2017", "2018"}));
-		comboBox.setBounds(105, 90, 100, 30);
-		contentPane.add(comboBox);
-		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setFont(new Font("Roboto", Font.PLAIN, 12));
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
-		comboBox_1.setBounds(275, 90, 100, 30);
-		contentPane.add(comboBox_1);
-		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setFont(new Font("Roboto", Font.PLAIN, 12));
-		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4"}));
-		comboBox_2.setBounds(445, 90, 100, 30);
-		contentPane.add(comboBox_2);
-		
-		JLabel lblYear = new JLabel("Year");
+		JLabel lblYear = new JLabel("Start Day");
 		lblYear.setFont(new Font("Roboto", Font.PLAIN, 17));
 		lblYear.setHorizontalAlignment(SwingConstants.CENTER);
-		lblYear.setBounds(50, 90, 50, 30);
+		lblYear.setBounds(23, 92, 71, 30);
 		contentPane.add(lblYear);
-		
-		JLabel lblMonth = new JLabel("Month");
-		lblMonth.setFont(new Font("Roboto", Font.PLAIN, 16));
-		lblMonth.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMonth.setBounds(215, 90, 50, 30);
-		contentPane.add(lblMonth);
-		
-		JLabel lblWeek = new JLabel("Week");
-		lblWeek.setFont(new Font("Roboto", Font.PLAIN, 17));
-		lblWeek.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWeek.setBounds(385, 90, 50, 30);
-		contentPane.add(lblWeek);
 		
 		JButton btnCreatePlan = new JButton("Create Plan");
 		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
