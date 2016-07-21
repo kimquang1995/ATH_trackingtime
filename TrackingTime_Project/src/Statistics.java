@@ -77,9 +77,9 @@ public class Statistics extends JFrame {
 		// weeks
 		// -*--------------------------------------------
 
-		JButton btnWeeks = new JButton("Show");
+		JButton btnWeeks = new JButton("Show by Duration");
 		btnWeeks.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnWeeks.setBounds(119, 150, 100, 30);
+		btnWeeks.setBounds(90, 150, 150, 30);
 
 		btnWeeks.addMouseListener(new MouseAdapter() {
 			@Override
@@ -139,9 +139,9 @@ public class Statistics extends JFrame {
 		contentPane.add(btnWeeks);
 		// years-------------------------------------------------
 
-		JButton btnYears = new JButton("Show");
+		JButton btnYears = new JButton("Show by Year");
 		btnYears.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnYears.setBounds(410, 150, 100, 30);
+		btnYears.setBounds(400, 150, 150, 30);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -235,15 +235,11 @@ public class Statistics extends JFrame {
 		lblStatistics.setFont(new Font("Roboto", Font.BOLD, 26));
 		lblStatistics.setBounds(250, 11, 145, 30);
 		contentPane.add(lblStatistics);
-		//FillComboboxWeek();
-
-		JLabel lblByWeeks = new JLabel("From");
-		lblByWeeks.setFont(new Font("Roboto", Font.PLAIN, 14));
-		lblByWeeks.setBounds(10, 107, 40, 15);
-		contentPane.add(lblByWeeks);
 		
 		JDateChooser dateChooser_Start = new JDateChooser();
-		dateChooser_Start.setBounds(60, 90, 100, 30);
+		dateChooser_Start.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
+		dateChooser_Start.setFont(new Font("Roboto", Font.PLAIN, 12));
+		dateChooser_Start.setBounds(40, 90, 100, 30);
 		try {
 			dateChooser_Start.setDate(dateFormat.parse(SubTrac_7day(dateFormat.format(Calendar.getInstance().getTime()))));
 		} catch (ParseException e1) {
@@ -260,17 +256,21 @@ public class Statistics extends JFrame {
 		yearChooser.getSpinner().setPreferredSize(new Dimension(50, 30));
 		yearChooser.setHorizontalAlignment(0);
 		yearChooser.setStartYear(2010);
-		yearChooser.setFont(new Font("Roboto", Font.PLAIN, 18));
-		yearChooser.setBorder(new MatteBorder(1, 2, 2, 1, (Color) Color.LIGHT_GRAY));
-		yearChooser.setBounds(400, 90, 100, 30);
+		yearChooser.setFont(new Font("Roboto", Font.PLAIN, 15));
+		yearChooser.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
+		yearChooser.setBounds(400, 90, 150, 30);
 		contentPane.add(yearChooser);
 		yearChooser.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{yearChooser.getSpinner()}));
 		
-		JLabel lblTo = new JLabel("To");
-		lblTo.setBounds(170, 108, 46, 14);
+		JLabel lblTo = new JLabel("----");
+		lblTo.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTo.setBounds(140, 90, 50, 30);
 		contentPane.add(lblTo);
 		
 		JDateChooser dateChooser_To = new JDateChooser();
+		dateChooser_To.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
+		dateChooser_To.setFont(new Font("Roboto", Font.PLAIN, 12));
 		dateChooser_To.setBounds(191, 90, 100, 30);
 		dateChooser_To.setDate(Calendar.getInstance().getTime());
 		contentPane.add(dateChooser_To);
