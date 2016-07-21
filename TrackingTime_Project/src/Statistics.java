@@ -249,7 +249,7 @@ public class Statistics extends JFrame {
 		contentPane.add(lblByWeeks);
 		
 		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(60, 90, 100, 40);
+		dateChooser.setBounds(60, 90, 100, 30);
 		contentPane.add(dateChooser);
 		
 		
@@ -261,7 +261,7 @@ public class Statistics extends JFrame {
 		yearChooser.setStartYear(2010);
 		yearChooser.setFont(new Font("Roboto", Font.PLAIN, 18));
 		yearChooser.setBorder(new MatteBorder(1, 2, 2, 1, (Color) Color.LIGHT_GRAY));
-		yearChooser.setBounds(400, 90, 100, 40);
+		yearChooser.setBounds(400, 90, 100, 30);
 		contentPane.add(yearChooser);
 		yearChooser.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{yearChooser.getSpinner()}));
 		
@@ -270,7 +270,7 @@ public class Statistics extends JFrame {
 		contentPane.add(lblTo);
 		
 		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(191, 90, 100, 40);
+		dateChooser_1.setBounds(191, 90, 100, 30);
 		contentPane.add(dateChooser_1);
 		
 		

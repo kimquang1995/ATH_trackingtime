@@ -32,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class Plan_GUI extends JFrame {
 
@@ -160,5 +161,9 @@ public class Plan_GUI extends JFrame {
 		lblHours.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHours.setBounds(219, 150, 50, 30);
 		contentPane.add(lblHours);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(114, 92, 100, 30);
+		contentPane.add(dateChooser);
 	}
 }
