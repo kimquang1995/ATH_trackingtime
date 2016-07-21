@@ -3,6 +3,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.toedter.calendar.JDateChooser;
 
 public class Main_GUI extends JFrame {
 
@@ -27,12 +31,14 @@ public class Main_GUI extends JFrame {
 			.getInstance().getTime());
 	JButton btnDate = new JButton(currentDate);
 	JLabel lbldate = new JLabel(currentDate);
-
+	JDateChooser dateChooser = new JDateChooser();
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	public Main_GUI(String userName) throws ParseException {
 		setTitle("Tracking Time");
 		setSize(750, 650);
 		setLayout(null);
 		// Panel Date
+		dateChooser.setDate(dateFormat.parse(currentDate));
 		JPanel panelDate = new JPanel(new GridLayout(1, 7, 5, 0));
 		
 		JButton btnBack = new JButton("<");
@@ -42,7 +48,12 @@ public class Main_GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				currentDate = Subtract_OneDate(currentDate);
-				btnDate.setText(currentDate);
+				try {
+					dateChooser.setDate(dateFormat.parse(currentDate));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				lbldate.setText(currentDate);
 			}
 		});
@@ -52,14 +63,20 @@ public class Main_GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				currentDate = Add_OneDate(currentDate);
-				btnDate.setText(currentDate);
+			
+				currentDate = Add_OneDate(currentDate);				
+					try {
+						dateChooser.setDate(dateFormat.parse(currentDate));
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				lbldate.setText(currentDate);
 			}
 		});
 		panelDate.add(btnBack);
 		
-		panelDate.add(btnDate);
+		panelDate.add(dateChooser);
 		panelDate.add(btnNext);
 		panelDate.setBounds(150, 100, 450, 50);
 		this.add(panelDate);
@@ -82,7 +99,7 @@ public class Main_GUI extends JFrame {
 		// Lable Time
 		lbldate.setBounds(300, 150, 200, 50);
 		lbldate.setFont(new Font("Arial", Font.BOLD, 28));
-		this.add(lbldate);
+		//this.add(lbldate);
 		// Panel Tag
 		JPanel panelTag = new JPanel(new GridLayout(3, 1, 0, 5));
 		panelTag.add(new JButton("Relax 5/10"));
@@ -191,7 +208,15 @@ public class Main_GUI extends JFrame {
 		panelHours.add(new JLabel("3"));
 		panelHours.setBounds(400, 270, 100, 300);
 		this.add(panelHours);
-
+		dateChooser.setFont(new Font("Arial", Font.BOLD, 20));
+		dateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+		    @Override
+		    public void propertyChange(PropertyChangeEvent evt) {
+		        Date date = (Date)evt.getNewValue();
+		        currentDate = dateFormat.format(date).toString();
+		        lbldate.setText(currentDate);
+		    }
+		});
 	}
 
 	public String Add_OneDate(String currentday) {

@@ -48,7 +48,7 @@ public class Statistics extends JFrame {
 	DatabaseConnection db = new DatabaseConnection();
 	int iCurentyear = Calendar.getInstance().get(Calendar.YEAR);
 	int iCurentDate = Calendar.getInstance().get(Calendar.DATE);
-
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	/**
 	 * Launch the application.
 	 */
@@ -242,9 +242,16 @@ public class Statistics extends JFrame {
 		lblByWeeks.setBounds(10, 107, 40, 15);
 		contentPane.add(lblByWeeks);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(60, 90, 100, 30);
-		contentPane.add(dateChooser);
+		JDateChooser dateChooser_Start = new JDateChooser();
+		dateChooser_Start.setBounds(60, 90, 100, 30);
+		try {
+			dateChooser_Start.setDate(dateFormat.parse(SubTrac_7day(dateFormat.format(Calendar.getInstance().getTime()))));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		contentPane.add(dateChooser_Start);
+		
 		
 		
 		
@@ -263,9 +270,10 @@ public class Statistics extends JFrame {
 		lblTo.setBounds(170, 108, 46, 14);
 		contentPane.add(lblTo);
 		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(191, 90, 100, 30);
-		contentPane.add(dateChooser_1);
+		JDateChooser dateChooser_To = new JDateChooser();
+		dateChooser_To.setBounds(191, 90, 100, 30);
+		dateChooser_To.setDate(Calendar.getInstance().getTime());
+		contentPane.add(dateChooser_To);
 		
 		
 		// tag in
@@ -273,7 +281,7 @@ public class Statistics extends JFrame {
 
 	}
 
-	public static String Add_FirstWeek(int year) {
+	/*public static String Add_FirstWeek(int year) {
 		String untildate = "1-1-" + year;
 		String newday = "";
 		// current format
@@ -288,16 +296,16 @@ public class Statistics extends JFrame {
 			e.printStackTrace();
 		}
 		return newday;
-	}
+	}*/
 
-	public static String Add_LasttWeek(String untildate) {
+	public static String SubTrac_7day(String untildate) {
 		String newday = "";
 		// current format
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateFormat.parse(untildate));
-			cal.add(Calendar.DATE, 7);
+			cal.add(Calendar.DATE, -7);
 			newday = dateFormat.format(cal.getTime());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
