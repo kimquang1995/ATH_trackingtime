@@ -12,10 +12,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import java.awt.Font;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Calendar;
 import java.awt.Color;
+
 import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JComboBox;
@@ -30,15 +34,17 @@ import javax.swing.border.TitledBorder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import com.toedter.calendar.JDateChooser;
 
 public class Plan_GUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -63,6 +69,13 @@ public class Plan_GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public Plan_GUI() {
+		DatabaseConnection db = new DatabaseConnection();
+		try {
+			db.Connect();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 650, 650);
 		contentPane = new JPanel();
@@ -111,11 +124,21 @@ public class Plan_GUI extends JFrame {
 		btnCreatePlan.setBounds(250, 472, 150, 30);
 		contentPane.add(btnCreatePlan);
 		
-		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setFont(new Font("Roboto", Font.PLAIN, 15));
-		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"Study", "Work ", "Relax"}));
-		comboBox_3.setBounds(105, 150, 100, 30);
-		contentPane.add(comboBox_3);
+		JComboBox cbTag = new JComboBox();
+		cbTag.setFont(new Font("Roboto", Font.PLAIN, 15));
+		cbTag.setBounds(105, 150, 100, 30);
+		contentPane.add(cbTag);
+		try {			
+			PreparedStatement query = db.getConnection().prepareStatement(
+					"Select * from Tag");
+			ResultSet rs = query.executeQuery();
+			while (rs.next()) {
+				cbTag.addItem(rs.getString("Name"));
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "No connection to server");
+		}
 		
 		JLabel lblTags = new JLabel("Tags");
 		lblTags.setFont(new Font("Roboto", Font.PLAIN, 17));
