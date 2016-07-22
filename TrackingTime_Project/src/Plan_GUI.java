@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DateFormatter;
@@ -39,6 +40,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Plan_GUI extends JFrame {
 
@@ -113,10 +116,15 @@ public class Plan_GUI extends JFrame {
 		
 		contentPane.add(lblPlan);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
+		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
+		scrollPane.setBounds(60, 230, 510, 330);
+		contentPane.add(scrollPane);
+		
 		JLabel lblYear = new JLabel("Start Day");
-		lblYear.setFont(new Font("Roboto", Font.PLAIN, 17));
-		lblYear.setHorizontalAlignment(SwingConstants.CENTER);
-		lblYear.setBounds(23, 92, 71, 30);
+		lblYear.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblYear.setBounds(60, 70, 70, 30);
 		contentPane.add(lblYear);
 		
 		JButton btnCreatePlan = new JButton("Create Plan");
@@ -126,7 +134,7 @@ public class Plan_GUI extends JFrame {
 		
 		JComboBox cbTag = new JComboBox();
 		cbTag.setFont(new Font("Roboto", Font.PLAIN, 15));
-		cbTag.setBounds(105, 150, 100, 30);
+		cbTag.setBounds(150, 120, 100, 30);
 		contentPane.add(cbTag);
 		try {			
 			PreparedStatement query = db.getConnection().prepareStatement(
@@ -141,24 +149,28 @@ public class Plan_GUI extends JFrame {
 		}
 		
 		JLabel lblTags = new JLabel("Tags");
-		lblTags.setFont(new Font("Roboto", Font.PLAIN, 17));
-		lblTags.setBounds(55, 150, 50, 30);
+		lblTags.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblTags.setBounds(60, 120, 50, 30);
 		contentPane.add(lblTags);
 		
 		JLabel lblODayLa = new JLabel("o day la table voi 2 cot \"Tag\" va \"Total hours\"");
 		lblODayLa.setBounds(231, 334, 218, 58);
 		contentPane.add(lblODayLa);
 		
-		JButton btnNewButton = new JButton("ADD");
-		btnNewButton.setBounds(105, 210, 100, 30);
+		JButton btnNewButton = new JButton("Add");
+		btnNewButton.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton.setBounds(470, 70, 100, 30);
 		contentPane.add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("DELETE");
-		btnNewButton_1.setBounds(275, 210, 100, 30);
+		JButton btnNewButton_1 = new JButton("Delete");
+		
+		btnNewButton_1.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton_1.setBounds(470, 170, 100, 30);
 		contentPane.add(btnNewButton_1);
 		
-		JButton btnNewButton_2 = new JButton("UPDATE");
-		btnNewButton_2.setBounds(445, 210, 100, 30);
+		JButton btnNewButton_2 = new JButton("Update");
+		btnNewButton_2.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton_2.setBounds(470, 120, 100, 30);
 		contentPane.add(btnNewButton_2);
 		
 		textField = new JTextField();
@@ -175,18 +187,17 @@ public class Plan_GUI extends JFrame {
 		});
 		
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setBounds(275, 150, 100, 30);
+		textField.setBounds(350, 120, 100, 30);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JLabel lblHours = new JLabel("Hours");
-		lblHours.setFont(new Font("Roboto", Font.PLAIN, 17));
-		lblHours.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHours.setBounds(219, 150, 50, 30);
+		lblHours.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblHours.setBounds(280, 120, 50, 30);
 		contentPane.add(lblHours);
 		
 		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(114, 92, 100, 30);
+		dateChooser.setBounds(150, 70, 100, 30);
 		contentPane.add(dateChooser);
 	}
 }
