@@ -24,6 +24,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
+import javax.swing.border.MatteBorder;
 
 public class ManageTag extends JFrame implements ActionListener {
 	private JPanel contentPane;
@@ -190,7 +192,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		}
 		//
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 750, 600);
+		setBounds(100, 100, 650, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -198,8 +200,10 @@ public class ManageTag extends JFrame implements ActionListener {
 		// add label
 
 		JLabel lblNewLabel = new JLabel("MANAGE TAG");
-		lblNewLabel.setBounds(300, 71, 276, 60);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 40));
+		lblNewLabel.setForeground(new Color(0, 204, 255));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(240, 11, 165, 30);
+		lblNewLabel.setFont(new Font("Roboto", Font.BOLD, 26));
 		contentPane.add(lblNewLabel);
 
 		JLabel lblName = new JLabel("NAME");
@@ -208,9 +212,10 @@ public class ManageTag extends JFrame implements ActionListener {
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblName);
 
-		JLabel lblStatus = new JLabel("NAME :");
-		lblStatus.setBounds(308, 159, 89, 50);
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		JLabel lblStatus = new JLabel("Name:");
+		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+		lblStatus.setBounds(60, 120, 50, 30);
+		lblStatus.setFont(new Font("Roboto", Font.PLAIN, 16));
 		contentPane.add(lblStatus);
 		/*
 		 * if(cbb_tag_status.getSelectedItem().equals("True")){ status=1; }else{
@@ -221,31 +226,36 @@ public class ManageTag extends JFrame implements ActionListener {
 		ImageIcon idelete = new ImageIcon("Images/Managetag_Delete.png");
 
 		txt_tag_name = new JTextField();
-		txt_tag_name.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		txt_tag_name.setBounds(407, 163, 221, 36);
+		txt_tag_name.setFont(new Font("Roboto", Font.PLAIN, 15));
+		txt_tag_name.setBounds(150, 120, 233, 30);
 		contentPane.add(txt_tag_name);
 		txt_tag_name.setColumns(10);
 		// add buton
-		JButton btn_tag_add = new JButton("ADD", iadd);
-		btn_tag_add.setBounds(256, 231, 79, 71);
+		JButton btn_tag_add = new JButton("Add");
+		btn_tag_add.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_add.setBounds(470, 120, 100, 30);
 		contentPane.add(btn_tag_add);
 		// add action for btn add
 		btn_tag_add.addActionListener(this);
 
-		JButton btn_tag_update = new JButton("UPDATE", iaupdate);
-		btn_tag_update.setBounds(385, 231, 89, 71);
+		JButton btn_tag_update = new JButton("Edit");
+		btn_tag_update.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_update.setBounds(470, 170, 100, 30);
 		contentPane.add(btn_tag_update);
 		// /add action for btn update
 		btn_tag_update.addActionListener(this);
 
-		JButton btn_tag_delete = new JButton("DELETE", idelete);
-		btn_tag_delete.setBounds(539, 231, 89, 71);
+		JButton btn_tag_delete = new JButton("Delete");
+		btn_tag_delete.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_delete.setBounds(470, 220, 100, 30);
 		contentPane.add(btn_tag_delete);
 		// add action for btn delete
 		btn_tag_delete.addActionListener(this);
 		// addscrollpane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(153, 326, 561, 224);
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
+		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
+		scrollPane.setBounds(60, 270, 510, 300);
 		contentPane.add(scrollPane);
 
 		table = new JTable();

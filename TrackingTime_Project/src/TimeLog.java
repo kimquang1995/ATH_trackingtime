@@ -134,6 +134,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(lblEnd);
 		
 		JComboBox cmb = new JComboBox();
+		cmb.setFont(new Font("Roboto", Font.PLAIN, 15));
 		cmb.setBounds(187, 120, 223, 30);
 		cmb.addItem("All");
 		contentPane1.add(cmb);
@@ -179,6 +180,7 @@ public class TimeLog extends JFrame {
 		});
 
 		txtName = new JTextField();
+		txtName.setFont(new Font("Roboto", Font.PLAIN, 15));
 		txtName.setBounds(187, 170, 223, 30);
 		contentPane1.add(txtName);
 		txtName.setColumns(10);
@@ -199,19 +201,23 @@ public class TimeLog extends JFrame {
 		}
 		
 		JComboBox cmbSHour = new JComboBox(hour);
+		cmbSHour.setFont(new Font("Roboto", Font.PLAIN, 15));
 		cmbSHour.setBounds(187, 220, 50, 30);
 		contentPane1.add(cmbSHour);
 		
 		JComboBox cmbSMin = new JComboBox(min);
+		cmbSMin.setFont(new Font("Roboto", Font.PLAIN, 15));
 		cmbSMin.setBounds(270, 220, 50, 30);
 		contentPane1.add(cmbSMin);
 		
 		
 		JComboBox cmbEHour = new JComboBox(hour);
+		cmbEHour.setFont(new Font("Roboto", Font.PLAIN, 15));
 		cmbEHour.setBounds(187, 270, 50, 30);
 		contentPane1.add(cmbEHour);
 		
 		JComboBox cmbEMin = new JComboBox(min);
+		cmbEMin.setFont(new Font("Roboto", Font.PLAIN, 15));
 		cmbEMin.setBounds(270, 270, 50, 30);
 		contentPane1.add(cmbEMin);
 		
@@ -224,6 +230,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(lblDot2);
 		// Add Button
 		JButton btnAdd = new JButton("Add");
+		btnAdd.setFont(new Font("Roboto", Font.PLAIN, 15));
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String srHour = (cmbSHour.getSelectedItem().toString()+":"+cmbSMin.getSelectedItem().toString()+":"+"00");
@@ -297,6 +304,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(btnAdd);
 		// Edit Button
 		JButton btnEdit = new JButton("Edit");
+		btnEdit.setFont(new Font("Roboto", Font.PLAIN, 15));
 		btnEdit.setEnabled(false);
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -364,6 +372,7 @@ public class TimeLog extends JFrame {
 		// Delete Button
 
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setFont(new Font("Roboto", Font.PLAIN, 15));
 		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
