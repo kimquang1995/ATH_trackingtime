@@ -53,7 +53,7 @@ public class Main_GUI extends JFrame {
 			e2.printStackTrace();
 		}
 		setTitle("Tracking Time");
-		setSize(750, 650);
+		setSize(830, 650);
 		setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
