@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -5,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,6 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -25,57 +32,82 @@ public class Main_GUI extends JFrame {
 	 * Main_GUI frame = new Main_GUI(""); frame.setVisible(true); } catch
 	 * (Exception e) { e.printStackTrace(); } } }); }
 	 */
-	String[] week = new String[52];
+	// String[] week = new String[52];
 	int iYearSelected = Calendar.getInstance().get(Calendar.YEAR);
 	String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
 			.getInstance().getTime());
 	JButton btnDate = new JButton(currentDate);
-	JLabel lbldate = new JLabel(currentDate);
+	JLabel lbldate = new JLabel();
 	JDateChooser dateChooser = new JDateChooser();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	public Main_GUI(String userName) throws ParseException {
+	DatabaseConnection db = new DatabaseConnection();
+	JPanel panelTag;
+	int id_User = 0;
+	private JTable table;
+
+	public Main_GUI(String userName, int IdUser) throws ParseException {
+		try {
+			db.Connect();
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		setTitle("Tracking Time");
 		setSize(750, 650);
 		setLayout(null);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 12));
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) new Color(192,
+				192, 192)));
+		scrollPane.setBounds(220, 273, 510, 295);
+		this.add(scrollPane);
+		table = new JTable();
+		table.setDefaultEditor(Object.class, null);
+		scrollPane.setViewportView(table);
+		id_User = IdUser;
 		// Panel Date
 		dateChooser.setDate(dateFormat.parse(currentDate));
 		JPanel panelDate = new JPanel(new GridLayout(1, 7, 5, 0));
-		
+
 		JButton btnBack = new JButton("<");
 		btnBack.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				currentDate = Subtract_OneDate(currentDate);
 				try {
 					dateChooser.setDate(dateFormat.parse(currentDate));
+					GetTag_inPlan(currentDate);
+					LoadTable(getQueryTimeLog(currentDate));
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				lbldate.setText(currentDate);
 			}
 		});
-		JButton btnNext = new JButton(">");		
+		JButton btnNext = new JButton(">");
 		btnNext.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-			
-				currentDate = Add_OneDate(currentDate);				
-					try {
-						dateChooser.setDate(dateFormat.parse(currentDate));
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				lbldate.setText(currentDate);
+
+				currentDate = Add_OneDate(currentDate);
+				try {
+					dateChooser.setDate(dateFormat.parse(currentDate));
+					GetTag_inPlan(currentDate);
+					LoadTable(getQueryTimeLog(currentDate));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		panelDate.add(btnBack);
-		
+
 		panelDate.add(dateChooser);
 		panelDate.add(btnNext);
 		panelDate.setBounds(150, 100, 450, 50);
@@ -97,16 +129,9 @@ public class Main_GUI extends JFrame {
 		 * this.add(lblWeek);
 		 */
 		// Lable Time
-		lbldate.setBounds(300, 150, 200, 50);
-		lbldate.setFont(new Font("Arial", Font.BOLD, 28));
-		//this.add(lbldate);
-		// Panel Tag
-		JPanel panelTag = new JPanel(new GridLayout(3, 1, 0, 5));
-		panelTag.add(new JButton("Relax 5/10"));
-		panelTag.add(new JButton("Play 2/10"));
-		panelTag.add(new JButton("Study 3/10"));
-		panelTag.setBounds(70, 270, 100, 300);
-		this.add(panelTag);
+		lbldate.setBounds(200, 150, 320, 50);
+		lbldate.setFont(new Font("Arial", Font.BOLD, 18));
+		this.add(lbldate);
 		// Panel Action
 		JPanel panelAction = new JPanel(new GridLayout(1, 5, 5, 0));
 		JButton btnCreatePlan = new JButton("Creat Plan");
@@ -191,6 +216,7 @@ public class Main_GUI extends JFrame {
 				Login_Interface lg = new Login_Interface();
 				lg.setVisible(true);
 				dispose();
+				lg.flag = false;
 			}
 		});
 		panelAction.add(btnCreatePlan);
@@ -202,21 +228,34 @@ public class Main_GUI extends JFrame {
 		this.add(panelAction);
 
 		// Panel Hours
-		JPanel panelHours = new JPanel(new GridLayout(3, 1, 0, 5));
-		panelHours.add(new JLabel("5"));
-		panelHours.add(new JLabel("2"));
-		panelHours.add(new JLabel("3"));
-		panelHours.setBounds(400, 270, 100, 300);
-		this.add(panelHours);
+		/*
+		 * JPanel panelHours = new JPanel(new GridLayout(3, 1, 0, 5));
+		 * panelHours.add(new JLabel("5")); panelHours.add(new JLabel("2"));
+		 * panelHours.add(new JLabel("3")); panelHours.setBounds(400, 270, 100,
+		 * 300); add(panelHours);
+		 */
 		dateChooser.setFont(new Font("Arial", Font.BOLD, 20));
-		dateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-		    @Override
-		    public void propertyChange(PropertyChangeEvent evt) {
-		        Date date = (Date)evt.getNewValue();
-		        currentDate = dateFormat.format(date).toString();
-		        lbldate.setText(currentDate);
-		    }
-		});
+		dateChooser.addPropertyChangeListener("date",
+				new PropertyChangeListener() {
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						Date date = (Date) evt.getNewValue();
+						currentDate = dateFormat.format(date).toString();
+						try {
+							GetTag_inPlan(currentDate);
+							LoadTable(getQueryTimeLog(currentDate));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+		try {
+			GetTag_inPlan(currentDate);
+			LoadTable(getQueryTimeLog(currentDate));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	public String Add_OneDate(String currentday) {
@@ -236,6 +275,7 @@ public class Main_GUI extends JFrame {
 		}
 		return newday;
 	}
+
 	public String Subtract_OneDate(String currentday) {
 		// String untildate = "1-1-" + year;
 		String newday = "";
@@ -253,27 +293,103 @@ public class Main_GUI extends JFrame {
 		}
 		return newday;
 	}
-	/*
-	 * public static String Add_FirstWeek(int year) { String untildate = "1-1-"
-	 * + year; String newday = ""; // current format try { SimpleDateFormat
-	 * dateFormat = new SimpleDateFormat("dd-MM-yyyy"); Calendar cal =
-	 * Calendar.getInstance(); cal.setTime(dateFormat.parse(untildate));
-	 * cal.add(Calendar.DATE, 7); newday = dateFormat.format(cal.getTime()); }
-	 * catch (ParseException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } return newday; }
-	 * 
-	 * public static String Add_LasttWeek(String untildate) { String newday =
-	 * ""; // current format try { SimpleDateFormat dateFormat = new
-	 * SimpleDateFormat("dd-MM-yyyy"); Calendar cal = Calendar.getInstance();
-	 * cal.setTime(dateFormat.parse(untildate)); cal.add(Calendar.DATE, 7);
-	 * newday = dateFormat.format(cal.getTime()); } catch (ParseException e) {
-	 * // TODO Auto-generated catch block e.printStackTrace(); } return newday;
-	 * }
-	 * 
-	 * private void FillComboboxWeek() { String iWeek1 = ""; for (int i = 0; i <
-	 * 52; i++) { if (i == 0) { iWeek1 = Add_FirstWeek(iYearSelected); week[i] =
-	 * "WEEK " + (i + 1) + " : " + "1-1-" + iYearSelected + "->" + iWeek1; }
-	 * else { week[i] = "WEEK " + (i + 1) + " : " + iWeek1 + "->" +
-	 * Add_LasttWeek(iWeek1); iWeek1 = Add_LasttWeek(iWeek1); } } }
-	 */
+
+	public void GetTag_inPlan(String date) throws ParseException {
+		int rowCount = 0;
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		Date inidate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+		String dateSelect = formater.format(inidate);
+		String queryTimeLog_Day = "select * from TimeLog where convert(varchar(10),Date, 120) = '"
+				+ dateSelect + "' ";
+		String selectQuery = "SELECT t.Name, SUM(s.Hour) as Hours,s.Start_Day,s.End_date  FROM Plans s "
+				+ "INNER JOIN Tag t ON t.Id = s.Id_Tag where convert(varchar(10),s.Start_Day, 120) <= '"
+				+ dateSelect
+				+ "' "
+				+ "and  convert(varchar(10),s.End_date, 120)>= '"
+				+ dateSelect
+				+ "' and s.Id_User='"
+				+ id_User
+				+ "'"
+				+ "GROUP BY t.Name,s.Start_Day,s.End_date  "
+				+ "ORDER BY Hours ";
+		try {
+
+			PreparedStatement query = db.getConnection().prepareStatement(
+					selectQuery);
+			PreparedStatement qTimeLog_Day = db.getConnection()
+					.prepareStatement(queryTimeLog_Day);
+			ResultSet rs = query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+
+			} else {
+				while (rs.next()) {
+					rowCount++;
+				}
+			}
+			panelTag = new JPanel(new GridLayout(rowCount, 1, 0, 5));
+			// panelTag.setVisible(true);
+			panelTag.setBounds(70, 270, 150, 300);
+			panelTag.removeAll();
+			ResultSet rs1 = query.executeQuery();
+			if (!rs1.isBeforeFirst()) {
+				lbldate.setText("Not Plan for This Day");
+			} else {
+				SimpleDateFormat dt = new SimpleDateFormat(
+						"yyyy-MM-dd hh:mm:ss");
+				SimpleDateFormat dt1 = new SimpleDateFormat("dd-MM-yyyy");
+				while (rs1.next()) {
+					panelTag.add(new JButton((rs1.getString("Name") + "--- "
+							+ rs1.getString("Hours") + " Hours")));
+					String start = dt1.format(dt.parse(rs1
+							.getString("Start_Day")));
+					String end = dt1
+							.format(dt.parse(rs1.getString("End_date")));
+					lbldate.setText("Plan from " + start + " to " + end);
+				}
+			}
+			add(panelTag);
+			panelTag.revalidate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public String getQueryTimeLog(String date) throws ParseException {
+
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		Date inidate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+		String dateSelect = formater.format(inidate);
+		return "select t.Name as Tags,tl.Name,tl.Hours,tl.Start_Time,tl.End_Time from TimeLog tl"
+				+ " left join Tag t on t.Id = tl.Id_Tag "
+				+ "where convert(varchar(10),Date, 120) = '"
+				+ dateSelect 
+				+ "' " 
+				+ "order by Tags";
+	}
+
+	public void LoadTable(String queryExe) {
+		try {
+			DefaultTableModel model = new DefaultTableModel(
+					new String[] { "Tag", "Name", "Hours",
+							"Start Time", "End Time" }, 0);
+			PreparedStatement query = db.getConnection().prepareStatement(
+					queryExe);
+			ResultSet rs = query.executeQuery();
+			Object[] row = new Object[5];
+			while (rs.next()) {
+				row[0] = rs.getString("Tags");
+				row[1] = rs.getString("Name");
+				row[2] = rs.getString("Hours");
+				row[3] = rs.getString("Start_Time");
+				row[4] = rs.getString("End_Time");
+				model.addRow(row);
+			}
+			table.setModel(model);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
 }

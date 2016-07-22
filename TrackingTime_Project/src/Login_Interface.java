@@ -33,6 +33,7 @@ public class Login_Interface extends JFrame {
 	public String userName;
 	private String pathSave = "./userInfor.txt";
 	private Checkbox cbSavePass;
+	public boolean flag = true;
 	/**
 	 * Launch the application.
 	 */
@@ -89,64 +90,18 @@ public class Login_Interface extends JFrame {
 		txtUsername.setBounds(99, 91, 228, 23);
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
-		
+
 		txtPass = new JPasswordField(ReadFile(pathSave)[1]);
 		txtPass.setBounds(99, 123, 228, 23);
 		contentPane.add(txtPass);
-		
+
 		btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
-					
-					String email = txtUsername.getText();
-					String pass = txtPass.getText();
-					if (email.length() > 0 && pass.length() > 0) {
-						DatabaseConnection db = new DatabaseConnection();
-						db.Connect();
-						PreparedStatement query = db.getConnection()
-								.prepareStatement(
-										"Select * from Users where Email='"
-												+ email + "'");
-						ResultSet rs = query.executeQuery();
-						if (!rs.isBeforeFirst()) {
-							JOptionPane.showMessageDialog(null,
-									"Email not exist ! Please Register",
-									"Login Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							while (rs.next()) {
-								if (pass.equals(rs.getString("Pass"))) {
-									userName = rs.getString("Name")
-											.toUpperCase();
-									//Open main frame
-									Main_GUI mtag = new Main_GUI(userName);
-									mtag.setVisible(true);
-									setVisible(false);
-									
-									if(cbSavePass.getState())
-									{
-									WriteFile(pathSave, email
-											+ "|\r\n" + pass);
-									System.out.println("Write Complete");									
-									}
-									else
-									{
-										WriteFile(pathSave,"");
-										System.out.println("Write Complete");	
-									}
-
-								} else
-									JOptionPane.showMessageDialog(null,
-											"Login Fail", "Login Error",
-											JOptionPane.ERROR_MESSAGE);
-							}
-						}
-					} else
-						JOptionPane.showMessageDialog(null,
-								"Please Input Email and Password !",
-								"Login Error", JOptionPane.ERROR_MESSAGE);
-
+					if(Login(txtUsername.getText(),txtPass.getText()))
+						{};
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.toString());
 				}
@@ -170,10 +125,10 @@ public class Login_Interface extends JFrame {
 			}
 		});
 		cbSavePass = new Checkbox("Remember Password");
-		cbSavePass.setBounds(99,150,226,20);
+		cbSavePass.setBounds(99, 150, 226, 20);
 		cbSavePass.setState(true);
 		contentPane.add(cbSavePass);
-		
+
 		btnLogin.setBounds(99, 170, 227, 50);
 		contentPane.add(btnLogin);
 
@@ -286,17 +241,17 @@ public class Login_Interface extends JFrame {
 	private static String[] ReadFile(String path) {
 		String text = "";
 		String sLine;
-		  String aTemp[];
-		  String[] infor = new String[2];
-		  int index = 0;
+		String aTemp[];
+		String[] infor = new String[2];
+		int index = 0;
 		try {
 			File fOpen = new File(path);
 			Scanner fileReader = new Scanner(fOpen);
 			while (fileReader.hasNextLine()) {
 				sLine = fileReader.nextLine().trim();
-			    aTemp = sLine.split("\\|");
-			    infor[index]=aTemp[0];
-			    index++;
+				aTemp = sLine.split("\\|");
+				infor[index] = aTemp[0];
+				index++;
 			}
 		} catch (FileNotFoundException e) {
 			System.out.print("File Not Found");
@@ -320,6 +275,52 @@ public class Login_Interface extends JFrame {
 			System.out.print("File Not Found");
 		}
 
+	}
+
+	public boolean Login(String email,String pass) {
+		
+		try {
+			if (email.length() > 0 && pass.length() > 0) {
+				DatabaseConnection db = new DatabaseConnection();
+				db.Connect();
+				PreparedStatement query = db.getConnection().prepareStatement(
+						"Select * from Users where Email='" + email + "'");
+				ResultSet rs = query.executeQuery();
+				if (!rs.isBeforeFirst()) {
+					JOptionPane.showMessageDialog(null,
+							"Email not exist ! Please Register", "Login Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					while (rs.next()) {
+						if (pass.equals(rs.getString("Pass"))) {
+							userName = rs.getString("Name").toUpperCase();
+							// Open main frame
+							Main_GUI mtag = new Main_GUI(userName,
+									Integer.parseInt(rs.getString("Id")));
+							mtag.setVisible(true);
+							setVisible(false);
+							flag = true ;
+							if (cbSavePass.getState()) {
+								WriteFile(pathSave, email + "|\r\n" + pass);
+								System.out.println("Write Complete");
+							} else {
+								WriteFile(pathSave, "");
+								System.out.println("Write Complete");
+							}
+
+						} else
+							JOptionPane.showMessageDialog(null, "Login Fail",
+									"Login Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			} else
+				JOptionPane.showMessageDialog(null,
+						"Please Input Email and Password !", "Login Error",
+						JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return flag;
 	}
 
 }
