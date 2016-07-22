@@ -1,6 +1,7 @@
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.regex.Matcher;
@@ -86,7 +87,7 @@ public class Register_Interface extends JFrame {
 				if(result == true){
 				try {
 					
-					String pass = "123";
+					String pass = randomString(6);
 					String massage;
 					db.Connect();
 					PreparedStatement query = db.getConnection()
@@ -137,8 +138,18 @@ public class Register_Interface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				System.out.println(randomString(6));
 				dispose();
 			}
 		});
+	}
+	static final String num = "0123456789";
+	static SecureRandom rnd = new SecureRandom();
+
+	public String randomString( int len ){
+	   StringBuilder sb = new StringBuilder( len );
+	   for( int i = 0; i < len; i++ ) 
+	      sb.append( num.charAt( rnd.nextInt(num.length()) ) );
+	   return sb.toString();
 	}
 }
