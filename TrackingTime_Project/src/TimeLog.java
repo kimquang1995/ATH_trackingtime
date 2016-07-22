@@ -29,6 +29,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.border.MatteBorder;
 
 
 
@@ -84,14 +87,17 @@ public class TimeLog extends JFrame {
 		setContentPane(contentPane1);
 		contentPane1.setLayout(null);
 
-		JLabel lblTitle = new JLabel("Time Log");
-		lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
-		lblTitle.setBounds(240, 13, 123, 30);
+		JLabel lblTitle = new JLabel("TIMELOG");
+		lblTitle.setForeground(new Color(0, 204, 255));
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Roboto", Font.BOLD, 26));
+		lblTitle.setBounds(250, 11, 145, 30);
 		contentPane1.add(lblTitle);
 
 		JLabel lblDay = new JLabel("Day :");
-		lblDay.setFont(new Font("Arial", Font.BOLD, 22));
-		lblDay.setBounds(204, 55, 56, 30);
+		lblDay.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDay.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblDay.setBounds(60, 70, 100, 30);
 		contentPane1.add(lblDay);
 
 		Date date = new Date();
@@ -99,32 +105,36 @@ public class TimeLog extends JFrame {
 		String strDate =sdf.format(date);
 		JLabel lblChoseDay = new JLabel();
 		lblChoseDay.setText(strDate);
-		lblChoseDay.setFont(new Font("Arial", Font.BOLD, 22));
-		lblChoseDay.setBounds(270, 55, 200, 30);
+		lblChoseDay.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblChoseDay.setBounds(150, 70, 200, 30);
 		contentPane1.add(lblChoseDay);
 
 		JLabel lblTag = new JLabel("Tag");
-		lblTag.setFont(new Font("Arial", Font.BOLD, 20));
-		lblTag.setBounds(57, 125, 45, 30);
+		lblTag.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTag.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblTag.setBounds(60, 120, 100, 30);
 		contentPane1.add(lblTag);
 
 		JLabel lblName = new JLabel("Task Name");
-		lblName.setFont(new Font("Arial", Font.BOLD, 20));
-		lblName.setBounds(57, 167, 111, 30);
+		lblName.setHorizontalAlignment(SwingConstants.LEFT);
+		lblName.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblName.setBounds(60, 170, 100, 30);
 		contentPane1.add(lblName);
 
 		JLabel lblStart = new JLabel("Start");
-		lblStart.setFont(new Font("Arial", Font.BOLD, 20));
-		lblStart.setBounds(57, 209, 65, 30);
+		lblStart.setHorizontalAlignment(SwingConstants.LEFT);
+		lblStart.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblStart.setBounds(60, 220, 100, 30);
 		contentPane1.add(lblStart);
 
 		JLabel lblEnd = new JLabel("End");
-		lblEnd.setFont(new Font("Arial", Font.BOLD, 20));
-		lblEnd.setBounds(57, 251, 65, 30);
+		lblEnd.setHorizontalAlignment(SwingConstants.LEFT);
+		lblEnd.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblEnd.setBounds(60, 270, 100, 30);
 		contentPane1.add(lblEnd);
 		
 		JComboBox cmb = new JComboBox();
-		cmb.setBounds(187, 128, 223, 25);
+		cmb.setBounds(187, 120, 223, 30);
 		cmb.addItem("All");
 		contentPane1.add(cmb);
 		try {			
@@ -169,7 +179,7 @@ public class TimeLog extends JFrame {
 		});
 
 		txtName = new JTextField();
-		txtName.setBounds(187, 170, 223, 25);
+		txtName.setBounds(187, 170, 223, 30);
 		contentPane1.add(txtName);
 		txtName.setColumns(10);
 
@@ -189,28 +199,28 @@ public class TimeLog extends JFrame {
 		}
 		
 		JComboBox cmbSHour = new JComboBox(hour);
-		cmbSHour.setBounds(187, 212, 50, 25);
+		cmbSHour.setBounds(187, 220, 50, 30);
 		contentPane1.add(cmbSHour);
 		
 		JComboBox cmbSMin = new JComboBox(min);
-		cmbSMin.setBounds(270, 212, 50, 25);
+		cmbSMin.setBounds(270, 220, 50, 30);
 		contentPane1.add(cmbSMin);
 		
 		
 		JComboBox cmbEHour = new JComboBox(hour);
-		cmbEHour.setBounds(187, 254, 50, 25);
+		cmbEHour.setBounds(187, 270, 50, 30);
 		contentPane1.add(cmbEHour);
 		
 		JComboBox cmbEMin = new JComboBox(min);
-		cmbEMin.setBounds(270, 254, 50, 25);
+		cmbEMin.setBounds(270, 270, 50, 30);
 		contentPane1.add(cmbEMin);
 		
 		JLabel lblDot1 = new JLabel(":");
-		lblDot1.setBounds(252, 212, 50, 25);
+		lblDot1.setBounds(252, 220, 50, 25);
 		contentPane1.add(lblDot1);
 		
 		JLabel lblDot2 = new JLabel(":");
-		lblDot2.setBounds(252, 254, 50, 25);
+		lblDot2.setBounds(252, 270, 50, 25);
 		contentPane1.add(lblDot2);
 		// Add Button
 		JButton btnAdd = new JButton("Add");
@@ -283,7 +293,7 @@ public class TimeLog extends JFrame {
 				table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
 			}
 		});
-		btnAdd.setBounds(442, 127, 100, 25);
+		btnAdd.setBounds(470, 120, 100, 30);
 		contentPane1.add(btnAdd);
 		// Edit Button
 		JButton btnEdit = new JButton("Edit");
@@ -348,7 +358,7 @@ public class TimeLog extends JFrame {
 				table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
 			}
 		});
-		btnEdit.setBounds(442, 169, 100, 25);
+		btnEdit.setBounds(470, 170, 100, 30);
 		contentPane1.add(btnEdit);
 
 		// Delete Button
@@ -393,11 +403,13 @@ public class TimeLog extends JFrame {
 				table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
 			}}
 		});
-		btnDelete.setBounds(442, 211, 100, 25);
+		btnDelete.setBounds(470, 220, 100, 30);
 		contentPane1.add(btnDelete);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(57, 303, 482, 250);
+		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 12));
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) new Color(192, 192, 192)));
+		scrollPane.setBounds(60, 320, 510, 250);
 		contentPane1.add(scrollPane);
 
 		table = new JTable();
