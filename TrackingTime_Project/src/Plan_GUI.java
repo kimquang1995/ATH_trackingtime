@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,6 +23,7 @@ import javax.swing.JList;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerModel;
@@ -34,12 +36,28 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
+import java.awt.color.CMMException;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+//import TimeLog.DateCellRenderer;
+
+
+
+
+
+
+
 
 import com.toedter.calendar.JDateChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -47,7 +65,8 @@ public class Plan_GUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	
+	int row;
+	String tag,hours;
 	/**
 	 * Launch the application.
 	 */
@@ -112,16 +131,6 @@ public class Plan_GUI extends JFrame {
 		lblPlan.setBounds(250, 11, 140, 30);
 		//close picker
 	
-		
-		
-		contentPane.add(lblPlan);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
-		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
-		scrollPane.setBounds(60, 230, 510, 330);
-		contentPane.add(scrollPane);
-		
 		JLabel lblYear = new JLabel("Start Day");
 		lblYear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblYear.setBounds(60, 70, 70, 30);
@@ -129,7 +138,7 @@ public class Plan_GUI extends JFrame {
 		
 		JButton btnCreatePlan = new JButton("Create Plan");
 		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
-		btnCreatePlan.setBounds(250, 472, 150, 30);
+		btnCreatePlan.setBounds(250, 550, 150, 30);
 		contentPane.add(btnCreatePlan);
 		
 		JComboBox cbTag = new JComboBox();
@@ -152,27 +161,118 @@ public class Plan_GUI extends JFrame {
 		lblTags.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblTags.setBounds(60, 120, 50, 30);
 		contentPane.add(lblTags);
+	
 		
-		JLabel lblODayLa = new JLabel("o day la table voi 2 cot \"Tag\" va \"Total hours\"");
-		lblODayLa.setBounds(231, 334, 218, 58);
-		contentPane.add(lblODayLa);
+		contentPane.add(lblPlan);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
+		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
+		scrollPane.setBounds(60, 230, 510, 300);
+		contentPane.add(scrollPane);
+	
+		JTable table = new JTable();
+		table.setDefaultEditor(Object.class, null);
+		scrollPane.setViewportView(table);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setFont(new Font("Arial", Font.PLAIN, 18));
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.setDefaultRenderer(String.class, centerRenderer);
+		DefaultTableModel model = new DefaultTableModel(new String[] {
+				"Tag", "Hours"}, 0);
+		
+		table.setModel(model);
+
+		// Create a new table instance
+		
+		
+		table.addMouseListener(new MouseListener() {
+
+		
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+			//	btnEdit.setEnabled(true);
+			//	btnDelete.setEnabled(true);
+				row = table.getSelectedRow();
+			    tag = model.getValueAt(row, 0).toString();
+				hours = model.getValueAt(row, 1).toString();
+				cbTag.setSelectedItem(tag);
+				textField.setText(hours);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	
 		
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.setBounds(470, 70, 100, 30);
 		contentPane.add(btnNewButton);
-		
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String cmb =cbTag.getSelectedItem().toString();
+				String hours = textField.getText();
+				model.addRow(new Object[] { cmb,hours });
+				textField.setText(null);
+			}
+			
+		});
 		JButton btnNewButton_1 = new JButton("Delete");
 		
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_1.setBounds(470, 170, 100, 30);
 		contentPane.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int row = table.getSelectedRow();
+				model.removeRow(row);
+				textField.setText(null);
+			}
+		});
 		
 		JButton btnNewButton_2 = new JButton("Update");
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_2.setBounds(470, 120, 100, 30);
 		contentPane.add(btnNewButton_2);
-		
+		btnNewButton_2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				model.setValueAt(textField.getText(), row, 1);
+				
+			}
+		});
 		textField = new JTextField();
 		textField.addKeyListener(new KeyAdapter() {
 			@Override
