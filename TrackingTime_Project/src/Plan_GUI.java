@@ -107,7 +107,7 @@ public class Plan_GUI extends JFrame {
 		spinner.setBounds(275, 150, 100, 30); */
 		JLabel lblPlan = new JLabel("PLAN");
 		lblPlan.setForeground(new Color(0, 204, 255));
-		lblPlan.setFont(new Font("Roboto", Font.BOLD, 26));
+		lblPlan.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblPlan.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlan.setBounds(250, 11, 140, 30);
 		//close picker
@@ -123,7 +123,7 @@ public class Plan_GUI extends JFrame {
 		contentPane.add(scrollPane);
 		
 		JLabel lblYear = new JLabel("Start Day");
-		lblYear.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblYear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblYear.setBounds(60, 70, 70, 30);
 		contentPane.add(lblYear);
 		
@@ -149,7 +149,7 @@ public class Plan_GUI extends JFrame {
 		}
 		
 		JLabel lblTags = new JLabel("Tags");
-		lblTags.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblTags.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblTags.setBounds(60, 120, 50, 30);
 		contentPane.add(lblTags);
 		
@@ -158,18 +158,18 @@ public class Plan_GUI extends JFrame {
 		contentPane.add(lblODayLa);
 		
 		JButton btnNewButton = new JButton("Add");
-		btnNewButton.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.setBounds(470, 70, 100, 30);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Delete");
 		
-		btnNewButton_1.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_1.setBounds(470, 170, 100, 30);
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Update");
-		btnNewButton_2.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_2.setBounds(470, 120, 100, 30);
 		contentPane.add(btnNewButton_2);
 		
@@ -192,7 +192,7 @@ public class Plan_GUI extends JFrame {
 		textField.setColumns(10);
 		
 		JLabel lblHours = new JLabel("Hours");
-		lblHours.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblHours.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblHours.setBounds(280, 120, 50, 30);
 		contentPane.add(lblHours);
 		

@@ -203,7 +203,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		lblNewLabel.setForeground(new Color(0, 204, 255));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(240, 11, 165, 30);
-		lblNewLabel.setFont(new Font("Roboto", Font.BOLD, 26));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		contentPane.add(lblNewLabel);
 
 		JLabel lblName = new JLabel("NAME");
@@ -215,7 +215,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		JLabel lblStatus = new JLabel("Name:");
 		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		lblStatus.setBounds(60, 120, 50, 30);
-		lblStatus.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(lblStatus);
 		/*
 		 * if(cbb_tag_status.getSelectedItem().equals("True")){ status=1; }else{
@@ -232,21 +232,21 @@ public class ManageTag extends JFrame implements ActionListener {
 		txt_tag_name.setColumns(10);
 		// add buton
 		JButton btn_tag_add = new JButton("Add");
-		btn_tag_add.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_add.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_tag_add.setBounds(470, 120, 100, 30);
 		contentPane.add(btn_tag_add);
 		// add action for btn add
 		btn_tag_add.addActionListener(this);
 
 		JButton btn_tag_update = new JButton("Edit");
-		btn_tag_update.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_update.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_tag_update.setBounds(470, 170, 100, 30);
 		contentPane.add(btn_tag_update);
 		// /add action for btn update
 		btn_tag_update.addActionListener(this);
 
 		JButton btn_tag_delete = new JButton("Delete");
-		btn_tag_delete.setFont(new Font("Roboto", Font.PLAIN, 15));
+		btn_tag_delete.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_tag_delete.setBounds(470, 220, 100, 30);
 		contentPane.add(btn_tag_delete);
 		// add action for btn delete

@@ -78,7 +78,7 @@ public class Statistics extends JFrame {
 		// -*--------------------------------------------
 
 		JButton btnWeeks = new JButton("Show by Duration");
-		btnWeeks.setFont(new Font("Roboto", Font.PLAIN, 12));
+		btnWeeks.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnWeeks.setBounds(90, 150, 150, 30);
 
 		btnWeeks.addMouseListener(new MouseAdapter() {
@@ -140,7 +140,7 @@ public class Statistics extends JFrame {
 		// years-------------------------------------------------
 
 		JButton btnYears = new JButton("Show by Year");
-		btnYears.setFont(new Font("Roboto", Font.PLAIN, 12));
+		btnYears.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnYears.setBounds(400, 150, 150, 30);
 		btnYears.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -232,13 +232,13 @@ public class Statistics extends JFrame {
 		JLabel lblStatistics = new JLabel("STATISTICS");
 		lblStatistics.setForeground(new Color(0, 204, 255));
 		lblStatistics.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStatistics.setFont(new Font("Roboto", Font.BOLD, 26));
-		lblStatistics.setBounds(250, 11, 145, 30);
+		lblStatistics.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblStatistics.setBounds(250, 11, 150, 30);
 		contentPane.add(lblStatistics);
 		
 		JDateChooser dateChooser_Start = new JDateChooser();
 		dateChooser_Start.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
-		dateChooser_Start.setFont(new Font("Roboto", Font.PLAIN, 12));
+		dateChooser_Start.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		dateChooser_Start.setBounds(40, 90, 100, 30);
 		try {
 			dateChooser_Start.setDate(dateFormat.parse(SubTrac_7day(dateFormat.format(Calendar.getInstance().getTime()))));
@@ -252,11 +252,12 @@ public class Statistics extends JFrame {
 		
 		
 		JYearChooser yearChooser = new JYearChooser();
+		yearChooser.getSpinner().setFont(new Font("Tahoma", Font.PLAIN, 11));
 		yearChooser.getSpinner().setMinimumSize(new Dimension(50, 30));
 		yearChooser.getSpinner().setPreferredSize(new Dimension(50, 30));
 		yearChooser.setHorizontalAlignment(0);
 		yearChooser.setStartYear(2010);
-		yearChooser.setFont(new Font("Roboto", Font.PLAIN, 15));
+		yearChooser.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		yearChooser.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
 		yearChooser.setBounds(400, 90, 150, 30);
 		contentPane.add(yearChooser);
@@ -270,7 +271,7 @@ public class Statistics extends JFrame {
 		
 		JDateChooser dateChooser_To = new JDateChooser();
 		dateChooser_To.setBorder(new MatteBorder(0, 2, 2, 0, (Color) Color.LIGHT_GRAY));
-		dateChooser_To.setFont(new Font("Roboto", Font.PLAIN, 12));
+		dateChooser_To.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		dateChooser_To.setBounds(191, 90, 100, 30);
 		dateChooser_To.setDate(Calendar.getInstance().getTime());
 		contentPane.add(dateChooser_To);
