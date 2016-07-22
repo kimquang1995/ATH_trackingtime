@@ -30,7 +30,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.SwingConstants;
+
 import java.awt.Color;
+
 import javax.swing.border.MatteBorder;
 
 
@@ -103,10 +105,13 @@ public class TimeLog extends JFrame {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat(selectDate);
 		String strDate =sdf.format(date);
+		SimpleDateFormat dtb = new SimpleDateFormat("yyyy-MM-dd");
+		String dtbquery = dtb.format(date);
+		System.out.println(dtbquery);
 		JLabel lblChoseDay = new JLabel();
 		lblChoseDay.setText(strDate);
-		lblChoseDay.setFont(new Font("Roboto", Font.PLAIN, 16));
-		lblChoseDay.setBounds(150, 70, 200, 30);
+		lblChoseDay.setFont(new Font("Roboto", Font.BOLD, 16));
+		lblChoseDay.setBounds(187, 70, 200, 30);
 		contentPane1.add(lblChoseDay);
 
 		JLabel lblTag = new JLabel("Tag");
@@ -165,10 +170,10 @@ public class TimeLog extends JFrame {
 							id_tag = subrs.getString("Id");
 							System.out.println(id_tag);
 							Load("Select * from TimeLog Where Id_Tag LIKE '"
-									+ id_tag + "'");							
+									+ id_tag + "' and Date = '"+dtbquery+"'");							
 						}
 					} if(TagName.equals("All")){
-						Load("Select * from TimeLog");
+						Load("Select * from TimeLog where Date ='"+ dtbquery + "'");
 						id_tag=null;
 					System.out.println(id_tag);
 					}
@@ -269,13 +274,11 @@ public class TimeLog extends JFrame {
 					
 					if (id_tag != null) {
 					
-						String now = LocalDate.now().toString();
-						System.out.println(id_tag);
 						int id_tagI = Integer.parseInt(id_tag);
 						String queryS="Insert into TimeLog"
 						+ "(Name,Hours,Date,Id_Tag,Start_Time,End_Time)"
 						+"values"
-						+ "('"+name+"','"+diffHours+"','"+now+"','"+id_tagI+"','"+sHours+":"+sMin+"','"+eHours+":"+eMin+"')";
+						+ "('"+name+"','"+diffHours+"','"+dtbquery+"','"+id_tagI+"','"+sHours+":"+sMin+"','"+eHours+":"+eMin+"')";
 						PreparedStatement query = db.getConnection()
 								.prepareStatement(queryS);
 										
@@ -283,12 +286,12 @@ public class TimeLog extends JFrame {
 						table.repaint();
 						JOptionPane.showMessageDialog(null,"Thêm công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
 						Load("Select * from TimeLog Where Id_Tag LIKE '"
-								+ id_tag + "'");
+								+ id_tag + "' and Date = '"+dtbquery+"'");
 						txtName.setText(null);
 					
 					}else {
 						JOptionPane.showMessageDialog(null,"Vui lòng chọn Tag bạn muốn thêm công việc.", "Lỗi",  JOptionPane.OK_OPTION);
-						Load("Select * from TimeLog");
+						Load("Select * from TimeLog where Date ='"+ dtbquery + "'");
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -354,7 +357,7 @@ public class TimeLog extends JFrame {
 					query.executeUpdate();
 					table.repaint();
 					JOptionPane.showMessageDialog(null,"Sửa công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
-					Load("Select * from TimeLog");
+					Load("Select * from TimeLog where Date ='"+ dtbquery + "'");
 					txtName.setText(null);
 				
 				} catch (Exception e1) {
@@ -401,7 +404,7 @@ public class TimeLog extends JFrame {
 					}
 					table.setModel(a);
 					table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
-					Load("Select * from TimeLog");
+					Load("Select * from TimeLog where Date ='"+ dtbquery + "'");
 					table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
 					JOptionPane.showMessageDialog(null,"Xóa công việc thành công.", "Thành Công",  JOptionPane.INFORMATION_MESSAGE);
 					table.getColumnModel().getColumn(0).setCellRenderer(new DateCellRenderer());
@@ -424,7 +427,7 @@ public class TimeLog extends JFrame {
 		table = new JTable();
 		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
-		Load("Select * from TimeLog");
+		Load("Select * from TimeLog where Date ='"+ dtbquery + "'");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFont(new Font("Arial", Font.PLAIN, 18));
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
