@@ -43,7 +43,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton btemp = (JButton) e.getSource();
-		if (btemp.getActionCommand().equals("ADD")) {
+		if (btemp.getActionCommand().equals("Add")) {
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			boolean reslt = false;
 			String name = txt_tag_name.getText();
@@ -64,11 +64,13 @@ public class ManageTag extends JFrame implements ActionListener {
 				try {
 
 					String sql = "Insert into Tag" + "(Name)" + "values" + "('"
-							+ name + "')";
+							+ name + "')";//+"ON DUPLICATE UPDATE Name= values+('"+name+"')";
 					PreparedStatement query = db.getConnection()
 							.prepareStatement(sql);
 					query.executeUpdate();
 					table.repaint();
+					txt_tag_name.setText("");
+					
 					//
 					JOptionPane.showMessageDialog(null,
 							"Thêm công việc thành công.", "Thành Công",
@@ -86,7 +88,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			}
 		}
 
-		if (btemp.getActionCommand().equals("UPDATE")) {
+		if (btemp.getActionCommand().equals("Edit")) {
 			boolean reslt = false;
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			String name = txt_tag_name.getText();
@@ -124,7 +126,7 @@ public class ManageTag extends JFrame implements ActionListener {
 				}
 			}
 		}
-		if (btemp.getActionCommand().equals("DELETE")) {
+		if (btemp.getActionCommand().equals("Delete")) {
 
 			if (JOptionPane.showConfirmDialog(null,
 					"Bạn có chắc muốn xóa hoạt động này?", "Xác Nhận",
