@@ -224,7 +224,7 @@ public class Main_GUI extends JFrame {
 		panelAction.add(btnManageTag);
 		panelAction.add(btnStatistic);
 		panelAction.add(btnLogout);
-		panelAction.setBounds(70, 200, 600, 50);
+		panelAction.setBounds(70, 200, 660, 50);
 		this.add(panelAction);
 
 		// Panel Hours
