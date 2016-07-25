@@ -56,7 +56,6 @@ public class Statistics extends JFrame {
 	JDateChooser dateChooser_Start;
 	JDateChooser dateChooser_To;
 	JYearChooser yearChooser;
-
 	/**
 	 * Launch the application.
 	 */

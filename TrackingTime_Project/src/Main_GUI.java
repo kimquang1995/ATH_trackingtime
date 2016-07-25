@@ -340,8 +340,7 @@ public class Main_GUI extends JFrame {
 				btntimeLog.setEnabled(true);
 				scrollPane.setVisible(true);
 				while (rs.next()) {
-					rowCount++;
-					
+					rowCount++;					
 				}
 			}
 			panelTag.removeAll();

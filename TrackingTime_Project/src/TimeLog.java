@@ -69,7 +69,7 @@ public class TimeLog extends JFrame {
 			SimpleDateFormat dtb = new SimpleDateFormat("yyyy-MM-dd");
 			dtbquery = dtb.format(seleDate);
 			JLabel lblChoseDay = new JLabel();
-			lblChoseDay.setText("For Day: "+dtbquery);
+			lblChoseDay.setText("For Day: " + dtbquery);
 			lblChoseDay.setFont(new Font("Roboto", Font.BOLD, 20));
 			lblChoseDay.setBounds(230, 50, 200, 50);
 			contentPane1.add(lblChoseDay);
@@ -153,26 +153,29 @@ public class TimeLog extends JFrame {
 										"Select top 1 * from Tag where Name LIKE '"
 												+ TagName + "'");
 						ResultSet subrs = subquery.executeQuery();
-						while (subrs.next()) {
-							id_tag = subrs.getString("Id");
-							System.out.println(id_tag);
-							Load("select Id,Name,Hours,Id_User,  convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
-									+ "End_Time from TimeLog where Date ='"
-									+ dtbquery
-									+ "' and id_User='"
-									+ id_User
-									+ "' and Id_Tag= '" + id_tag + "'");
+						if (!subrs.isBeforeFirst()) {
+						} else {
+							while (subrs.next()) {
+								id_tag = subrs.getString("Id");
+								System.out.println(id_tag);
+								Load("select Id,Name,Hours,Id_User,  convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
+										+ "End_Time from TimeLog where Date ='"
+										+ dtbquery
+										+ "' and id_User='"
+										+ id_User
+										+ "' and Id_Tag= '"
+										+ id_tag
+										+ "'");
+							}
 						}
-					}
-					if (TagName.equals("All")) {
-						Load(queryLoad);
-						id_tag = null;
-					}
+						if (TagName.equals("All")) {
+							Load(queryLoad);
+							id_tag = null;
+						}
 
+					}
 				} catch (Exception e1) {
 				}
-				table.getColumnModel().getColumn(0)
-						.setCellRenderer(new DateCellRenderer());
 			}
 		});
 
@@ -465,71 +468,70 @@ public class TimeLog extends JFrame {
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
 		Load(queryLoad);
-			table.addMouseListener(new MouseListener() {
+		table.addMouseListener(new MouseListener() {
 
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
-					btnEdit.setEnabled(true);
-					btnDelete.setEnabled(true);
-					row = table.getSelectedRow();
-					DefaultTableModel model = (DefaultTableModel) table
-							.getModel();
-					String SelectedName = model.getValueAt(row, 1).toString();
-					String S = model.getValueAt(row, 2).toString() + ":00";
-					String E = model.getValueAt(row, 3).toString() + ":00";
-					txtName.setText(SelectedName);
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				btnEdit.setEnabled(true);
+				btnDelete.setEnabled(true);
+				row = table.getSelectedRow();
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				String SelectedName = model.getValueAt(row, 1).toString();
+				String S = model.getValueAt(row, 2).toString() + ":00";
+				String E = model.getValueAt(row, 3).toString() + ":00";
+				txtName.setText(SelectedName);
 
-					try {
-						d1 = format.parse(S);
-					} catch (java.text.ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					try {
-						d2 = format.parse(E);
-					} catch (java.text.ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-					int rSHours = d1.getHours();
-					cmbSHour.setSelectedItem(rSHours);
-					int rSMin = d1.getMinutes();
-					cmbSMin.setSelectedItem(rSMin);
-					int rEHours = d2.getHours();
-					cmbEHour.setSelectedItem(rEHours);
-					int rEMin = d2.getMinutes();
-					cmbEMin.setSelectedItem(rEMin);
-					SelectedId = (model.getValueAt(row, 0)).toString();
+				try {
+					d1 = format.parse(S);
+				} catch (java.text.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					d2 = format.parse(E);
+				} catch (java.text.ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 
-				@Override
-				public void mouseEntered(MouseEvent arg0) {
-					// TODO Auto-generated method stub
+				int rSHours = d1.getHours();
+				cmbSHour.setSelectedItem(rSHours);
+				int rSMin = d1.getMinutes();
+				cmbSMin.setSelectedItem(rSMin);
+				int rEHours = d2.getHours();
+				cmbEHour.setSelectedItem(rEHours);
+				int rEMin = d2.getMinutes();
+				cmbEMin.setSelectedItem(rEMin);
+				SelectedId = (model.getValueAt(row, 0)).toString();
+			}
 
-				}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-				@Override
-				public void mouseExited(MouseEvent arg0) {
-					// TODO Auto-generated method stub
+			}
 
-				}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-				@Override
-				public void mousePressed(MouseEvent arg0) {
-					// TODO Auto-generated method stub
+			}
 
-				}
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-				@Override
-				public void mouseReleased(MouseEvent arg0) {
-					// TODO Auto-generated method stub
+			}
 
-				}
-			});
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 
-		}
+			}
+		});
+
+	}
 
 	public void Load(String queryExe) {
 		try {
