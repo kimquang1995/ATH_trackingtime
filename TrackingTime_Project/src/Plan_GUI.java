@@ -64,33 +64,17 @@ import java.awt.event.ActionEvent;
 public class Plan_GUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField txtHours;
 	int row;
 	String tag,hours;
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-			
-		     
-				try {
-					Plan_GUI frame = new Plan_GUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			}
-		});
-	}*/
-
 	/**
 	 * Create the frame.
 	 */
 	public Plan_GUI() {
+		setTitle("CREATE PLAN");
 		DatabaseConnection db = new DatabaseConnection();
 		try {
 			db.Connect();
@@ -99,7 +83,7 @@ public class Plan_GUI extends JFrame {
 			e1.printStackTrace();
 		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 650, 650);
+		setBounds(100, 100, 560, 500);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(0, 0, 0));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,27 +108,36 @@ public class Plan_GUI extends JFrame {
 
         spinner.setEditor(editor);
 		spinner.setBounds(275, 150, 100, 30); */
-		JLabel lblPlan = new JLabel("PLAN");
+		JLabel lblPlan = new JLabel("CREATE PLAN");
 		lblPlan.setForeground(new Color(0, 204, 255));
-		lblPlan.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblPlan.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblPlan.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPlan.setBounds(250, 11, 140, 30);
+		lblPlan.setBounds(200, 10, 150, 30);
 		//close picker
 	
-		JLabel lblYear = new JLabel("Start Day");
-		lblYear.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblYear.setBounds(60, 70, 70, 30);
-		contentPane.add(lblYear);
+		JLabel lblStar_Day = new JLabel("Start Day");
+		lblStar_Day.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblStar_Day.setBounds(60, 50, 70, 30);
+		contentPane.add(lblStar_Day);
 		
 		JButton btnCreatePlan = new JButton("Create Plan");
 		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
-		btnCreatePlan.setBounds(250, 550, 150, 30);
+		btnCreatePlan.setBounds(200, 420, 150, 30);
 		contentPane.add(btnCreatePlan);
+		//
+		JLabel lblTags = new JLabel("Tag");
+		lblTags.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblTags.setBounds(60, 100, 50, 30);
+		contentPane.add(lblTags);
+		//--------------------------------------------
 		
 		JComboBox cbTag = new JComboBox();
 		cbTag.setFont(new Font("Roboto", Font.PLAIN, 15));
-		cbTag.setBounds(150, 120, 100, 30);
+		cbTag.setBounds(150,100, 200, 30);
 		contentPane.add(cbTag);
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(150, 50, 200, 30);
+		contentPane.add(dateChooser);
 		try {			
 			PreparedStatement query = db.getConnection().prepareStatement(
 					"Select * from Tag");
@@ -157,18 +150,36 @@ public class Plan_GUI extends JFrame {
 			JOptionPane.showMessageDialog(null, "No connection to server");
 		}
 		
-		JLabel lblTags = new JLabel("Tags");
-		lblTags.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblTags.setBounds(60, 120, 50, 30);
-		contentPane.add(lblTags);
-	
+		JLabel lblHours = new JLabel("Hours");
+		lblHours.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblHours.setBounds(60, 150, 50, 30);
+		contentPane.add(lblHours);
+		//
+		txtHours = new JTextField();
+		txtHours.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				 char c = e.getKeyChar();
+		           if ((!Character.isDigit(c) ||
+		              (c == KeyEvent.VK_BACK_SPACE) ||
+		              (c == KeyEvent.VK_DELETE))) {
+		                e.consume();
+		              }
+			}
+		});
 		
+		txtHours.setHorizontalAlignment(SwingConstants.CENTER);
+		txtHours.setBounds(150, 150, 200, 30);
+		contentPane.add(txtHours);
+		txtHours.setColumns(10);
+		
+
 		contentPane.add(lblPlan);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
 		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
-		scrollPane.setBounds(60, 230, 510, 300);
+		scrollPane.setBounds(60, 200, 420, 200);
 		contentPane.add(scrollPane);
 	
 		JTable table = new JTable();
@@ -199,7 +210,7 @@ public class Plan_GUI extends JFrame {
 			    tag = model.getValueAt(row, 0).toString();
 				hours = model.getValueAt(row, 1).toString();
 				cbTag.setSelectedItem(tag);
-				textField.setText(hours);
+				txtHours.setText(hours);
 			}
 
 			@Override
@@ -230,7 +241,7 @@ public class Plan_GUI extends JFrame {
 		
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBounds(470, 70, 100, 30);
+		btnNewButton.setBounds(380, 50, 100, 30);
 		contentPane.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			
@@ -238,16 +249,16 @@ public class Plan_GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				String cmb =cbTag.getSelectedItem().toString();
-				String hours = textField.getText();
+				String hours = txtHours.getText();
 				model.addRow(new Object[] { cmb,hours });
-				textField.setText(null);
+				txtHours.setText(null);
 			}
 			
 		});
 		JButton btnNewButton_1 = new JButton("Delete");
 		
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton_1.setBounds(470, 170, 100, 30);
+		btnNewButton_1.setBounds(380, 150, 100, 30);
 		contentPane.add(btnNewButton_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			
@@ -256,48 +267,23 @@ public class Plan_GUI extends JFrame {
 				// TODO Auto-generated method stub
 				int row = table.getSelectedRow();
 				model.removeRow(row);
-				textField.setText(null);
+				txtHours.setText(null);
 			}
 		});
 		
 		JButton btnNewButton_2 = new JButton("Update");
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton_2.setBounds(470, 120, 100, 30);
+		btnNewButton_2.setBounds(380, 100, 100, 30);
 		contentPane.add(btnNewButton_2);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				model.setValueAt(textField.getText(), row, 1);
+				model.setValueAt(txtHours.getText(), row, 1);
 				
 			}
 		});
-		textField = new JTextField();
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				 char c = e.getKeyChar();
-		           if ((!Character.isDigit(c) ||
-		              (c == KeyEvent.VK_BACK_SPACE) ||
-		              (c == KeyEvent.VK_DELETE))) {
-		                e.consume();
-		              }
-			}
-		});
-		
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setBounds(350, 120, 100, 30);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		JLabel lblHours = new JLabel("Hours");
-		lblHours.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblHours.setBounds(280, 120, 50, 30);
-		contentPane.add(lblHours);
-		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(150, 70, 100, 30);
-		contentPane.add(dateChooser);
+	
 	}
 }
