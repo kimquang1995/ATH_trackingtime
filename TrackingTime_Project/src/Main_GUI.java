@@ -161,7 +161,7 @@ public class Main_GUI extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							TimeLog g_TimeLog = new TimeLog(currentDate);
+							TimeLog g_TimeLog = new TimeLog(currentDate,id_User);
 							g_TimeLog.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -361,7 +361,7 @@ public class Main_GUI extends JFrame {
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		Date inidate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
 		String dateSelect = formater.format(inidate);
-		return "select t.Name as Tags,tl.Name,tl.Hours,tl.Start_Time,tl.End_Time from TimeLog tl"
+		return "select t.Name as Tags,tl.Name,tl.Hours,convert(char(5), tl.Start_Time, 108) Start_Time,convert(char(5), tl.End_Time, 108) End_Time from TimeLog tl"
 				+ " left join Tag t on t.Id = tl.Id_Tag "
 				+ "where convert(varchar(10),Date, 120) = '"
 				+ dateSelect 
