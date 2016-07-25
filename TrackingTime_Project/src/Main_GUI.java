@@ -143,7 +143,7 @@ public class Main_GUI extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							Plan_GUI g_Plan = new Plan_GUI();
+							Plan_GUI g_Plan = new Plan_GUI(id_User);
 							g_Plan.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

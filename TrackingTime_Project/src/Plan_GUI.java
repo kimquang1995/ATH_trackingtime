@@ -16,7 +16,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Font;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.awt.Color;
 
 import javax.swing.JList;
@@ -51,30 +54,37 @@ import java.awt.event.MouseListener;
 
 
 
-
-
-
-
-
 import com.toedter.calendar.JDateChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class Plan_GUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtHours;
 	int row;
-	String tag,hours;
+	String tag, hours;
+	String chosserDay;
+	DefaultTableModel model;
+	DatabaseConnection db = new DatabaseConnection();
+	int id_user;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
 	/**
 	 * Launch the application.
 	 */
 	/**
 	 * Create the frame.
+	 * @throws ParseException 
 	 */
-	public Plan_GUI() {
+	public Plan_GUI(int id_User) throws ParseException {
 		setTitle("CREATE PLAN");
+		id_user = id_User;
+		model = new DefaultTableModel(new String[] { "Tag",
+		"Hours" }, 0);
 		DatabaseConnection db = new DatabaseConnection();
 		try {
 			db.Connect();
@@ -83,62 +93,39 @@ public class Plan_GUI extends JFrame {
 			e1.printStackTrace();
 		}
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// setBounds(100, 100, 380, 130);
 		setBounds(100, 100, 560, 500);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(0, 0, 0));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		//create hours picker*********************************************************************************************************
-	/*	Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 24); // 24 == 12 PM == 00:00:00
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        SpinnerDateModel model = new SpinnerDateModel();
-        model.setValue(calendar.getTime());
-
-        JSpinner spinner = new JSpinner(model);
-        spinner.setFont(new Font("Roboto", Font.PLAIN, 14));
-
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm:ss");
-        DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
-        formatter.setAllowsInvalid(false); // this makes what you want
-        formatter.setOverwriteMode(true);
-
-        spinner.setEditor(editor);
-		spinner.setBounds(275, 150, 100, 30); */
 		JLabel lblPlan = new JLabel("CREATE PLAN");
 		lblPlan.setForeground(new Color(0, 204, 255));
 		lblPlan.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblPlan.setHorizontalAlignment(SwingConstants.CENTER);
+		// lblPlan.setBounds(120, 10, 150, 30);
 		lblPlan.setBounds(200, 10, 150, 30);
-		//close picker
-	
+		// close picker
+
 		JLabel lblStar_Day = new JLabel("Start Day");
 		lblStar_Day.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblStar_Day.setBounds(60, 50, 70, 30);
 		contentPane.add(lblStar_Day);
-		
-		JButton btnCreatePlan = new JButton("Create Plan");
-		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
-		btnCreatePlan.setBounds(200, 420, 150, 30);
-		contentPane.add(btnCreatePlan);
+	
+
 		//
 		JLabel lblTags = new JLabel("Tag");
 		lblTags.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblTags.setBounds(60, 100, 50, 30);
 		contentPane.add(lblTags);
-		//--------------------------------------------
-		
+		// --------------------------------------------
+
 		JComboBox cbTag = new JComboBox();
 		cbTag.setFont(new Font("Roboto", Font.PLAIN, 15));
-		cbTag.setBounds(150,100, 200, 30);
+		cbTag.setBounds(150, 100, 200, 30);
 		contentPane.add(cbTag);
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(150, 50, 200, 30);
-		contentPane.add(dateChooser);
-		try {			
+		try {
 			PreparedStatement query = db.getConnection().prepareStatement(
 					"Select * from Tag");
 			ResultSet rs = query.executeQuery();
@@ -149,7 +136,26 @@ public class Plan_GUI extends JFrame {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "No connection to server");
 		}
-		
+
+		JDateChooser StartDay = new JDateChooser();
+		StartDay.setBounds(150, 50, 200, 30);
+		contentPane.add(StartDay);
+		StartDay.setDate(dateFormat.parse(dateFormat.format(Calendar.getInstance().getTime())));
+		StartDay.addPropertyChangeListener("date",
+				new PropertyChangeListener() {
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						Date date = (Date) evt.getNewValue();
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								"dd-MM-yyyy");
+						chosserDay = dateFormat.format(date).toString();
+						for (int i = model.getRowCount() - 1; i >= 0; i--) {
+							model.removeRow(i);
+						}
+						System.out.println(chosserDay);
+					}
+				});
+
 		JLabel lblHours = new JLabel("Hours");
 		lblHours.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblHours.setBounds(60, 150, 50, 30);
@@ -159,55 +165,44 @@ public class Plan_GUI extends JFrame {
 		txtHours.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				 char c = e.getKeyChar();
-		           if ((!Character.isDigit(c) ||
-		              (c == KeyEvent.VK_BACK_SPACE) ||
-		              (c == KeyEvent.VK_DELETE))) {
-		                e.consume();
-		              }
+				char c = e.getKeyChar();
+				if ((!Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+					e.consume();
+				}
 			}
 		});
-		
+
 		txtHours.setHorizontalAlignment(SwingConstants.CENTER);
 		txtHours.setBounds(150, 150, 200, 30);
 		contentPane.add(txtHours);
 		txtHours.setColumns(10);
-		
 
 		contentPane.add(lblPlan);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1,
+				(Color) Color.LIGHT_GRAY));
 		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
 		scrollPane.setBounds(60, 200, 420, 200);
 		contentPane.add(scrollPane);
-	
+
 		JTable table = new JTable();
 		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFont(new Font("Arial", Font.PLAIN, 18));
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		table.setDefaultRenderer(String.class, centerRenderer);
-		DefaultTableModel model = new DefaultTableModel(new String[] {
-				"Tag", "Hours"}, 0);
-		
 		table.setModel(model);
-
 		// Create a new table instance
-		
-		
+
 		table.addMouseListener(new MouseListener() {
 
-		
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-			//	btnEdit.setEnabled(true);
-			//	btnDelete.setEnabled(true);
+				// btnEdit.setEnabled(true);
+				// btnDelete.setEnabled(true);
 				row = table.getSelectedRow();
-			    tag = model.getValueAt(row, 0).toString();
+				tag = model.getValueAt(row, 0).toString();
 				hours = model.getValueAt(row, 1).toString();
 				cbTag.setSelectedItem(tag);
 				txtHours.setText(hours);
@@ -216,52 +211,51 @@ public class Plan_GUI extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseExited(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-	
-		
+
 		JButton btnNewButton = new JButton("Add");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.setBounds(380, 50, 100, 30);
 		contentPane.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				String cmb =cbTag.getSelectedItem().toString();
+				String cmb = cbTag.getSelectedItem().toString();
 				String hours = txtHours.getText();
-				model.addRow(new Object[] { cmb,hours });
+				model.addRow(new Object[] { cmb, hours });
 				txtHours.setText(null);
 			}
-			
+
 		});
 		JButton btnNewButton_1 = new JButton("Delete");
-		
+
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_1.setBounds(380, 150, 100, 30);
 		contentPane.add(btnNewButton_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -270,20 +264,86 @@ public class Plan_GUI extends JFrame {
 				txtHours.setText(null);
 			}
 		});
-		
+
 		JButton btnNewButton_2 = new JButton("Update");
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton_2.setBounds(380, 100, 100, 30);
 		contentPane.add(btnNewButton_2);
 		btnNewButton_2.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				model.setValueAt(txtHours.getText(), row, 1);
-				
+
 			}
 		});
-	
+		JButton btnCreatePlan = new JButton("Create Plan");
+		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
+		btnCreatePlan.setBounds(200, 420, 150, 30);
+		btnCreatePlan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+				
+					SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+					String Start_day = formatDate.format(new SimpleDateFormat("dd-MM-yyyy").parse(chosserDay.toString()));
+					String End_day = formatDate.format(new SimpleDateFormat("dd-MM-yyyy").parse(Add_7day(chosserDay.toString())));					
+		
+					for (int i = 0; i < model.getRowCount(); i++) {
+						String id_Tag = model.getValueAt(i, 0).toString();
+						String Hour = model.getValueAt(i, 1).toString();
+						PreparedStatement Tag_query = db.getConnection()
+								.prepareStatement("Select * from Tag where Name ='"+id_Tag+"'");
+						ResultSet rs = Tag_query.executeQuery();
+						while(rs.next())
+						{
+							id_Tag=rs.getString("Id");
+						}					
+						String query ="insert into Plans(Start_Day,End_date,Id_Tag,Hour,Id_User) values ('"
+								+Start_day+"','"
+								+End_day+"','"
+								+id_Tag+"','"
+								+Hour+"','"
+								+id_user+"')";
+						PreparedStatement Insert_query = db.getConnection()
+								.prepareStatement(query);
+						Insert_query.executeUpdate();
+						System.out.println("Start_Day :"+Start_day );
+						System.out.println("End_Day :"+End_day );
+						System.out.println("Id Tag :"+id_Tag );
+						System.out.println("Hour :"+Hour );
+						System.out.println("User :"+id_user );
+					}
+					JOptionPane.showMessageDialog(null,
+							"Insert Completed.", "Successfull",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null,
+							"Insert Fail.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}
+			}
+		});
+		contentPane.add(btnCreatePlan);
 	}
+	public static String Add_7day(String untildate) {
+		String newday = "";
+		// current format
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFormat.parse(untildate));
+			cal.add(Calendar.DATE, 7);
+			newday = dateFormat.format(cal.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newday;
+	}
+
 }
