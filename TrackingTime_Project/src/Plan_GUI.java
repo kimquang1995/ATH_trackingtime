@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 import java.awt.List;
 
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Font;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,8 +54,6 @@ import java.awt.event.MouseListener;
 
 //import TimeLog.DateCellRenderer;
 
-
-
 import com.toedter.calendar.JDateChooser;
 
 import java.awt.event.ActionListener;
@@ -78,13 +78,13 @@ public class Plan_GUI extends JFrame {
 	 */
 	/**
 	 * Create the frame.
-	 * @throws ParseException 
+	 * 
+	 * @throws ParseException
 	 */
 	public Plan_GUI(int id_User) throws ParseException {
 		setTitle("CREATE PLAN");
 		id_user = id_User;
-		model = new DefaultTableModel(new String[] { "Tag",
-		"Hours" }, 0);
+		model = new DefaultTableModel(new String[] { "Tag", "Hours" }, 0);
 		DatabaseConnection db = new DatabaseConnection();
 		try {
 			db.Connect();
@@ -112,7 +112,6 @@ public class Plan_GUI extends JFrame {
 		lblStar_Day.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblStar_Day.setBounds(60, 50, 70, 30);
 		contentPane.add(lblStar_Day);
-	
 
 		//
 		JLabel lblTags = new JLabel("Tag");
@@ -140,7 +139,8 @@ public class Plan_GUI extends JFrame {
 		JDateChooser StartDay = new JDateChooser();
 		StartDay.setBounds(150, 50, 200, 30);
 		contentPane.add(StartDay);
-		StartDay.setDate(dateFormat.parse(dateFormat.format(Calendar.getInstance().getTime())));
+		StartDay.setDate(dateFormat.parse(dateFormat.format(Calendar
+				.getInstance().getTime())));
 		StartDay.addPropertyChangeListener("date",
 				new PropertyChangeListener() {
 					@Override
@@ -149,6 +149,15 @@ public class Plan_GUI extends JFrame {
 						SimpleDateFormat dateFormat = new SimpleDateFormat(
 								"dd-MM-yyyy");
 						chosserDay = dateFormat.format(date).toString();
+						try {
+							CheckDuplicasePlan(chosserDay);
+						} catch (HeadlessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						for (int i = model.getRowCount() - 1; i >= 0; i--) {
 							model.removeRow(i);
 						}
@@ -287,49 +296,48 @@ public class Plan_GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-				
-					SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-					String Start_day = formatDate.format(new SimpleDateFormat("dd-MM-yyyy").parse(chosserDay.toString()));
-					String End_day = formatDate.format(new SimpleDateFormat("dd-MM-yyyy").parse(Add_7day(chosserDay.toString())));					
-		
+
+					SimpleDateFormat formatDate = new SimpleDateFormat(
+							"yyyy-MM-dd");
+					String Start_day = formatDate.format(new SimpleDateFormat(
+							"dd-MM-yyyy").parse(chosserDay.toString()));
+					String End_day = formatDate.format(new SimpleDateFormat(
+							"dd-MM-yyyy").parse(Add_7day(chosserDay.toString())));
+
 					for (int i = 0; i < model.getRowCount(); i++) {
 						String id_Tag = model.getValueAt(i, 0).toString();
 						String Hour = model.getValueAt(i, 1).toString();
 						PreparedStatement Tag_query = db.getConnection()
-								.prepareStatement("Select * from Tag where Name ='"+id_Tag+"'");
+								.prepareStatement(
+										"Select * from Tag where Name ='"
+												+ id_Tag + "'");
 						ResultSet rs = Tag_query.executeQuery();
-						while(rs.next())
-						{
-							id_Tag=rs.getString("Id");
-						}					
-						String query ="insert into Plans(Start_Day,End_date,Id_Tag,Hour,Id_User) values ('"
-								+Start_day+"','"
-								+End_day+"','"
-								+id_Tag+"','"
-								+Hour+"','"
-								+id_user+"')";
+						while (rs.next()) {
+							id_Tag = rs.getString("Id");
+						}
+						String query = "insert into Plans(Start_Day,End_date,Id_Tag,Hour,Id_User) values ('"
+								+ Start_day
+								+ "','"
+								+ End_day
+								+ "','"
+								+ id_Tag
+								+ "','" + Hour + "','" + id_user + "')";
 						PreparedStatement Insert_query = db.getConnection()
 								.prepareStatement(query);
 						Insert_query.executeUpdate();
-						System.out.println("Start_Day :"+Start_day );
-						System.out.println("End_Day :"+End_day );
-						System.out.println("Id Tag :"+id_Tag );
-						System.out.println("Hour :"+Hour );
-						System.out.println("User :"+id_user );
 					}
-					JOptionPane.showMessageDialog(null,
-							"Insert Completed.", "Successfull",
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Insert Completed.",
+							"Successfull", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null,
-							"Insert Fail.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Insert Fail.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
 			}
 		});
 		contentPane.add(btnCreatePlan);
 	}
+
 	public static String Add_7day(String untildate) {
 		String newday = "";
 		// current format
@@ -346,4 +354,69 @@ public class Plan_GUI extends JFrame {
 		return newday;
 	}
 
+	public static String Add_1day(String untildate) {
+		String newday = "";
+		// current format
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFormat.parse(untildate));
+			cal.add(Calendar.DATE, 1);
+			newday = dateFormat.format(cal.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newday;
+	}
+
+	public static boolean CheckDuplicasePlan(String Start_Day)
+			throws HeadlessException, ParseException {
+		boolean flag = false;
+		DatabaseConnection db = new DatabaseConnection();
+		String Start_D = "";
+		String dateSelect = "";
+		String dateExist="";
+		try {
+			db.Connect();
+			for (int i = 0; i < 7; i++) {
+				dateSelect = new SimpleDateFormat("yyyy-MM-dd")
+						.format(new SimpleDateFormat("dd-MM-yyyy")
+								.parse(Start_Day));
+				String query = "SELECT * FROM Plans where convert(varchar(10),Start_Day, 120) <= '"
+						+ dateSelect + "' and "
+								+ "convert(varchar(10),End_date, 120) >= '"
+						+ dateSelect + "'";
+				PreparedStatement select_query = db.getConnection()
+						.prepareStatement(query);
+				ResultSet rs = select_query.executeQuery();
+				if (!rs.isBeforeFirst()) {
+				} else {
+					while (rs.next()) {
+						Start_D = new SimpleDateFormat("dd-MM-yyyy")
+								.format(new SimpleDateFormat("yyyy-MM-dd")
+										.parse(rs.getString("Start_Day")));
+					
+					}
+					dateExist = dateSelect;
+					flag = true;
+				}
+				Start_Day = Add_1day(Start_Day);
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (flag) {
+			JOptionPane.showMessageDialog(
+					null,"Có Một Ngày Đã Tồn Tại Plan từ "
+							+ Start_D
+							+ " Đến "
+							+ Add_7day(Start_D), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return flag;
+
+	}
 }
