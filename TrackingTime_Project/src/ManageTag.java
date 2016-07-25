@@ -166,19 +166,6 @@ public class ManageTag extends JFrame implements ActionListener {
 		}
 	}
 
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ManageTag frame = new ManageTag();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
 	/**
 	 * Create the frame.
 	 */
@@ -194,7 +181,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		}
 		//
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 650, 650);
+		setBounds(100, 100, 450, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -204,52 +191,43 @@ public class ManageTag extends JFrame implements ActionListener {
 		JLabel lblNewLabel = new JLabel("MANAGE TAG");
 		lblNewLabel.setForeground(new Color(0, 204, 255));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(240, 11, 165, 30);
+		lblNewLabel.setBounds(140, 10, 165, 30);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		contentPane.add(lblNewLabel);
 
-		JLabel lblName = new JLabel("NAME");
-		lblName.setVerticalAlignment(SwingConstants.TOP);
-		lblName.setBounds(119, 0, 0, 571);
-		lblName.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		contentPane.add(lblName);
-
 		JLabel lblStatus = new JLabel("Name:");
 		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStatus.setBounds(60, 120, 50, 30);
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblStatus.setBounds(58, 70, 60, 30);
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		contentPane.add(lblStatus);
 		/*
 		 * if(cbb_tag_status.getSelectedItem().equals("True")){ status=1; }else{
 		 * status=0; }
 		 */
-		ImageIcon iadd = new ImageIcon("Images/Managetag_add.png");
-		ImageIcon iaupdate = new ImageIcon("Images/Managetag_Update.png");
-		ImageIcon idelete = new ImageIcon("Images/Managetag_Delete.png");
 
 		txt_tag_name = new JTextField();
 		txt_tag_name.setFont(new Font("Roboto", Font.PLAIN, 15));
-		txt_tag_name.setBounds(150, 120, 233, 30);
+		txt_tag_name.setBounds(120, 70, 250, 30);
 		contentPane.add(txt_tag_name);
 		txt_tag_name.setColumns(10);
 		// add buton
 		JButton btn_tag_add = new JButton("Add");
 		btn_tag_add.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_tag_add.setBounds(470, 120, 100, 30);
+		btn_tag_add.setBounds(60, 110, 100, 30);
 		contentPane.add(btn_tag_add);
 		// add action for btn add
 		btn_tag_add.addActionListener(this);
 
 		JButton btn_tag_update = new JButton("Edit");
 		btn_tag_update.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_tag_update.setBounds(470, 170, 100, 30);
+		btn_tag_update.setBounds(165, 110, 100, 30);
 		contentPane.add(btn_tag_update);
 		// /add action for btn update
 		btn_tag_update.addActionListener(this);
 
 		JButton btn_tag_delete = new JButton("Delete");
 		btn_tag_delete.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_tag_delete.setBounds(470, 220, 100, 30);
+		btn_tag_delete.setBounds(270, 110, 100, 30);
 		contentPane.add(btn_tag_delete);
 		// add action for btn delete
 		btn_tag_delete.addActionListener(this);
@@ -257,7 +235,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
 		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
-		scrollPane.setBounds(60, 270, 510, 300);
+		scrollPane.setBounds(60, 150, 310, 150);
 		contentPane.add(scrollPane);
 
 		table = new JTable();
