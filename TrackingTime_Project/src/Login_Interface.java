@@ -145,7 +145,7 @@ public class Login_Interface extends JFrame {
 			}
 		});
 
-		btnForgotPassword = new JButton("Forgot Password");
+		btnForgotPassword = new JButton("Forgot Pass");
 		btnForgotPassword.setBounds(212, 220, 113, 23);
 		contentPane.add(btnForgotPassword);
 		btnForgotPassword.addActionListener(new ActionListener() {

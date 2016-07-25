@@ -29,7 +29,7 @@ public class ForgotPass_Interface extends JFrame {
 	public ForgotPass_Interface() {
 		setTitle("Get Password");
 		SendEmail sendmail = new SendEmail();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 457, 229);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
