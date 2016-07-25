@@ -41,10 +41,15 @@ public class Main_GUI extends JFrame {
 	JDateChooser dateChooser = new JDateChooser();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	DatabaseConnection db = new DatabaseConnection();
-	JPanel panelTag;
+	JPanel panelTag = new JPanel();
 	int id_User = 0;
 	private JTable table;
-
+	JButton btnCreatePlan;
+	JButton btntimeLog;
+	JButton btnManageTag;
+	JButton btnStatistic;
+	JButton btnLogout;
+	JScrollPane scrollPane ;
 	public Main_GUI(String userName, int IdUser) throws ParseException {
 		try {
 			db.Connect();
@@ -52,11 +57,14 @@ public class Main_GUI extends JFrame {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+
+		panelTag.setBounds(70, 270, 150, 300);
+		add(panelTag);
 		setTitle("Tracking Time");
-		setBounds(100, 100,820, 650);
+		setBounds(100, 100, 820, 650);
 		setLayout(null);
 
-		JScrollPane scrollPane = new JScrollPane();
+		 scrollPane = new JScrollPane();
 		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 12));
 		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) new Color(192,
 				192, 192)));
@@ -68,6 +76,22 @@ public class Main_GUI extends JFrame {
 		id_User = IdUser;
 		// Panel Date
 		dateChooser.setDate(dateFormat.parse(currentDate));
+		dateChooser.setFont(new Font("Arial", Font.BOLD, 20));
+		dateChooser.addPropertyChangeListener("date",
+				new PropertyChangeListener() {
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						Date date = (Date) evt.getNewValue();
+						currentDate = dateFormat.format(date).toString();
+						try {
+							GetTag_inPlan(currentDate);
+							LoadTable(getQueryTimeLog(currentDate));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
 		JPanel panelDate = new JPanel(new GridLayout(1, 7, 5, 0));
 
 		JButton btnBack = new JButton("<");
@@ -134,7 +158,7 @@ public class Main_GUI extends JFrame {
 		this.add(lbldate);
 		// Panel Action
 		JPanel panelAction = new JPanel(new GridLayout(1, 5, 5, 0));
-		JButton btnCreatePlan = new JButton("Creat Plan");
+		btnCreatePlan = new JButton("Creat Plan");
 		btnCreatePlan.addActionListener(new ActionListener() {
 
 			@Override
@@ -152,7 +176,7 @@ public class Main_GUI extends JFrame {
 				});
 			}
 		});
-		JButton btntimeLog = new JButton("Time Log");
+		btntimeLog = new JButton("Time Log");
 		btntimeLog.addActionListener(new ActionListener() {
 
 			@Override
@@ -161,7 +185,8 @@ public class Main_GUI extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							TimeLog g_TimeLog = new TimeLog(currentDate,id_User);
+							TimeLog g_TimeLog = new TimeLog(currentDate,
+									id_User);
 							g_TimeLog.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -171,7 +196,7 @@ public class Main_GUI extends JFrame {
 			}
 		});
 
-		JButton btnManageTag = new JButton("Manage Tag");
+		btnManageTag = new JButton("Manage Tag");
 		btnManageTag.addActionListener(new ActionListener() {
 
 			@Override
@@ -189,7 +214,7 @@ public class Main_GUI extends JFrame {
 				});
 			}
 		});
-		JButton btnStatistic = new JButton("Statistic");
+		btnStatistic = new JButton("Statistic");
 		btnStatistic.addActionListener(new ActionListener() {
 
 			@Override
@@ -207,7 +232,7 @@ public class Main_GUI extends JFrame {
 				});
 			}
 		});
-		JButton btnLogout = new JButton("Log out");
+		btnLogout = new JButton("Log out");
 		btnLogout.addActionListener(new ActionListener() {
 
 			@Override
@@ -234,22 +259,7 @@ public class Main_GUI extends JFrame {
 		 * panelHours.add(new JLabel("3")); panelHours.setBounds(400, 270, 100,
 		 * 300); add(panelHours);
 		 */
-		dateChooser.setFont(new Font("Arial", Font.BOLD, 20));
-		dateChooser.addPropertyChangeListener("date",
-				new PropertyChangeListener() {
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						Date date = (Date) evt.getNewValue();
-						currentDate = dateFormat.format(date).toString();
-						try {
-							GetTag_inPlan(currentDate);
-							LoadTable(getQueryTimeLog(currentDate));
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
+
 		try {
 			GetTag_inPlan(currentDate);
 			LoadTable(getQueryTimeLog(currentDate));
@@ -320,17 +330,26 @@ public class Main_GUI extends JFrame {
 					.prepareStatement(queryTimeLog_Day);
 			ResultSet rs = query.executeQuery();
 			if (!rs.isBeforeFirst()) {
-
+				panelTag.setEnabled(false);
+				panelTag.removeAll();
+				panelTag.validate();
+				panelTag.repaint();
+				btntimeLog.setEnabled(false);
+				scrollPane.setVisible(false);
 			} else {
+				btntimeLog.setEnabled(true);
+				scrollPane.setVisible(true);
 				while (rs.next()) {
 					rowCount++;
+					
 				}
 			}
-			panelTag = new JPanel(new GridLayout(rowCount, 1, 0, 5));
-			// panelTag.setVisible(true);
-			panelTag.setBounds(70, 270, 150, 300);
 			panelTag.removeAll();
+			panelTag.setLayout(new GridLayout(rowCount, 1, 0, 5));
+			// panelTag.setVisible(true);
+
 			ResultSet rs1 = query.executeQuery();
+
 			if (!rs1.isBeforeFirst()) {
 				lbldate.setText("Not Plan for This Day");
 			} else {
@@ -338,6 +357,7 @@ public class Main_GUI extends JFrame {
 						"yyyy-MM-dd hh:mm:ss");
 				SimpleDateFormat dt1 = new SimpleDateFormat("dd-MM-yyyy");
 				while (rs1.next()) {
+
 					panelTag.add(new JButton((rs1.getString("Name") + "--- "
 							+ rs1.getString("Hours") + " Hours")));
 					String start = dt1.format(dt.parse(rs1
@@ -346,9 +366,10 @@ public class Main_GUI extends JFrame {
 							.format(dt.parse(rs1.getString("End_date")));
 					lbldate.setText("Plan from " + start + " to " + end);
 				}
+				panelTag.validate();
+				panelTag.repaint();
 			}
-			add(panelTag);
-			panelTag.revalidate();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -364,16 +385,14 @@ public class Main_GUI extends JFrame {
 		return "select t.Name as Tags,tl.Name,tl.Hours,convert(char(5), tl.Start_Time, 108) Start_Time,convert(char(5), tl.End_Time, 108) End_Time from TimeLog tl"
 				+ " left join Tag t on t.Id = tl.Id_Tag "
 				+ "where convert(varchar(10),Date, 120) = '"
-				+ dateSelect 
-				+ "' " 
-				+ "order by Tags";
+				+ dateSelect
+				+ "' " + "order by Tags";
 	}
 
 	public void LoadTable(String queryExe) {
 		try {
-			DefaultTableModel model = new DefaultTableModel(
-					new String[] { "Tag", "Name", "Hours",
-							"Start Time", "End Time" }, 0);
+			DefaultTableModel model = new DefaultTableModel(new String[] {
+					"Tag", "Name", "Hours", "Start Time", "End Time" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
@@ -390,6 +409,16 @@ public class Main_GUI extends JFrame {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	public void EnableButton() {
+		btnDate.setEnabled(true);
+		btnCreatePlan.setEnabled(true);
+		btnLogout.setEnabled(true);
+		btnManageTag.setEnabled(true);
+		btnStatistic.setEnabled(true);
+		btntimeLog.setEnabled(true);
+
 	}
 
 }

@@ -251,10 +251,13 @@ public class Plan_GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if(txtHours.getText().length()!=0)
+				{
 				String cmb = cbTag.getSelectedItem().toString();
 				String hours = txtHours.getText();
 				model.addRow(new Object[] { cmb, hours });
 				txtHours.setText(null);
+				}
 			}
 
 		});
@@ -283,6 +286,7 @@ public class Plan_GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if(txtHours.getText().length()!=0)
 				model.setValueAt(txtHours.getText(), row, 1);
 
 			}
