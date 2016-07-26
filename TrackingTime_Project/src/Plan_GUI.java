@@ -156,6 +156,14 @@ public class Plan_GUI extends JFrame {
 								"dd-MM-yyyy");
 						chosserDay = dateFormat.format(date).toString();
 						try {
+							if(model.getRowCount()!=0)
+							{
+								btnCreatePlan.setEnabled(true);
+							}
+							else
+							{
+								btnCreatePlan.setEnabled(false);
+							}
 							if(CheckDuplicasePlan(chosserDay)==true)
 							{
 								btnAdd.setEnabled(false);
