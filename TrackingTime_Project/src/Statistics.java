@@ -1,74 +1,48 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.jfree.util.Rotation;
 
-import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-import com.toedter.components.JSpinField;
 import com.toedter.calendar.JYearChooser;
 
-import javax.swing.border.MatteBorder;
-
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-
-import java.awt.Component;
-import java.awt.Dimension;
-
 public class Statistics extends JFrame {
-
-	private JPanel contentPane;
-	private String[] year = new String[100];
 	DatabaseConnection db = new DatabaseConnection();
-	int iCurentyear = Calendar.getInstance().get(Calendar.YEAR);
-	int iCurentDate = Calendar.getInstance().get(Calendar.DATE);
-	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	JDateChooser dateChooser_Start;
-	JDateChooser dateChooser_To;
-	JYearChooser yearChooser;
-	/**
-	 * Launch the application.
-	 */
-	/*
-	 * public static void main(String[] args) { EventQueue.invokeLater(new
-	 * Runnable() { public void run() { try { Statistics frame = new
-	 * Statistics(); frame.setVisible(true); } catch (Exception e) {
-	 * e.printStackTrace(); } } }); }
-	 */
+
+	public static void main(String[] args) throws ParseException {
+		Statistics f = new Statistics();
+		f.setVisible(true);
+	}
+
 	/**
 	 * Create the frame.
 	 */
-	public Statistics() {
+	JPanel mainPane = new JPanel(new BorderLayout());
+
+	public Statistics() throws ParseException {
 		try {
 			db.Connect();
 
@@ -77,231 +51,251 @@ public class Statistics extends JFrame {
 		}
 		setTitle("Statistics");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 650, 650);
-		contentPane = new JPanel();
-		// contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		// weeks
-		// -*--------------------------------------------
+		setBounds(100, 100, 1000, 650);
+		add(createMainPanel());
+	}
 
-		JButton btnWeeks = new JButton("Show by Duration");
-		btnWeeks.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnWeeks.setBounds(90, 150, 150, 30);
+	private JPanel createMainPanel() throws ParseException {
+		JPanel panel = new JPanel(new BorderLayout(10, 10));
+		panel.add(createTitlePanel(), BorderLayout.NORTH);
+		panel.add(LeftPanel(), BorderLayout.WEST);
+		panel.add(CenterPanel(), BorderLayout.CENTER);
+		panel.add(RightPanel(), BorderLayout.EAST);
+		panel.add(BottomPanel(), BorderLayout.SOUTH);
+		return panel;
+	}
 
-		btnWeeks.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+	// create Top panel
+	private JPanel createTitlePanel() {
+		JPanel panel = new JPanel();
+		JLabel lblTitle = new JLabel("Statistics");
+		lblTitle.setFont(new Font("Arial", Font.BOLD, 50));
+		panel.add(lblTitle);
+		return panel;
+	}
 
-				try {
-					DefaultPieDataset dataset1 = new DefaultPieDataset();
-					String sQuery = getQueryTimeLog(
-							dateFormat.format(dateChooser_Start.getDate()),
-							dateFormat.format(dateChooser_To.getDate()));
-					PreparedStatement query = db.getConnection()
-							.prepareStatement(sQuery);
-					ResultSet rs = query.executeQuery();
-					if (!rs.isBeforeFirst()) {
-						dataset1.setValue("No Values", 0);
-					}
-					// float hours = Float.parseFloat(rs.getString("Hours"));
+	// create Left panel
+	private JPanel LeftPanel() {
+		JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
+		return panel;
+	}
 
-					else {
-						while (rs.next()) {
-							String x = rs.getString("Tags");
-							dataset1.setValue(x,
-									Float.parseFloat(rs.getString("Hours")));
-						}
-						// Create the custom label generator
-					}
+	// create Center panel
+	private JPanel CenterPanel() throws ParseException {
+		JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
+		JPanel TOPpanel = new JPanel(new GridLayout(1, 2, 5, 5));
+		JPanel sub_TOPpanel1 = new JPanel(new BorderLayout());
+		JPanel sub_TOPpanel2 = new JPanel(new BorderLayout());
+		JPanel BOTpanel = new JPanel(new GridLayout(1, 2, 5, 5));
+		JPanel sub_BOTpanel1 = new JPanel(new BorderLayout());
+		JPanel sub_BOTpanel2 = new JPanel(new BorderLayout());
 
-					final PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
-							"{0} = {2}");
-					JFreeChart chart1 = ChartFactory.createPieChart("Weeks",
-							dataset1, true, false, false);
-					PiePlot P = (PiePlot) chart1.getPlot();
-					P.setLabelGenerator(labelGenerator);
-					// P.setForegroundAlpha(0);
-					P.setCircular(true);
-					ChartPanel frame = new ChartPanel(chart1);
-					contentPane.setLayout(new java.awt.BorderLayout());
-					contentPane.add(frame, BorderLayout.SOUTH);
-					contentPane.validate();
-				}
-
-				catch (Exception e1) {
-					System.out.println(e1.toString());
-				}
-
-			}
-		});
-
-		contentPane.setLayout(null);
-		contentPane.setLayout(null);
-		contentPane.add(btnWeeks);
-		// years-------------------------------------------------
-
-		JButton btnYears = new JButton("Show by Year");
-		btnYears.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnYears.setBounds(400, 150, 150, 30);
-		btnYears.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnYears.addActionListener(new ActionListener() {
-
+		// Toppanel 1
+		JYearChooser yearChooser1 = new JYearChooser();
+		JLabel lblTitile = new JLabel("PLEASE CHOOSE YEAR");
+		lblTitile.setFont(new Font("Arial", Font.BOLD, 20));
+		JPanel sub_TOPpanel1_Title = new JPanel(new GridLayout(1, 2, 5, 5));
+		sub_TOPpanel1_Title.add(lblTitile);
+		sub_TOPpanel1_Title.add(yearChooser1);
+		sub_TOPpanel1.add(sub_TOPpanel1_Title, BorderLayout.NORTH);
+		sub_TOPpanel1.add(((JFrame) FrameOverView(yearChooser1.getYear()))
+				.getContentPane(), BorderLayout.CENTER);
+		// Toppanel 2
+		JYearChooser yearChooser2 = new JYearChooser();
+		JLabel lblTitile2 = new JLabel("PLEASE CHOOSE YEAR");
+		lblTitile2.setFont(new Font("Arial", Font.BOLD, 20));
+		JPanel sub_TOPpanel2_Title = new JPanel(new GridLayout(1, 2, 5, 5));
+		sub_TOPpanel2_Title.add(lblTitile2);
+		sub_TOPpanel2_Title.add(yearChooser2);
+		sub_TOPpanel2.add(sub_TOPpanel2_Title, BorderLayout.NORTH);
+		sub_TOPpanel2.add(((JFrame) Frame_onTotalTime(yearChooser2.getYear()))
+				.getContentPane(), BorderLayout.CENTER);
+		// Botpanel 1
+		// sub_BOTpanel2.add(frame.getContentPane(),BorderLayout.CENTER);
+		// sub_BOTpanel2.add(new JLabel("OverView"),BorderLayout.NORTH); //
+		// Botpanel 2
+		JDateChooser DateChooser4_From = new JDateChooser();
+		JDateChooser DateChooser4_To = new JDateChooser();
+		JButton btnShow4 = new JButton("Statistic");
+		JLabel lblTitile4_From = new JLabel("FROM");
+		lblTitile4_From.setFont(new Font("Arial", Font.BOLD, 20));
+		JLabel lblTitile4_To = new JLabel("TO");
+		lblTitile4_To.setFont(new Font("Arial", Font.BOLD, 20));
+		JPanel sub_BOTpanel2_Title = new JPanel(new GridLayout(1, 5, 5, 5));
+		sub_BOTpanel2_Title.add(lblTitile4_From);
+		sub_BOTpanel2_Title.add(DateChooser4_From);
+		sub_BOTpanel2_Title.add(lblTitile4_To);
+		sub_BOTpanel2_Title.add(DateChooser4_To);
+		sub_BOTpanel2_Title.add(btnShow4);
+		sub_BOTpanel2.add(sub_BOTpanel2_Title, BorderLayout.NORTH);
+		sub_BOTpanel2.add(((JFrame) Frame_onTotalTimeWeek("21-07-2016","29-07-2016"))
+							.getContentPane(), BorderLayout.CENTER);
+		btnShow4.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-
 				try {
-					DefaultPieDataset dataset2 = new DefaultPieDataset();
-					String Squery = "select t.Name as Tags,Sum(tl.Hours) as Hours from TimeLog tl"
-							+ " left join Tag t on t.Id = tl.Id_Tag "
-							+ "where YEAR(Date) >= '"
-							+ yearChooser.getValue()
-							+ "' group by t.Name " + "order by Tags";
-					PreparedStatement query = db.getConnection()
-							.prepareStatement(Squery);
-					ResultSet rs = query.executeQuery();
-					if (!rs.isBeforeFirst()) {
-						dataset2.setValue("No value", 0);
-					} else {
-						while (rs.next()) {
-							dataset2.setValue(rs.getString("Tags"), Float
-									.parseFloat(rs.getString("Hours")
-											.toString()));
-						}
-
-						final PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
-								"{0} = {2}");
-						JFreeChart chart2 = ChartFactory.createPieChart(
-								"Years", dataset2, true, false, false);
-						PiePlot P = (PiePlot) chart2.getPlot();
-						// P.setForegroundAlpha(0);
-						P.setLabelGenerator(labelGenerator);
-
-						P.setCircular(true);
-						ChartPanel frame = new ChartPanel(chart2);
-						// frame.setVisible(true);
-						// frame.setBounds(100, 300, 300, 200);
-						// frame.setSize(200,200);
-						// contentPane.add(frame);
-						contentPane.setLayout(new java.awt.BorderLayout());
-						// contentPane.add(frame,
-						// BorderLayout.AFTER_LAST_LINE);
-						// contentPane.add(frame, new Dimension (200,200));
-						// frame.setSize(200, 200);
-
-						contentPane.add(frame, BorderLayout.SOUTH);
-						contentPane.validate();
-
-					}
-					// /---------------------------------------------
-
-					// Create the custom label generator
-
-				} catch (Exception e2) {
-					System.out.println(e2.toString());
+					String from_date = new SimpleDateFormat("dd-MM-yyyy").format(
+							DateChooser4_From.getDate());
+					String to_date = new SimpleDateFormat("dd-MM-yyyy").format(
+							DateChooser4_To.getDate());
+					JFrame chart =Frame_onTotalTimeWeek(from_date,to_date);
+					sub_BOTpanel2.removeAll();
+					sub_BOTpanel2.add(sub_BOTpanel2_Title, BorderLayout.NORTH);
+					sub_BOTpanel2.add(chart.getContentPane(), BorderLayout.CENTER);
+					sub_BOTpanel2.validate();
+					sub_BOTpanel2.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});
-		
-		contentPane.setLayout(null);
 
-		int startYear = 2000;
-		for (int i = 0; i < 100; i++) {
-			if (i == 0) {
-				year[i] = "Years";
-			} else
-				year[i] = "" + (startYear + i);
+		TOPpanel.add(sub_TOPpanel1);
+		TOPpanel.add(sub_TOPpanel2);
+		BOTpanel.add(sub_BOTpanel1);
+		BOTpanel.add(sub_BOTpanel2);
+		panel.add(TOPpanel);
+		panel.add(BOTpanel);
 
-		}
-
-		contentPane.add(btnYears);
-
-		JLabel lblStatistics = new JLabel("STATISTICS");
-		lblStatistics.setForeground(new Color(0, 204, 255));
-		lblStatistics.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStatistics.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblStatistics.setBounds(250, 11, 150, 30);
-		contentPane.add(lblStatistics);
-
-		dateChooser_Start = new JDateChooser();
-		dateChooser_Start.setBorder(new MatteBorder(0, 2, 2, 0,
-				(Color) Color.LIGHT_GRAY));
-		dateChooser_Start.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		dateChooser_Start.setBounds(40, 90, 100, 30);
-		try {
-			dateChooser_Start.setDate(dateFormat.parse(SubTrac_7day(dateFormat
-					.format(Calendar.getInstance().getTime()))));
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		contentPane.add(dateChooser_Start);
-
-		yearChooser = new JYearChooser();
-		yearChooser.getSpinner().setFont(new Font("Tahoma", Font.PLAIN, 11));
-		yearChooser.getSpinner().setMinimumSize(new Dimension(50, 30));
-		yearChooser.getSpinner().setPreferredSize(new Dimension(50, 30));
-		yearChooser.setHorizontalAlignment(0);
-		yearChooser.setStartYear(2010);
-		yearChooser.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		yearChooser.setBorder(new MatteBorder(0, 2, 2, 0,
-				(Color) Color.LIGHT_GRAY));
-		yearChooser.setBounds(400, 90, 150, 30);
-		contentPane.add(yearChooser);
-		yearChooser.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { yearChooser.getSpinner() }));
-
-		JLabel lblTo = new JLabel("----");
-		lblTo.setFont(new Font("Roboto", Font.PLAIN, 16));
-		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTo.setBounds(140, 90, 50, 30);
-		contentPane.add(lblTo);
-
-		dateChooser_To = new JDateChooser();
-		dateChooser_To.setBorder(new MatteBorder(0, 2, 2, 0,
-				(Color) Color.LIGHT_GRAY));
-		dateChooser_To.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		dateChooser_To.setBounds(191, 90, 100, 30);
-		dateChooser_To.setDate(Calendar.getInstance().getTime());
-		contentPane.add(dateChooser_To);
-
-		// tag in
-		// years-----------------------------------
-
+		return panel;
 	}
 
+	// create Right panel
+	private JPanel RightPanel() {
+		JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
+		// panel.add(new JButton("Right"));
+		// panel.add(new JButton("Right"));
+		return panel;
+	}
 
-	public static String SubTrac_7day(String untildate) {
+	// create login button panel
+	private JPanel BottomPanel() {
+		JPanel panel = new JPanel();
+		return panel;
+	}
+
+	public JFrame DrawChar(String title, DefaultPieDataset dataset) {
+		JFreeChart chart = ChartFactory.createPieChart3D(title, dataset, true,
+				true, false);
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setStartAngle(290);
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.5f);
+		PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+				"{0}: {1} ({2})", new DecimalFormat("0.0"), new DecimalFormat(
+						"0.0%"));
+		plot.setLabelGenerator(gen);
+		return new ChartFrame(title, chart);
+	}
+
+	public Frame FrameOverView(int year) {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
+				+ "Left join Tag t on t.Id = tl.Id_Tag"
+				+ " where YEAR(tl.Date) =" + year + " group by t.Name";
+		try {
+
+			PreparedStatement select_query = db.getConnection()
+					.prepareStatement(query);
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					dataset.setValue(rs.getString("Name"),
+							Float.parseFloat(rs.getString("Hours")));
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return DrawChar("OVERVIEW TAG FOR YEAR", dataset);
+	}
+
+	public Frame Frame_onTotalTime(int year) {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		float total_Hours = 0;
+		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
+				+ "Left join Tag t on t.Id = tl.Id_Tag"
+				+ " where YEAR(tl.Date) =" + year + " group by t.Name";
+		try {
+
+			PreparedStatement select_query = db.getConnection()
+					.prepareStatement(query);
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					total_Hours += Float.parseFloat(rs.getString("Hours"));
+				}
+				dataset.setValue("Time Active", total_Hours);
+				dataset.setValue("Total Time", 8760);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return DrawChar("STATISTIC ON TOTAL TIME YEAR", dataset);
+	}
+
+	public JFrame Frame_onTotalTimeWeek(String From_date, String To_date)
+			throws ParseException {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		From_date = new SimpleDateFormat("yyyy-MM-dd")
+				.format(new SimpleDateFormat("dd-MM-yyyy").parse(From_date));
+		To_date = new SimpleDateFormat("yyyy-MM-dd")
+				.format(new SimpleDateFormat("dd-MM-yyyy").parse(To_date));
+		float total_Hours = (float) 0.0;
+		int countDay = 0;
+		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
+				+ "Left join Tag t on t.Id = tl.Id_Tag "
+				+ "where convert(varchar(10),tl.Date, 120) >=" + "'"
+				+ From_date + "' " + "and "
+				+ "convert(varchar(10),tl.Date, 120) <=" + "'" + To_date + "' "
+				+ "group by t.Name";
+		try {
+
+			PreparedStatement select_query = db.getConnection()
+					.prepareStatement(query);
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					total_Hours += Float.parseFloat(rs.getString("Hours"));
+				}
+				dataset.setValue("Time Active", total_Hours);
+				System.out.println(total_Hours);
+				dataset.setValue("Total Time", (7 * 24));
+				System.out.println(7 * 24);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return DrawChar("STATISTIC ON TOTAL TIME WEEK", dataset);
+	}
+
+	public Frame FrameOverViewforWeek(String Start_date, String End_date) {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		return DrawChar("OVERVIEW TAG FOR WEEK", dataset);
+	}
+
+	public static String Add_1day(String untildate) {
 		String newday = "";
 		// current format
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dateFormat.parse(untildate));
-			cal.add(Calendar.DATE, -7);
+			cal.add(Calendar.DATE, 1);
 			newday = dateFormat.format(cal.getTime());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return newday;
-	}
-
-	public String getQueryTimeLog(String Start_date, String End_Date)
-			throws ParseException {
-
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		Date inidate1 = new SimpleDateFormat("dd-MM-yyyy").parse(Start_date);
-		Date inidate2 = new SimpleDateFormat("dd-MM-yyyy").parse(End_Date);
-		String Start_date_1 = formater.format(inidate1);
-		String End_Date_1 = formater.format(inidate2);
-		return "select t.Name as Tags,Sum(tl.Hours) as Hours from TimeLog tl"
-				+ " left join Tag t on t.Id = tl.Id_Tag "
-				+ "where convert(varchar(10),Date, 120) >= '" + Start_date_1
-				+ "' " + "and convert(varchar(10),Date, 120)<= '" + End_Date_1
-				+ "' group by t.Name " + "order by Tags";
 	}
 }
