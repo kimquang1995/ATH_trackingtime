@@ -223,7 +223,7 @@ public class Main_GUI extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							Statistics g_Sta = new Statistics();
+							Statistics g_Sta = new Statistics(id_User);
 							g_Sta.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

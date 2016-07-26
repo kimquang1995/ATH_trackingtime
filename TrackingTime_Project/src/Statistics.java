@@ -2,17 +2,22 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,19 +36,16 @@ import com.toedter.calendar.JYearChooser;
 
 public class Statistics extends JFrame {
 	DatabaseConnection db = new DatabaseConnection();
-
-	public static void main(String[] args) throws ParseException {
-		Statistics f = new Statistics();
-		f.setVisible(true);
-	}
-
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+	int id_user=0;
 	/**
 	 * Create the frame.
 	 */
 	JPanel mainPane = new JPanel(new BorderLayout());
 
-	public Statistics() throws ParseException {
+	public Statistics(int id_User) throws ParseException {
 		try {
+			id_user = id_User;
 			db.Connect();
 
 		} catch (Exception e) {
@@ -91,31 +93,100 @@ public class Statistics extends JFrame {
 		JPanel sub_BOTpanel2 = new JPanel(new BorderLayout());
 
 		// Toppanel 1
+		// ------------------------------------------------------------------------------------------------------------------
 		JYearChooser yearChooser1 = new JYearChooser();
-		JLabel lblTitile = new JLabel("PLEASE CHOOSE YEAR");
+		JButton btnShow1 = new JButton("Statistic");
+
+		JLabel lblTitile = new JLabel("CHOOSE YEAR");
 		lblTitile.setFont(new Font("Arial", Font.BOLD, 20));
-		JPanel sub_TOPpanel1_Title = new JPanel(new GridLayout(1, 2, 5, 5));
+		JPanel sub_TOPpanel1_Title = new JPanel(new GridLayout(1, 3, 5, 5));
 		sub_TOPpanel1_Title.add(lblTitile);
 		sub_TOPpanel1_Title.add(yearChooser1);
+		sub_TOPpanel1_Title.add(btnShow1);
 		sub_TOPpanel1.add(sub_TOPpanel1_Title, BorderLayout.NORTH);
 		sub_TOPpanel1.add(((JFrame) FrameOverView(yearChooser1.getYear()))
 				.getContentPane(), BorderLayout.CENTER);
+		btnShow1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int year = yearChooser1.getYear();
+				JFrame chart = FrameOverView(year);
+				sub_TOPpanel1.removeAll();
+				sub_TOPpanel1.add(sub_TOPpanel1_Title, BorderLayout.NORTH);
+				sub_TOPpanel1.add(chart.getContentPane(), BorderLayout.CENTER);
+				sub_TOPpanel1.validate();
+				sub_TOPpanel1.repaint();
+			}
+		});
+		// ------------------------------------------------------------------------------------------------------------------
 		// Toppanel 2
 		JYearChooser yearChooser2 = new JYearChooser();
-		JLabel lblTitile2 = new JLabel("PLEASE CHOOSE YEAR");
+		JButton btnShow2 = new JButton("Statistic");
+		JLabel lblTitile2 = new JLabel("CHOOSE YEAR");
 		lblTitile2.setFont(new Font("Arial", Font.BOLD, 20));
-		JPanel sub_TOPpanel2_Title = new JPanel(new GridLayout(1, 2, 5, 5));
+		JPanel sub_TOPpanel2_Title = new JPanel(new GridLayout(1, 3, 5, 5));
 		sub_TOPpanel2_Title.add(lblTitile2);
 		sub_TOPpanel2_Title.add(yearChooser2);
+		sub_TOPpanel2_Title.add(btnShow2);
 		sub_TOPpanel2.add(sub_TOPpanel2_Title, BorderLayout.NORTH);
 		sub_TOPpanel2.add(((JFrame) Frame_onTotalTime(yearChooser2.getYear()))
 				.getContentPane(), BorderLayout.CENTER);
+		btnShow2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int year = yearChooser2.getYear();
+				JFrame chart = Frame_onTotalTime(year);
+				sub_TOPpanel2.removeAll();
+				sub_TOPpanel2.add(sub_TOPpanel2_Title, BorderLayout.NORTH);
+				sub_TOPpanel2.add(chart.getContentPane(), BorderLayout.CENTER);
+				sub_TOPpanel2.validate();
+				sub_TOPpanel2.repaint();
+			}
+		});
+		// ------------------------------------------------------------------------------------------------------------------
 		// Botpanel 1
-		// sub_BOTpanel2.add(frame.getContentPane(),BorderLayout.CENTER);
-		// sub_BOTpanel2.add(new JLabel("OverView"),BorderLayout.NORTH); //
+		JComboBox cbPlan = new JComboBox();
+		FillPlantoCombobox(cbPlan);
+
+		JLabel lblTitile3 = new JLabel("CHOOSE PLAN");
+		lblTitile3.setFont(new Font("Arial", Font.BOLD, 20));
+		JPanel sub_BOTpanel1_Title = new JPanel(new GridLayout(1, 3, 5, 5));
+		JPanel sub_BOTpanel1_Center = new JPanel(new GridLayout(1, 2, 5, 5));
+		sub_BOTpanel1_Title.add(lblTitile3);
+		sub_BOTpanel1_Title.add(cbPlan);
+		sub_BOTpanel1.add(sub_BOTpanel1_Title, BorderLayout.NORTH);
+		sub_BOTpanel1.add(sub_BOTpanel1_Center, BorderLayout.CENTER);
+		cbPlan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String sub_Date = cbPlan.getSelectedItem().toString()
+						.substring(0, 10);
+				System.out.println(sub_Date);
+				sub_BOTpanel1_Center.removeAll();
+				//PLAN
+				JFrame chart1 = FramePlanforWeek(sub_Date);
+				sub_BOTpanel1_Center.add(chart1.getContentPane());
+				// ACTUAL
+				JFrame chart2 = FrameActualforWeek(sub_Date, Add_7day(sub_Date));
+				sub_BOTpanel1_Center.add(chart2.getContentPane());
+				sub_BOTpanel1_Center.validate();
+				sub_BOTpanel1_Center.repaint();
+			}
+		});
+		// ------------------------------------------------------------------------------------------------------------------
 		// Botpanel 2
 		JDateChooser DateChooser4_From = new JDateChooser();
+		DateChooser4_From.setDate(dateFormat.parse(dateFormat.format(Calendar
+				.getInstance().getTime())));
 		JDateChooser DateChooser4_To = new JDateChooser();
+		DateChooser4_To.setDate(dateFormat.parse(dateFormat.format(Calendar
+				.getInstance().getTime())));
 		JButton btnShow4 = new JButton("Statistic");
 		JLabel lblTitile4_From = new JLabel("FROM");
 		lblTitile4_From.setFont(new Font("Arial", Font.BOLD, 20));
@@ -128,22 +199,26 @@ public class Statistics extends JFrame {
 		sub_BOTpanel2_Title.add(DateChooser4_To);
 		sub_BOTpanel2_Title.add(btnShow4);
 		sub_BOTpanel2.add(sub_BOTpanel2_Title, BorderLayout.NORTH);
-		sub_BOTpanel2.add(((JFrame) Frame_onTotalTimeWeek("21-07-2016","29-07-2016"))
-							.getContentPane(), BorderLayout.CENTER);
+		sub_BOTpanel2.add(
+				((JFrame) Frame_onTotalTimeWeek(
+						dateFormat.format(DateChooser4_From.getDate()),
+						dateFormat.format(DateChooser4_To.getDate())))
+						.getContentPane(), BorderLayout.CENTER);
 		btnShow4.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-					String from_date = new SimpleDateFormat("dd-MM-yyyy").format(
-							DateChooser4_From.getDate());
-					String to_date = new SimpleDateFormat("dd-MM-yyyy").format(
-							DateChooser4_To.getDate());
-					JFrame chart =Frame_onTotalTimeWeek(from_date,to_date);
+					String from_date = dateFormat.format(DateChooser4_From
+							.getDate());
+					String to_date = dateFormat.format(DateChooser4_To
+							.getDate());
+					JFrame chart = Frame_onTotalTimeWeek(from_date, to_date);
 					sub_BOTpanel2.removeAll();
 					sub_BOTpanel2.add(sub_BOTpanel2_Title, BorderLayout.NORTH);
-					sub_BOTpanel2.add(chart.getContentPane(), BorderLayout.CENTER);
+					sub_BOTpanel2.add(chart.getContentPane(),
+							BorderLayout.CENTER);
 					sub_BOTpanel2.validate();
 					sub_BOTpanel2.repaint();
 				} catch (Exception e1) {
@@ -191,11 +266,11 @@ public class Statistics extends JFrame {
 		return new ChartFrame(title, chart);
 	}
 
-	public Frame FrameOverView(int year) {
+	public JFrame FrameOverView(int year) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
 				+ "Left join Tag t on t.Id = tl.Id_Tag"
-				+ " where YEAR(tl.Date) =" + year + " group by t.Name";
+				+ " where YEAR(tl.Date) =" + year + " and Id_User = "+id_user+"  group by t.Name";
 		try {
 
 			PreparedStatement select_query = db.getConnection()
@@ -215,12 +290,12 @@ public class Statistics extends JFrame {
 		return DrawChar("OVERVIEW TAG FOR YEAR", dataset);
 	}
 
-	public Frame Frame_onTotalTime(int year) {
+	public JFrame Frame_onTotalTime(int year) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		float total_Hours = 0;
 		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
 				+ "Left join Tag t on t.Id = tl.Id_Tag"
-				+ " where YEAR(tl.Date) =" + year + " group by t.Name";
+				+ " where YEAR(tl.Date) =" + year + "and Id_User = "+id_user+" group by t.Name";
 		try {
 
 			PreparedStatement select_query = db.getConnection()
@@ -254,7 +329,7 @@ public class Statistics extends JFrame {
 				+ "Left join Tag t on t.Id = tl.Id_Tag "
 				+ "where convert(varchar(10),tl.Date, 120) >=" + "'"
 				+ From_date + "' " + "and "
-				+ "convert(varchar(10),tl.Date, 120) <=" + "'" + To_date + "' "
+				+ "convert(varchar(10),tl.Date, 120) <=" + "'" + To_date + "' and Id_User = "+id_user+" "
 				+ "group by t.Name";
 		try {
 
@@ -278,9 +353,59 @@ public class Statistics extends JFrame {
 		return DrawChar("STATISTIC ON TOTAL TIME WEEK", dataset);
 	}
 
-	public Frame FrameOverViewforWeek(String Start_date, String End_date) {
+	public JFrame FrameActualforWeek(String Start_date, String End_date) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		return DrawChar("OVERVIEW TAG FOR WEEK", dataset);
+		String query = "select t.Name,sum(tl.Hours) as Hours from TimeLog tl "
+				+ "Left join Tag t on t.Id = tl.Id_Tag " + "where  "
+				+ "replace(convert(varchar, tl.Date, 104), '.','-') >= " + "'"
+				+ Start_date + "' " + "and "
+				+ "replace(convert(varchar, tl.Date, 104), '.','-') <= " + "'"
+				+ End_date + "' " + "and " + "tl.Id_User ="+id_user+" "
+				+ " group by t.Name" + " order by t.Name";
+		try {
+
+			PreparedStatement select_query = db.getConnection()
+					.prepareStatement(query);
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					dataset.setValue(rs.getString("Name"),
+							Float.parseFloat(rs.getString("Hours")));
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return DrawChar("ACTUAL TAG FOR WEEK", dataset);
+	}
+
+	public JFrame FramePlanforWeek(String Start_date) {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		String query = "SELECT T.Name,sum(p.Hour) as Hours FROM PLANS P "
+				+ "LEFT JOIN TAG T ON T.Id = P.Id_Tag " + "where "
+				+ "replace(convert(varchar, p.Start_Day, 104), '.','-') = "
+				+ "'" + Start_date + "' " + "and " + "Id_User = "+id_user+" "
+				+ "group by T.Name " + "order by T.Name ";
+		try {
+			PreparedStatement select_query = db.getConnection()
+					.prepareStatement(query);
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					dataset.setValue(rs.getString("Name"),
+							Float.parseFloat(rs.getString("Hours")));
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return DrawChar("PLAN FOR WEEK", dataset);
 	}
 
 	public static String Add_1day(String untildate) {
@@ -298,4 +423,45 @@ public class Statistics extends JFrame {
 		}
 		return newday;
 	}
+	public static String Add_7day(String untildate) {
+		String newday = "";
+		// current format
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateFormat.parse(untildate));
+			cal.add(Calendar.DATE, 7);
+			newday = dateFormat.format(cal.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newday;
+	}
+
+	public void FillPlantoCombobox(JComboBox<String> cb) {
+		try {
+			PreparedStatement select_query = db
+					.getConnection()
+					.prepareStatement(
+							"select "
+									+ "replace(convert(varchar, Start_Day, 104), '.','-') as Start_Day,"
+									+ "replace(convert(varchar, End_date, 104), '.','-')as End_date "
+									+ "from Plans where Id_User = '"
+									+ ""+id_user+"' "
+									+ "group by Start_Day,End_date "
+									+ "order by Start_Day");
+			ResultSet rs = select_query.executeQuery();
+			if (!rs.isBeforeFirst()) {
+			} else {
+				while (rs.next()) {
+					cb.addItem(rs.getString("Start_Day") + "->"
+							+ rs.getString("End_date"));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
