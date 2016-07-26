@@ -72,7 +72,10 @@ public class Plan_GUI extends JFrame {
 	DatabaseConnection db = new DatabaseConnection();
 	int id_user;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+	JButton btnAdd;
+	JButton btnDelete;
+	JButton btnUpdate;
+	JButton btnCreatePlan;
 	/**
 	 * Launch the application.
 	 */
@@ -84,6 +87,7 @@ public class Plan_GUI extends JFrame {
 	public Plan_GUI(int id_User) throws ParseException {
 		setTitle("CREATE PLAN");
 		id_user = id_User;
+
 		model = new DefaultTableModel(new String[] { "Tag", "Hours" }, 0);
 		DatabaseConnection db = new DatabaseConnection();
 		try {
@@ -139,6 +143,8 @@ public class Plan_GUI extends JFrame {
 		JDateChooser StartDay = new JDateChooser();
 		StartDay.setBounds(150, 50, 200, 30);
 		contentPane.add(StartDay);
+		chosserDay = (dateFormat.format(Calendar
+				.getInstance().getTime()));
 		StartDay.setDate(dateFormat.parse(dateFormat.format(Calendar
 				.getInstance().getTime())));
 		StartDay.addPropertyChangeListener("date",
@@ -150,7 +156,14 @@ public class Plan_GUI extends JFrame {
 								"dd-MM-yyyy");
 						chosserDay = dateFormat.format(date).toString();
 						try {
-							CheckDuplicasePlan(chosserDay);
+							if(CheckDuplicasePlan(chosserDay)==true)
+							{
+								btnAdd.setEnabled(false);
+							}
+							else
+							{
+								btnAdd.setEnabled(true);
+							}
 						} catch (HeadlessException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -242,11 +255,11 @@ public class Plan_GUI extends JFrame {
 			}
 		});
 
-		JButton btnNewButton = new JButton("Add");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBounds(380, 50, 100, 30);
-		contentPane.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
+		btnAdd = new JButton("Add");
+		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAdd.setBounds(380, 50, 100, 30);
+		contentPane.add(btnAdd);
+		btnAdd.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -258,15 +271,23 @@ public class Plan_GUI extends JFrame {
 				model.addRow(new Object[] { cmb, hours });
 				txtHours.setText(null);
 				}
+				if(model.getRowCount()!=0)
+				{
+					btnCreatePlan.setEnabled(true);
+				}
+				else
+				{
+					btnCreatePlan.setEnabled(false);
+				}
 			}
 
 		});
-		JButton btnNewButton_1 = new JButton("Delete");
+		btnDelete = new JButton("Delete");
 
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton_1.setBounds(380, 150, 100, 30);
-		contentPane.add(btnNewButton_1);
-		btnNewButton_1.addActionListener(new ActionListener() {
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnDelete.setBounds(380, 150, 100, 30);
+		contentPane.add(btnDelete);
+		btnDelete.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -274,24 +295,34 @@ public class Plan_GUI extends JFrame {
 				int row = table.getSelectedRow();
 				model.removeRow(row);
 				txtHours.setText(null);
+				if(model.getRowCount()!=0)
+				{
+					btnCreatePlan.setEnabled(true);
+				}
+				else
+				{
+					btnCreatePlan.setEnabled(false);
+				}
 			}
 		});
 
-		JButton btnNewButton_2 = new JButton("Update");
-		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton_2.setBounds(380, 100, 100, 30);
-		contentPane.add(btnNewButton_2);
-		btnNewButton_2.addActionListener(new ActionListener() {
+		btnUpdate = new JButton("Update");
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnUpdate.setBounds(380, 100, 100, 30);
+		contentPane.add(btnUpdate);
+		btnUpdate.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(txtHours.getText().length()!=0)
+				{
 				model.setValueAt(txtHours.getText(), row, 1);
+				}
 
 			}
 		});
-		JButton btnCreatePlan = new JButton("Create Plan");
+		btnCreatePlan = new JButton("Create Plan");
 		btnCreatePlan.setFont(new Font("Roboto", Font.PLAIN, 18));
 		btnCreatePlan.setBounds(200, 420, 150, 30);
 		btnCreatePlan.addActionListener(new ActionListener() {
@@ -300,7 +331,7 @@ public class Plan_GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-
+					boolean flag = false;
 					SimpleDateFormat formatDate = new SimpleDateFormat(
 							"yyyy-MM-dd");
 					String Start_day = formatDate.format(new SimpleDateFormat(
@@ -340,6 +371,22 @@ public class Plan_GUI extends JFrame {
 			}
 		});
 		contentPane.add(btnCreatePlan);
+		if(model.getRowCount()!=0)
+		{
+			btnCreatePlan.setEnabled(true);
+		}
+		else
+		{
+			btnCreatePlan.setEnabled(false);
+		}
+		if(CheckDuplicasePlan(chosserDay)==true)
+		{
+			btnAdd.setEnabled(false);
+		}
+		else
+		{
+			btnAdd.setEnabled(true);
+		}
 	}
 
 	public static String Add_7day(String untildate) {
@@ -380,7 +427,6 @@ public class Plan_GUI extends JFrame {
 		DatabaseConnection db = new DatabaseConnection();
 		String Start_D = "";
 		String dateSelect = "";
-		String dateExist="";
 		try {
 			db.Connect();
 			for (int i = 0; i < 7; i++) {
@@ -402,7 +448,6 @@ public class Plan_GUI extends JFrame {
 										.parse(rs.getString("Start_Day")));
 					
 					}
-					dateExist = dateSelect;
 					flag = true;
 				}
 				Start_Day = Add_1day(Start_Day);
@@ -414,13 +459,13 @@ public class Plan_GUI extends JFrame {
 		}
 		if (flag) {
 			JOptionPane.showMessageDialog(
-					null,"Có Một Ngày Đã Tồn Tại Plan từ "
+					null,"Có Một Ngày Đã Tồn Tại trong Plan từ "
 							+ Start_D
 							+ " Đến "
 							+ Add_7day(Start_D), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 		return flag;
-
 	}
+
 }
