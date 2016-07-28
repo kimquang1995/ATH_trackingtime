@@ -22,12 +22,6 @@ public class Register_Interface extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	/*
-	 * public static void main(String[] args) { EventQueue.invokeLater(new
-	 * Runnable() { public void run() { try { Register_Interface frame = new
-	 * Register_Interface(); frame.setVisible(true); } catch (Exception e) {
-	 * e.printStackTrace(); } } }); }
-	 */
 	/**
 	 * Create the frame.
 	 */
@@ -104,8 +98,8 @@ public class Register_Interface extends JFrame {
 								.prepareStatement(Squery);
 						exQuery.executeUpdate();
 						JOptionPane.showMessageDialog(null,
-								"Đăng ký thành công."+"\n"+"\n"+"Mật khẩu sẽ được gửi đến Email của bạn.",
-								"Thành công", JOptionPane.INFORMATION_MESSAGE);
+								"Register Completed."+"\n"+"\n"+"Your Pass was sent to your email.",
+								"Successful", JOptionPane.INFORMATION_MESSAGE);
 						
 						System.out.println("Insert Complete");
 						massage = "Dear " + name + "\r\n" + "Your pass is: "
@@ -123,7 +117,7 @@ public class Register_Interface extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}}else{
-					JOptionPane.showMessageDialog(null,"Địa chỉ Email và Tên không được trống."+"\n"+"\n"+"Địa chỉ Email phải có định dạng abc@abc.abc"+"\n"+"\n"+"Tên chỉ chứa ký tự chữ và khoảng trắng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Email must'n null."+"\n"+"\n"+"Email must be format abc@abc.abc"+"\n"+"\n"+"Name must contains Space and Charaters.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

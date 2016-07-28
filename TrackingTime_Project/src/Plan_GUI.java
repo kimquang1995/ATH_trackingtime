@@ -370,7 +370,7 @@ public class Plan_GUI extends JFrame {
 						Insert_query.executeUpdate();
 					}
 					JOptionPane.showMessageDialog(null, "Insert Completed.",
-							"Successfull", JOptionPane.INFORMATION_MESSAGE);
+							"Successful", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Insert Fail.",
 							"Error", JOptionPane.ERROR_MESSAGE);

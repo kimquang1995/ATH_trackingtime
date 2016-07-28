@@ -55,8 +55,8 @@ public class ManageTag extends JFrame implements ActionListener {
 			if (matchername.find()) {
 				reslt = true;
 			} else {
-				JOptionPane.showMessageDialog(null, "Vui Lòng nhập lại!",
-						"Lỗi", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Please Input Again!",
+						"Error", JOptionPane.ERROR_MESSAGE);
 
 			}
 			if (reslt == true) {
@@ -73,7 +73,7 @@ public class ManageTag extends JFrame implements ActionListener {
 					
 					//
 					JOptionPane.showMessageDialog(null,
-							"Thêm công việc thành công.", "Thành Công",
+							"Insert Completed.", "Successful",
 							JOptionPane.INFORMATION_MESSAGE);
 					Load("Select * from Tag");
 				} catch (SQLException e1) {
@@ -84,7 +84,7 @@ public class ManageTag extends JFrame implements ActionListener {
 
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"Vui lòng nhập tên hoạt động cần thêm");
+						"Please Input Tag");
 			}
 		}
 
@@ -102,8 +102,8 @@ public class ManageTag extends JFrame implements ActionListener {
 			if (matchername.find()) {
 				reslt = true;
 			} else {
-				JOptionPane.showMessageDialog(null, "Vui Lòng nhập lại!",
-						"Lỗi", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Please Input Again",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (reslt == true) {
 
@@ -115,7 +115,7 @@ public class ManageTag extends JFrame implements ActionListener {
 					query.executeUpdate();
 					table.repaint();
 					JOptionPane.showMessageDialog(null,
-							"Sửa công việc thành công.", "Thành Công",
+							"Edit Completed", "Successful",
 							JOptionPane.INFORMATION_MESSAGE);
 					Load("Select * from Tag");
 					txt_tag_name.setText(null);
@@ -129,7 +129,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		if (btemp.getActionCommand().equals("Delete")) {
 
 			if (JOptionPane.showConfirmDialog(null,
-					"Bạn có chắc muốn xóa hoạt động này?", "Xác Nhận",
+					"Are you sure", "Delete",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				int row = table.getSelectedRow();
 				DefaultTableModel a = (DefaultTableModel) table.getModel();
@@ -151,7 +151,7 @@ public class ManageTag extends JFrame implements ActionListener {
 							table.setModel(a);
 							Load("Select * from Tag");
 							JOptionPane.showMessageDialog(null,
-									"Xóa hoạt động thành công", "Thành Công",
+									"Delete Completed", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
 						} catch (Exception e1) {
 							e1.printStackTrace();
@@ -159,7 +159,7 @@ public class ManageTag extends JFrame implements ActionListener {
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
-							"Vui Lòng chọn tên hoạt động cần xóa", "Lỗi",
+							"Please Select Tag Need Delete", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}

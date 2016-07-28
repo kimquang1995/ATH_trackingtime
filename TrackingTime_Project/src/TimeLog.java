@@ -285,7 +285,7 @@ public class TimeLog extends JFrame {
 							query.executeUpdate();
 							table.repaint();
 							JOptionPane.showMessageDialog(null,
-									"Thêm công việc thành công.", "Thành Công",
+									"Insert Comleted.", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
 							Load(queryLoad);
 							txtName.setText(null);
@@ -295,8 +295,8 @@ public class TimeLog extends JFrame {
 							JOptionPane
 									.showMessageDialog(
 											null,
-											"Vui lòng chọn Tag bạn muốn thêm công việc.",
-											"Lỗi", JOptionPane.OK_OPTION);
+											"Please Select Tag",
+											"Error", JOptionPane.OK_OPTION);
 							Load(queryLoad);
 
 						}
@@ -306,9 +306,9 @@ public class TimeLog extends JFrame {
 
 				} else {
 					JOptionPane.showMessageDialog(null,
-							"Tên công việc không được để trống." + "\n"
-									+ "Giờ bắt đầu phải nhỏ hơn giờ kết thúc.",
-							"Lỗi", JOptionPane.OK_OPTION);
+							"Content mustn't Null." + "\n"
+									+ "End Time must greater than Start Time",
+							"Error", JOptionPane.OK_OPTION);
 				}
 				table.getColumnModel().getColumn(0)
 						.setCellRenderer(new DateCellRenderer());
@@ -375,7 +375,7 @@ public class TimeLog extends JFrame {
 						query.executeUpdate();
 						table.repaint();
 						JOptionPane.showMessageDialog(null,
-								"Sửa công việc thành công.", "Thành Công",
+								"Edit Completed", "Successful",
 								JOptionPane.INFORMATION_MESSAGE);
 						Load(queryLoad);
 						txtName.setText(null);
@@ -385,9 +385,9 @@ public class TimeLog extends JFrame {
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
-							"Tên công việc không được để trống." + "\n"
-									+ "Giờ bắt đầu phải nhỏ hơn giờ kết thúc.",
-							"Lỗi", JOptionPane.OK_OPTION);
+							"Content mustn't Null." + "\n"
+									+ "End Time must greater than Start Time",
+							"Error", JOptionPane.OK_OPTION);
 				}
 			}
 		});
@@ -404,8 +404,8 @@ public class TimeLog extends JFrame {
 				table.getColumnModel().getColumn(0)
 						.setCellRenderer(new DateCellRenderer());
 				if (JOptionPane.showConfirmDialog(null,
-						"Bạn có chắc chắn muốn xóa công việc này không?",
-						"Xác Nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						"Are You Sure?",
+						"Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					table.getColumnModel().getColumn(0)
 							.setCellRenderer(new DateCellRenderer());
 					txtName.setText(null);
@@ -436,7 +436,7 @@ public class TimeLog extends JFrame {
 						table.getColumnModel().getColumn(0)
 								.setCellRenderer(new DateCellRenderer());
 						JOptionPane.showMessageDialog(null,
-								"Xóa công việc thành công.", "Thành Công",
+								"Delete Completed", "Successful",
 								JOptionPane.INFORMATION_MESSAGE);
 						table.getColumnModel().getColumn(0)
 								.setCellRenderer(new DateCellRenderer());
