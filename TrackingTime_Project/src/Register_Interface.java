@@ -117,7 +117,7 @@ public class Register_Interface extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}}else{
-					JOptionPane.showMessageDialog(null,"Email must'n null."+"\n"+"\n"+"Email must be format abc@abc.abc"+"\n"+"\n"+"Name must contains Space and Charaters.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Email must'n null."+"\n"+"\n"+"Email must be format abc@abc.abc"+"\n"+"\n"+"Name must be English name and only contains Space and Charaters.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
