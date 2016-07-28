@@ -467,9 +467,9 @@ public class Plan_GUI extends JFrame {
 		}
 		if (flag) {
 			JOptionPane.showMessageDialog(
-					null,"Có Một Ngày Đã Tồn Tại trong Plan từ "
+					null,"Have a Day is exist in Plan from "
 							+ Start_D
-							+ " Đến "
+							+ " to "
 							+ Add_7day(Start_D), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
