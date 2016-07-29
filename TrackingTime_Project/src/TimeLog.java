@@ -467,6 +467,7 @@ public class TimeLog extends JFrame {
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		Load(queryLoad);
 		table.addMouseListener(new MouseListener() {
 

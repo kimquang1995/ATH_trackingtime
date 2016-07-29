@@ -222,6 +222,7 @@ public class Plan_GUI extends JFrame {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFont(new Font("Arial", Font.PLAIN, 18));
 		table.setModel(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Create a new table instance
 
 		table.addMouseListener(new MouseListener() {

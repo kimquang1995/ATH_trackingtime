@@ -132,14 +132,12 @@ public class ManageTag extends JFrame implements ActionListener {
 					"Are you sure", "Delete",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				int row = table.getSelectedRow();
+			
 				DefaultTableModel a = (DefaultTableModel) table.getModel();
-
+				
 				String selected = a.getValueAt(row, 0).toString();
 				if (txt_tag_name.getText() != null) {
 					if (row >= 0) {
-
-						a.removeRow(row);
-
 						try {
 
 							PreparedStatement ps = db.getConnection()
@@ -147,14 +145,15 @@ public class ManageTag extends JFrame implements ActionListener {
 											"delete from Tag where Id='"
 													+ selected + "'");
 							ps.executeUpdate();
-
 							table.setModel(a);
 							Load("Select * from Tag");
 							JOptionPane.showMessageDialog(null,
 									"Delete Completed", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
 						} catch (Exception e1) {
-							e1.printStackTrace();
+							JOptionPane.showMessageDialog(null,
+									"Can not delete this Tag \r\n Because of Using", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} else {
@@ -172,7 +171,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	public ManageTag() {
 		setTitle("Manage Tag");
 		setAutoRequestFocus(false);
-
+		
 		try {
 			db.Connect();
 		} catch (Exception e) {
@@ -240,6 +239,7 @@ public class ManageTag extends JFrame implements ActionListener {
 
 		table = new JTable();
 		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -262,8 +262,6 @@ public class ManageTag extends JFrame implements ActionListener {
 		scrollPane.setColumnHeaderView(table);
 		scrollPane.setViewportView(table);
 		Load("Select * from Tag");
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
 		// connect data
 		PreparedStatement query;
 		try {
