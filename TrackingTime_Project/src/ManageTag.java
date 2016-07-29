@@ -219,6 +219,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		JButton btn_tag_update = new JButton("Edit");
 		btn_tag_update.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_tag_update.setBounds(165, 110, 100, 30);
+		btn_tag_update.setEnabled(false);
 		contentPane.add(btn_tag_update);
 		// /add action for btn update
 		btn_tag_update.addActionListener(this);
@@ -226,6 +227,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		JButton btn_tag_delete = new JButton("Delete");
 		btn_tag_delete.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_tag_delete.setBounds(270, 110, 100, 30);
+		btn_tag_delete.setEnabled(false);
 		contentPane.add(btn_tag_delete);
 		// add action for btn delete
 		btn_tag_delete.addActionListener(this);
