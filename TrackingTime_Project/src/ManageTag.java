@@ -56,8 +56,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			if (matchername.find()) {
 				reslt = true;
 			} else {
-				JOptionPane.showMessageDialog(null, "Please Input Again!",
-						"Error", JOptionPane.ERROR_MESSAGE);
+				reslt = false;
 
 			}
 			if (reslt == true) {
