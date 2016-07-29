@@ -322,10 +322,10 @@ public class TimeLog extends JFrame {
 
 				double diff = d2.getTime() - d1.getTime();
 				double diffHours = diff / (60 * 60 * 1000);
-				String name = txtName.getText();
+				String name = txtName.getText().trim();
 				boolean result = false;
 				Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
-				// Matcher matcherName = patternName.matcher(name); // Your
+				Matcher matcherName = patternName.matcher(name); // Your
 				// String should come here
 				int sHours = Integer.parseInt(cmbSHour.getSelectedItem()
 						.toString());
@@ -335,7 +335,7 @@ public class TimeLog extends JFrame {
 						.toString());
 				int eMin = Integer.parseInt(cmbEMin.getSelectedItem()
 						.toString());
-				if ((sHours < eHours) || (sHours == eHours && sMin < eMin))
+				if (matcherName.find()&&(sHours < eHours) || (sHours == eHours && sMin < eMin))
 					result = true;
 				else
 					result = false;
@@ -380,7 +380,7 @@ public class TimeLog extends JFrame {
 						e1.printStackTrace();
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Please choose a Tag"+"\n"+"Content mustn't Null."
+					JOptionPane.showMessageDialog(null, "Please choose a Tag"+"\n"+"Content mustn't Null and contain special char."
 							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
