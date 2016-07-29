@@ -70,7 +70,7 @@ public class Plan_GUI extends JFrame {
 	String chosserDay;
 	DefaultTableModel model;
 	DatabaseConnection db = new DatabaseConnection();
-	int id_user;
+	static int id_user;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	JButton btnAdd;
 	JButton btnDelete;
@@ -369,10 +369,10 @@ public class Plan_GUI extends JFrame {
 								.prepareStatement(query);
 						Insert_query.executeUpdate();
 					}
-					JOptionPane.showMessageDialog(null, "Insert Completed.",
+					JOptionPane.showMessageDialog(null, "Create Completed.",
 							"Successful", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Insert Fail.",
+					JOptionPane.showMessageDialog(null, "Create Fail.",
 							"Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
@@ -444,7 +444,7 @@ public class Plan_GUI extends JFrame {
 				String query = "SELECT * FROM Plans where convert(varchar(10),Start_Day, 120) <= '"
 						+ dateSelect + "' and "
 								+ "convert(varchar(10),End_date, 120) >= '"
-						+ dateSelect + "'";
+						+ dateSelect + "' and Id_User = "+id_user;
 				PreparedStatement select_query = db.getConnection()
 						.prepareStatement(query);
 				ResultSet rs = select_query.executeQuery();

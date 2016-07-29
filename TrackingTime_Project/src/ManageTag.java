@@ -281,7 +281,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	public void Load(String queryExe) {
 		try {
 			DefaultTableModel model = new DefaultTableModel(new String[] {
-					"Id", "Name" }, 0);
+					"Serial Number", "Name" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();

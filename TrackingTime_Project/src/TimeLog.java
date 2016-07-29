@@ -32,7 +32,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class TimeLog extends JFrame {
 	private JPanel contentPane1;
-	private JTextField textField;
 	private JTextField txtName;
 	private JTable table;
 	Date d1 = null, d2 = null;
@@ -62,6 +61,7 @@ public class TimeLog extends JFrame {
 	 */
 	public TimeLog(String selectDate, int Id_user) {
 		try {
+
 			db.Connect();
 			contentPane1 = new JPanel();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -168,11 +168,9 @@ public class TimeLog extends JFrame {
 										+ "'");
 							}
 						}
-						if (TagName.equals("All")) {
-							Load(queryLoad);
-							id_tag = null;
-						}
-
+					} else {
+						Load(queryLoad);
+						id_tag = null;
 					}
 				} catch (Exception e1) {
 				}
@@ -292,11 +290,9 @@ public class TimeLog extends JFrame {
 							cmb.setSelectedIndex(0);
 
 						} else {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"Please Select Tag",
-											"Error", JOptionPane.OK_OPTION);
+							JOptionPane.showMessageDialog(null,
+									"Please Select Tag", "Error",
+									JOptionPane.OK_OPTION);
 							Load(queryLoad);
 
 						}
@@ -305,9 +301,8 @@ public class TimeLog extends JFrame {
 					}
 
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Content mustn't Null." + "\n"
-									+ "End Time must greater than Start Time",
+					JOptionPane.showMessageDialog(null, "Content mustn't Null."
+							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
 				table.getColumnModel().getColumn(0)
@@ -374,9 +369,8 @@ public class TimeLog extends JFrame {
 												+ "'");
 						query.executeUpdate();
 						table.repaint();
-						JOptionPane.showMessageDialog(null,
-								"Edit Completed", "Successful",
-								JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Edit Completed",
+								"Successful", JOptionPane.INFORMATION_MESSAGE);
 						Load(queryLoad);
 						txtName.setText(null);
 
@@ -384,9 +378,8 @@ public class TimeLog extends JFrame {
 						e1.printStackTrace();
 					}
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Content mustn't Null." + "\n"
-									+ "End Time must greater than Start Time",
+					JOptionPane.showMessageDialog(null, "Content mustn't Null."
+							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
 			}
@@ -403,8 +396,7 @@ public class TimeLog extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				table.getColumnModel().getColumn(0)
 						.setCellRenderer(new DateCellRenderer());
-				if (JOptionPane.showConfirmDialog(null,
-						"Are You Sure?",
+				if (JOptionPane.showConfirmDialog(null, "Are You Sure?",
 						"Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					table.getColumnModel().getColumn(0)
 							.setCellRenderer(new DateCellRenderer());
@@ -435,9 +427,8 @@ public class TimeLog extends JFrame {
 						Load(queryLoad);
 						table.getColumnModel().getColumn(0)
 								.setCellRenderer(new DateCellRenderer());
-						JOptionPane.showMessageDialog(null,
-								"Delete Completed", "Successful",
-								JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Delete Completed",
+								"Successful", JOptionPane.INFORMATION_MESSAGE);
 						table.getColumnModel().getColumn(0)
 								.setCellRenderer(new DateCellRenderer());
 					} catch (Exception e1) {
@@ -537,14 +528,16 @@ public class TimeLog extends JFrame {
 	public void Load(String queryExe) {
 		try {
 			DefaultTableModel model = new DefaultTableModel(
-					new String[] { "Serial Number", "Name", "Start Time",
+					new String[] {"Serial Number", "Name", "Start Time",
 							"End Time", "Hours" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
 			Object[] row = new Object[5];
 			if (!rs.isBeforeFirst()) {
+				table.setModel(model);
 			} else {
+				
 				while (rs.next()) {
 					row[0] = rs.getString("Id");
 					row[1] = rs.getString("Name");
