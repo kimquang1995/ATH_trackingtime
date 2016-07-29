@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
@@ -248,10 +249,10 @@ public class TimeLog extends JFrame {
 				}
 				double diff = d2.getTime() - d1.getTime();
 				double diffHours = diff / (60 * 60 * 1000);
-				String name = txtName.getText();
+				String name = txtName.getText().trim();
 				boolean result = false;
-				// Pattern patternName = Pattern.compile("^[a-zA-Z_0-9]+$");
-				// Matcher matcherName = patternName.matcher(name); // Your
+				 Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
+				 Matcher matcherName = patternName.matcher(name); // Your
 				// String should come here
 				int sHours = Integer.parseInt(cmbSHour.getSelectedItem()
 						.toString());
@@ -261,10 +262,11 @@ public class TimeLog extends JFrame {
 						.toString());
 				int eMin = Integer.parseInt(cmbEMin.getSelectedItem()
 						.toString());
-				if ((sHours < eHours) || (sHours == eHours && sMin < eMin))
-					result = true;
+				if (matcherName.find()&&(sHours < eHours) || (sHours == eHours && sMin < eMin)){
+				
+					result = true;}
 				else
-					result = false;
+					result=false;
 				if (result == true) {
 					try {
 
@@ -301,7 +303,7 @@ public class TimeLog extends JFrame {
 					}
 
 				} else {
-					JOptionPane.showMessageDialog(null, "Content mustn't Null."
+					JOptionPane.showMessageDialog(null, "Content mustn't Null and contain special char."
 							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
@@ -322,7 +324,7 @@ public class TimeLog extends JFrame {
 				double diffHours = diff / (60 * 60 * 1000);
 				String name = txtName.getText();
 				boolean result = false;
-				Pattern patternName = Pattern.compile("^[a-zA-Z_0-9]+$");
+				Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
 				// Matcher matcherName = patternName.matcher(name); // Your
 				// String should come here
 				int sHours = Integer.parseInt(cmbSHour.getSelectedItem()

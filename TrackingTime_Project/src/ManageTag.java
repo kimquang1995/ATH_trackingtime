@@ -46,7 +46,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		if (btemp.getActionCommand().equals("Add")) {
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			boolean reslt = false;
-			String name = txt_tag_name.getText();
+			String name = txt_tag_name.getText().trim();
 			row = table.getSelectedRow();
 			
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
@@ -96,7 +96,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			// SelectedId = (model.getValueAt(row, 2)).toString();
 			// String cb1=cbb_tag_status.getSelectedItem().toString();
 
-			Pattern patternname = Pattern.compile(".*\\D.*");
+			Pattern patternname = Pattern.compile("^[a-zA-Z_\\s]+$");
 			Matcher matchername = patternname.matcher(name);
 			if (matchername.find()) {
 				reslt = true;
