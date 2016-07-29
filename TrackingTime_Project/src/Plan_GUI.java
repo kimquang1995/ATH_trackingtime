@@ -85,7 +85,7 @@ public class Plan_GUI extends JFrame {
 	 * @throws ParseException
 	 */
 	public Plan_GUI(int id_User) throws ParseException {
-		setTitle("CREATE PLAN");
+		setTitle("Create Plan");
 		id_user = id_User;
 
 		model = new DefaultTableModel(new String[] { "Tag", "Hours" }, 0);
@@ -222,7 +222,6 @@ public class Plan_GUI extends JFrame {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFont(new Font("Arial", Font.PLAIN, 18));
 		table.setModel(model);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Create a new table instance
 
 		table.addMouseListener(new MouseListener() {

@@ -26,7 +26,7 @@ public class ForgotPass_Interface extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ForgotPass_Interface() {
+	public ForgotPass_Interface(String email) {
 		setTitle("Get Password");
 		SendEmail sendmail = new SendEmail();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -51,7 +51,7 @@ public class ForgotPass_Interface extends JFrame {
 		textField.setBounds(165, 78, 234, 23);
 		contentPane.add(textField);
 		textField.setColumns(10);
-
+		textField.setText(email);
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			DatabaseConnection db = new DatabaseConnection();

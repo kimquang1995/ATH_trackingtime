@@ -289,8 +289,6 @@ public class ManageTag extends JFrame implements ActionListener {
 			while (rs.next()) {
 				row[0] = rs.getString("Id");
 				row[1] = rs.getString("Name");
-				;
-
 				model.addRow(row);
 			}
 			table.setModel(model);

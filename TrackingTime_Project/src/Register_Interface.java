@@ -25,10 +25,10 @@ public class Register_Interface extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register_Interface() {
+	public Register_Interface(String email) {
 		setTitle("Register Acccount");
 		SendEmail sendmail = new SendEmail();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 457, 229);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,11 +60,11 @@ public class Register_Interface extends JFrame {
 		txtEmail.setBounds(165, 80, 234, 23);
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
+		txtEmail.setText(email);
 
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			DatabaseConnection db = new DatabaseConnection();
-
 			public void actionPerformed(ActionEvent arg0) {
 				String name = txtName.getText().trim();
 				String email = txtEmail.getText().trim();

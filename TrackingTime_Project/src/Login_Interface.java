@@ -140,7 +140,7 @@ public class Login_Interface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Register_Interface reg_inf = new Register_Interface();
+				Register_Interface reg_inf = new Register_Interface(txtUsername.getText());
 				reg_inf.setVisible(true);
 			}
 		});
@@ -153,7 +153,7 @@ public class Login_Interface extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				ForgotPass_Interface forgot_Int = new ForgotPass_Interface();
+				ForgotPass_Interface forgot_Int = new ForgotPass_Interface(txtUsername.getText());
 				forgot_Int.setVisible(true);
 			}
 		});
