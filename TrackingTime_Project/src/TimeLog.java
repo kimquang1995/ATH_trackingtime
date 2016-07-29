@@ -303,7 +303,7 @@ public class TimeLog extends JFrame {
 					}
 
 				} else {
-					JOptionPane.showMessageDialog(null, "Content mustn't Null and contain special char."
+					JOptionPane.showMessageDialog(null, "Please Choose a Tag"+"\n"+"Content mustn't Null and contain special char."
 							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
@@ -380,7 +380,7 @@ public class TimeLog extends JFrame {
 						e1.printStackTrace();
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Content mustn't Null."
+					JOptionPane.showMessageDialog(null, "Please choose a Tag"+"\n"+"Content mustn't Null."
 							+ "\n" + "End Time must greater than Start Time",
 							"Error", JOptionPane.OK_OPTION);
 				}
