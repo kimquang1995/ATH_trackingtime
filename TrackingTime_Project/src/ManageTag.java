@@ -50,7 +50,8 @@ public class ManageTag extends JFrame implements ActionListener {
 			row = table.getSelectedRow();
 			
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
-			Pattern patternname = Pattern.compile(".*\\D.*");
+			Pattern patternname = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+					  + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 			Matcher matchername = patternname.matcher(name);
 			if (matchername.find()) {
 				reslt = true;
