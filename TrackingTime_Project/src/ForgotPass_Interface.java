@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ForgotPass_Interface extends JFrame {
 
@@ -61,26 +63,40 @@ public class ForgotPass_Interface extends JFrame {
 				try {
 					String massage = "";
 					String email = textField.getText().toString();
-					db.Connect();
-					PreparedStatement query = db.getConnection()
-							.prepareStatement(
-									"Select * from Users where Email like '"+email+"'");
-					ResultSet resultSet = query.executeQuery();
-					if (resultSet != null) {
-						while (resultSet.next()) {
+					Pattern patternEmail = Pattern
+							.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+									+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+					Matcher matcherEmail = patternEmail.matcher(email);
+					if (matcherEmail.find()) {
+						db.Connect();
+						PreparedStatement query = db.getConnection()
+								.prepareStatement(
+										"Select * from Users where Email like '"
+												+ email + "'");
+						ResultSet resultSet = query.executeQuery();
+						if (resultSet != null) {
+							while (resultSet.next()) {
 
-							massage = "Dear " + resultSet.getString("Name")
-									+ "\r\n" + "Your pass is: "
-									+ resultSet.getString("Pass");
-							sendmail.sendSSLMessage(email, "Forgot Password MAil",
-									massage,email);
-							System.out.println("Send thành công");
-						}
-					} else
-						JOptionPane.showMessageDialog(null,
-								"Email Don't exist !", "Error",
-								JOptionPane.CLOSED_OPTION);
+								massage = "Dear " + resultSet.getString("Name")
+										+ "\r\n" + "Your pass is: "
+										+ resultSet.getString("Pass");
+								sendmail.sendSSLMessage(email,
+										"Forgot Password MAil", massage, email);
+								System.out.println("Send thành công");
+								JOptionPane.showMessageDialog(null,
+										"Your pass was sent to your email !", "Information",
+										JOptionPane.INFORMATION_MESSAGE);
+								dispose();
+							}
+						} else
+							JOptionPane.showMessageDialog(null,
+									"Email Don't exist !", "Error",
+									JOptionPane.ERROR_MESSAGE);
 
+					} else {
+						JOptionPane.showMessageDialog(null, "Email invalid!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

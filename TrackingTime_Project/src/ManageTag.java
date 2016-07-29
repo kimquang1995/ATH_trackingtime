@@ -50,14 +50,12 @@ public class ManageTag extends JFrame implements ActionListener {
 			row = table.getSelectedRow();
 			
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
-			Pattern patternname = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-					  + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+			Pattern patternname = Pattern.compile("^[a-zA-Z_\\s]+$");
 			Matcher matchername = patternname.matcher(name);
 			if (matchername.find()) {
 				reslt = true;
 			} else {
 				reslt = false;
-
 			}
 			if (reslt == true) {
 
@@ -84,7 +82,8 @@ public class ManageTag extends JFrame implements ActionListener {
 
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"Please Input Tag");
+						"Name tag must haven't contains special characters.", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
