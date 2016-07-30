@@ -48,7 +48,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			boolean reslt = false;
 			String name = txt_tag_name.getText().trim();
 			row = table.getSelectedRow();
-		
+
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
 			Pattern patternname = Pattern.compile("^[a-zA-Z_\\s]+$");
 			Matcher matchername = patternname.matcher(name);
@@ -136,37 +136,19 @@ public class ManageTag extends JFrame implements ActionListener {
 				if (txt_tag_name.getText() != null) {
 					if (row >= 0) {
 						try {
-
-							PreparedStatement ps = db.getConnection()
+							PreparedStatement query = db.getConnection()
 									.prepareStatement(
-											"delete from Tag where Id='"
-													+ selected + "'");
-							ps.executeUpdate();
-							table.setModel(a);
-							Load("Select * from Tag where Status='" + true
-									+ "'");
+											"Update Tag set Status='" + false
+													+ "' where Id='"
+													+ SelectedId + "'");
+							query.executeUpdate();
 							JOptionPane.showMessageDialog(null,
 									"Delete Completed", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
-						} catch (Exception e1) {
-							try {
-
-								PreparedStatement query = db.getConnection()
-										.prepareStatement(
-												"Update Tag set Status='"
-														+ false
-														+ "' where Id='"
-														+ SelectedId + "'");
-								query.executeUpdate();
-								JOptionPane.showMessageDialog(null,
-										"Delete Completed", "Successful",
-										JOptionPane.INFORMATION_MESSAGE);
-								Load("Select * from Tag where Status='" + true
-										+ "'");
-							} catch (Exception e2) {
-								// TODO: handle exception
-							}
-
+							Load("Select * from Tag where Status='" + true
+									+ "'");
+						} catch (Exception e2) {
+							// TODO: handle exception
 						}
 					}
 				} else {
@@ -254,7 +236,7 @@ public class ManageTag extends JFrame implements ActionListener {
 		btnRefesh.setEnabled(true);
 		contentPane.add(btnRefesh);
 		btnRefesh.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -262,7 +244,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			}
 		});
 		btnUndo.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
