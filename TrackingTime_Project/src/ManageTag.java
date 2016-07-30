@@ -48,7 +48,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			boolean reslt = false;
 			String name = txt_tag_name.getText().trim();
 			row = table.getSelectedRow();
-			
+
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
 			Pattern patternname = Pattern.compile("^[a-zA-Z_\\s]+$");
 			Matcher matchername = patternname.matcher(name);
@@ -61,19 +61,18 @@ public class ManageTag extends JFrame implements ActionListener {
 
 				try {
 
-					String sql = "Insert into Tag" + "(Name)" + "values" + "('"
-							+ name + "')";//+"ON DUPLICATE UPDATE Name= values+('"+name+"')";
+					String sql = "Insert into Tag" + "(Name,Status)" + "values"
+							+ "('" + name + "','" + true + "')";// +"ON DUPLICATE UPDATE Name= values+('"+name+"')";
 					PreparedStatement query = db.getConnection()
 							.prepareStatement(sql);
 					query.executeUpdate();
 					table.repaint();
 					txt_tag_name.setText("");
-					
+
 					//
-					JOptionPane.showMessageDialog(null,
-							"Insert Completed.", "Successful",
-							JOptionPane.INFORMATION_MESSAGE);
-					Load("Select * from Tag");
+					JOptionPane.showMessageDialog(null, "Insert Completed.",
+							"Successful", JOptionPane.INFORMATION_MESSAGE);
+					Load("Select * from Tag where Status='" + true + "'");
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -82,8 +81,8 @@ public class ManageTag extends JFrame implements ActionListener {
 
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"Name tag must haven't contains special characters.", "Error",
-						JOptionPane.ERROR_MESSAGE);
+						"Name tag must haven't contains special characters.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -110,13 +109,13 @@ public class ManageTag extends JFrame implements ActionListener {
 					PreparedStatement query = db
 							.getConnection()
 							.prepareStatement(
-									"Update Tag set Name='" +name+ "' where Id='" +SelectedId +"'");
+									"Update Tag set Name='" + name
+											+ "' where Id='" + SelectedId + "'");
 					query.executeUpdate();
 					table.repaint();
-					JOptionPane.showMessageDialog(null,
-							"Edit Completed", "Successful",
-							JOptionPane.INFORMATION_MESSAGE);
-					Load("Select * from Tag");
+					JOptionPane.showMessageDialog(null, "Edit Completed",
+							"Successful", JOptionPane.INFORMATION_MESSAGE);
+					Load("Select * from Tag where Status='" + true + "'");
 					txt_tag_name.setText(null);
 
 				} catch (SQLException e1) {
@@ -127,13 +126,12 @@ public class ManageTag extends JFrame implements ActionListener {
 		}
 		if (btemp.getActionCommand().equals("Delete")) {
 
-			if (JOptionPane.showConfirmDialog(null,
-					"Are you sure", "Delete",
+			if (JOptionPane.showConfirmDialog(null, "Are you sure", "Delete",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				int row = table.getSelectedRow();
-			
+
 				DefaultTableModel a = (DefaultTableModel) table.getModel();
-				
+
 				String selected = a.getValueAt(row, 0).toString();
 				if (txt_tag_name.getText() != null) {
 					if (row >= 0) {
@@ -145,14 +143,30 @@ public class ManageTag extends JFrame implements ActionListener {
 													+ selected + "'");
 							ps.executeUpdate();
 							table.setModel(a);
-							Load("Select * from Tag");
+							Load("Select * from Tag where Status='" + true
+									+ "'");
 							JOptionPane.showMessageDialog(null,
 									"Delete Completed", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
 						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(null,
-									"Can not delete this Tag \r\n Because of Using", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							try {
+
+								PreparedStatement query = db.getConnection()
+										.prepareStatement(
+												"Update Tag set Status='"
+														+ false
+														+ "' where Id='"
+														+ SelectedId + "'");
+								query.executeUpdate();
+								JOptionPane.showMessageDialog(null,
+										"Delete Completed", "Successful",
+										JOptionPane.INFORMATION_MESSAGE);
+								Load("Select * from Tag where Status='" + true
+										+ "'");
+							} catch (Exception e2) {
+								// TODO: handle exception
+							}
+							
 						}
 					}
 				} else {
@@ -170,7 +184,7 @@ public class ManageTag extends JFrame implements ActionListener {
 	public ManageTag() {
 		setTitle("Manage Tag");
 		setAutoRequestFocus(false);
-		
+
 		try {
 			db.Connect();
 		} catch (Exception e) {
@@ -233,7 +247,8 @@ public class ManageTag extends JFrame implements ActionListener {
 		btn_tag_delete.addActionListener(this);
 		// addscrollpane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1, (Color) Color.LIGHT_GRAY));
+		scrollPane.setBorder(new MatteBorder(1, 4, 4, 1,
+				(Color) Color.LIGHT_GRAY));
 		scrollPane.setFont(new Font("Roboto", Font.PLAIN, 15));
 		scrollPane.setBounds(60, 150, 310, 150);
 		contentPane.add(scrollPane);
@@ -249,7 +264,7 @@ public class ManageTag extends JFrame implements ActionListener {
 				btn_tag_update.setEnabled(true);
 				row = table.getSelectedRow();
 				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				String SelectedName = model.getValueAt(row, 1).toString();
+				String SelectedName = model.getValueAt(row, 2).toString();
 
 				txt_tag_name.setText(SelectedName);//
 
@@ -262,11 +277,12 @@ public class ManageTag extends JFrame implements ActionListener {
 
 		scrollPane.setColumnHeaderView(table);
 		scrollPane.setViewportView(table);
-		Load("Select * from Tag");
+		Load("Select * from Tag where Status='" + true + "'");
 		// connect data
 		PreparedStatement query;
 		try {
-			query = db.getConnection().prepareStatement("Select * from Tag");
+			query = db.getConnection().prepareStatement(
+					"Select * from Tag where Status='" + true + "'");
 			ResultSet rs = query.executeQuery();
 			while (rs.next()) {
 
@@ -282,17 +298,23 @@ public class ManageTag extends JFrame implements ActionListener {
 	public void Load(String queryExe) {
 		try {
 			DefaultTableModel model = new DefaultTableModel(new String[] {
-					"Serial Number", "Name" }, 0);
+					"Id", "No", "Name" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
-			Object[] row = new Object[2];
+			Object[] row = new Object[3];
+			int i = 1;
 			while (rs.next()) {
 				row[0] = rs.getString("Id");
-				row[1] = rs.getString("Name");
+				row[1] = i;
+				row[2] = rs.getString("Name");
 				model.addRow(row);
+				i++;
 			}
 			table.setModel(model);
+			table.getColumnModel().getColumn(0).setMinWidth(0);
+			table.getColumnModel().getColumn(0).setMaxWidth(0);
+			table.getColumnModel().getColumn(0).setWidth(0);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

@@ -75,8 +75,8 @@ public class TimeLog extends JFrame {
 			lblChoseDay.setBounds(230, 50, 200, 50);
 			contentPane1.add(lblChoseDay);
 			id_User = Id_user;
-			queryLoad = "select Id,Name,Hours,Id_User,  convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
-					+ "End_Time from TimeLog where Date ='"
+			queryLoad = "select Id,Name,Hours,Id_User, convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
+					+ "End_Time,Id_Tag from TimeLog where Date ='"
 					+ dtbquery
 					+ "' and id_User='" + id_User + "'";
 
@@ -129,7 +129,7 @@ public class TimeLog extends JFrame {
 		contentPane1.add(cmb);
 		try {
 			PreparedStatement query = db.getConnection().prepareStatement(
-					"Select * from Tag");
+					"Select * from Tag where Status='"+true+"'");
 			ResultSet rs = query.executeQuery();
 			if (!rs.isBeforeFirst()) {
 
@@ -160,7 +160,7 @@ public class TimeLog extends JFrame {
 								id_tag = subrs.getString("Id");
 								System.out.println(id_tag);
 								Load("select Id,Name,Hours,Id_User,  convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
-										+ "End_Time from TimeLog where Date ='"
+										+ "End_Time,Id_Tag from TimeLog where Date ='"
 										+ dtbquery
 										+ "' and id_User='"
 										+ id_User
@@ -172,6 +172,7 @@ public class TimeLog extends JFrame {
 					} else {
 						Load(queryLoad);
 						id_tag = null;
+						System.out.println(id_tag);
 					}
 				} catch (Exception e1) {
 				}
@@ -251,8 +252,8 @@ public class TimeLog extends JFrame {
 				double diffHours = diff / (60 * 60 * 1000);
 				String name = txtName.getText().trim();
 				boolean result = false;
-				 Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
-				 Matcher matcherName = patternName.matcher(name); // Your
+				Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
+				Matcher matcherName = patternName.matcher(name); // Your
 				// String should come here
 				int sHours = Integer.parseInt(cmbSHour.getSelectedItem()
 						.toString());
@@ -262,14 +263,8 @@ public class TimeLog extends JFrame {
 						.toString());
 				int eMin = Integer.parseInt(cmbEMin.getSelectedItem()
 						.toString());
-				if (matcherName.find()&&(sHours < eHours) || (sHours == eHours && sMin < eMin)){
-				
-					result = true;}
-				else
-					result=false;
-				if (result == true) {
+				if ((sHours < eHours) || (sHours == eHours && sMin < eMin)) {
 					try {
-
 						if (id_tag != null) {
 
 							int id_tagI = Integer.parseInt(id_tag);
@@ -287,14 +282,16 @@ public class TimeLog extends JFrame {
 							JOptionPane.showMessageDialog(null,
 									"Insert Comleted.", "Successful",
 									JOptionPane.INFORMATION_MESSAGE);
-							Load(queryLoad);
+							Load("select Id,Name,Hours,Id_User, convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
+									+ "End_Time,Id_Tag from TimeLog where Date ='"
+									+ dtbquery
+									+ "' and id_User='" + id_User + "'and Id_Tag ="+id_tagI);
 							txtName.setText(null);
-							cmb.setSelectedIndex(0);
-
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Please Select Tag", "Error",
-									JOptionPane.OK_OPTION);
+									JOptionPane.ERROR_MESSAGE);
+							cmb.setSelectedIndex(0);
 							Load(queryLoad);
 
 						}
@@ -303,9 +300,9 @@ public class TimeLog extends JFrame {
 					}
 
 				} else {
-					JOptionPane.showMessageDialog(null, "Please Choose a Tag"+"\n"+"Content mustn't Null and contain special char."
-							+ "\n" + "End Time must greater than Start Time",
-							"Error", JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(null,
+							"End Time must greater than Start Time", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				table.getColumnModel().getColumn(0)
 						.setCellRenderer(new DateCellRenderer());
@@ -319,13 +316,10 @@ public class TimeLog extends JFrame {
 		btnEdit.setEnabled(false);
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				double diff = d2.getTime() - d1.getTime();
 				double diffHours = diff / (60 * 60 * 1000);
 				String name = txtName.getText().trim();
 				boolean result = false;
-				Pattern patternName = Pattern.compile("^[a-zA-Z_\\s]+$");
-				Matcher matcherName = patternName.matcher(name); // Your
 				// String should come here
 				int sHours = Integer.parseInt(cmbSHour.getSelectedItem()
 						.toString());
@@ -335,54 +329,66 @@ public class TimeLog extends JFrame {
 						.toString());
 				int eMin = Integer.parseInt(cmbEMin.getSelectedItem()
 						.toString());
-				if (matcherName.find()&&(sHours < eHours) || (sHours == eHours && sMin < eMin))
-					result = true;
-				else
-					result = false;
 
-				if (result == true) {
+				if ((sHours < eHours) || (sHours == eHours && sMin < eMin)) {
 
 					try {
-						String srHour = (cmbSHour.getSelectedItem().toString()
-								+ ":" + cmbSMin.getSelectedItem().toString()
-								+ ":" + "00");
-						String erHour = (cmbEHour.getSelectedItem().toString()
-								+ ":" + cmbEMin.getSelectedItem().toString()
-								+ ":" + "00");
-						try {
-							d1 = format.parse(srHour);
-						} catch (java.text.ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+						if (id_tag != null) {
+							int id_tagI = Integer.parseInt(id_tag);
+							String srHour = (cmbSHour.getSelectedItem()
+									.toString()
+									+ ":"
+									+ cmbSMin.getSelectedItem().toString()
+									+ ":" + "00");
+							String erHour = (cmbEHour.getSelectedItem()
+									.toString()
+									+ ":"
+									+ cmbEMin.getSelectedItem().toString()
+									+ ":" + "00");
+							try {
+								d1 = format.parse(srHour);
+							} catch (java.text.ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							try {
+								d2 = format.parse(erHour);
+							} catch (java.text.ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							PreparedStatement query = db.getConnection()
+									.prepareStatement(
+											"Update TimeLog set Id_Tag="
+													+ id_tagI + ", Name='"
+													+ name + "',Hours='"
+													+ diffHours
+													+ "',Start_Time='" + srHour
+													+ "',End_Time='" + erHour
+													+ "' where id ='"
+													+ SelectedId + "'");
+							query.executeUpdate();
+							table.repaint();
+							JOptionPane.showMessageDialog(null,
+									"Edit Completed", "Successful",
+									JOptionPane.INFORMATION_MESSAGE);
+							Load("select Id,Name,Hours,Id_User, convert(char(5), Start_Time, 108) Start_Time,convert(char(5), End_Time, 108) "
+									+ "End_Time,Id_Tag from TimeLog where Date ='"
+									+ dtbquery
+									+ "' and id_User='" + id_User + "'and Id_Tag ="+id_tagI);
+							txtName.setText(null);
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Please choose a Tag", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
-						try {
-							d2 = format.parse(erHour);
-						} catch (java.text.ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						PreparedStatement query = db.getConnection()
-								.prepareStatement(
-										"Update TimeLog set Name='" + name
-												+ "',Hours='" + diffHours
-												+ "',Start_Time='" + srHour
-												+ "',End_Time='" + erHour
-												+ "' where id ='" + SelectedId
-												+ "'");
-						query.executeUpdate();
-						table.repaint();
-						JOptionPane.showMessageDialog(null, "Edit Completed",
-								"Successful", JOptionPane.INFORMATION_MESSAGE);
-						Load(queryLoad);
-						txtName.setText(null);
-
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Please choose a Tag"+"\n"+"Content mustn't Null and contain special char."
-							+ "\n" + "End Time must greater than Start Time",
-							"Error", JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(null,
+							"End Time must greater than Start Time", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -498,6 +504,25 @@ public class TimeLog extends JFrame {
 				int rEMin = d2.getMinutes();
 				cmbEMin.setSelectedItem(rEMin);
 				SelectedId = (model.getValueAt(row, 0)).toString();
+				id_tag = (model.getValueAt(row, 5)).toString();
+				System.out.println(id_tag);
+				try {
+
+					PreparedStatement query = db.getConnection()
+							.prepareStatement(
+									"select * from Tag where Id="
+											+ id_tag);
+					ResultSet rs = query.executeQuery();
+					if (!rs.isBeforeFirst()) {
+					} else {
+						while (rs.next()) {
+							cmb.setSelectedItem(rs.getString("Name"));
+						}
+					}
+
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
 			}
 
 			@Override
@@ -529,26 +554,36 @@ public class TimeLog extends JFrame {
 
 	public void Load(String queryExe) {
 		try {
-			DefaultTableModel model = new DefaultTableModel(
-					new String[] {"Serial Number", "Name", "Start Time",
-							"End Time", "Hours" }, 0);
+			DefaultTableModel model = new DefaultTableModel(new String[] {
+					"ID","Serial Number", "Name", "Start Time", "End Time", "Hours",
+					"Id_Tag" }, 0);
 			PreparedStatement query = db.getConnection().prepareStatement(
 					queryExe);
 			ResultSet rs = query.executeQuery();
-			Object[] row = new Object[5];
+			Object[] row = new Object[7];
+			int i = 1;
 			if (!rs.isBeforeFirst()) {
 				table.setModel(model);
 			} else {
-				
+
 				while (rs.next()) {
 					row[0] = rs.getString("Id");
-					row[1] = rs.getString("Name");
-					row[2] = rs.getString("Start_Time");
-					row[3] = rs.getString("End_Time");
-					row[4] = rs.getString("Hours");
+					row[1] = i;
+					row[2] = rs.getString("Name");
+					row[3] = rs.getString("Start_Time");
+					row[4] = rs.getString("End_Time");
+					row[5] = rs.getString("Hours");
+					row[6] = rs.getString("Id_Tag");
 					model.addRow(row);
+					i++;
 				}
 				table.setModel(model);
+				   table.getColumnModel().getColumn(0).setMinWidth(0);
+				   table.getColumnModel().getColumn(0).setMaxWidth(0);
+				   table.getColumnModel().getColumn(0).setWidth(0);
+				   table.getColumnModel().getColumn(5).setMinWidth(0);
+				   table.getColumnModel().getColumn(5).setMaxWidth(0);
+				   table.getColumnModel().getColumn(5).setWidth(0);
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();

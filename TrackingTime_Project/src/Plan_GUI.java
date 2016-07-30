@@ -130,7 +130,7 @@ public class Plan_GUI extends JFrame {
 		contentPane.add(cbTag);
 		try {
 			PreparedStatement query = db.getConnection().prepareStatement(
-					"Select * from Tag");
+					"Select * from Tag where Status='"+true+"'");
 			ResultSet rs = query.executeQuery();
 			while (rs.next()) {
 				cbTag.addItem(rs.getString("Name"));
