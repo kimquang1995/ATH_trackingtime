@@ -48,7 +48,7 @@ public class ManageTag extends JFrame implements ActionListener {
 			boolean reslt = false;
 			String name = txt_tag_name.getText().trim();
 			row = table.getSelectedRow();
-
+		
 			// cbdata = cbb_tag_status.getSelectedItem().toString();
 			Pattern patternname = Pattern.compile("^[a-zA-Z_\\s]+$");
 			Matcher matchername = patternname.matcher(name);
@@ -166,7 +166,7 @@ public class ManageTag extends JFrame implements ActionListener {
 							} catch (Exception e2) {
 								// TODO: handle exception
 							}
-							
+
 						}
 					}
 				} else {
@@ -243,6 +243,33 @@ public class ManageTag extends JFrame implements ActionListener {
 		btn_tag_delete.setBounds(270, 110, 100, 30);
 		btn_tag_delete.setEnabled(false);
 		contentPane.add(btn_tag_delete);
+		JButton btnUndo = new JButton("Undo Tag Deleted");
+		btnUndo.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnUndo.setBounds(60, 300, 200, 30);
+		btnUndo.setEnabled(true);
+		contentPane.add(btnUndo);
+		JButton btnRefesh = new JButton("Refesh");
+		btnRefesh.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnRefesh.setBounds(270, 300, 100, 30);
+		btnRefesh.setEnabled(true);
+		contentPane.add(btnRefesh);
+		btnRefesh.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Load("Select * from Tag where Status='" + true + "'");
+			}
+		});
+		btnUndo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Undo_TagDelete undo = new Undo_TagDelete();
+				undo.setVisible(true);
+			}
+		});
 		// add action for btn delete
 		btn_tag_delete.addActionListener(this);
 		// addscrollpane
@@ -278,20 +305,6 @@ public class ManageTag extends JFrame implements ActionListener {
 		scrollPane.setColumnHeaderView(table);
 		scrollPane.setViewportView(table);
 		Load("Select * from Tag where Status='" + true + "'");
-		// connect data
-		PreparedStatement query;
-		try {
-			query = db.getConnection().prepareStatement(
-					"Select * from Tag where Status='" + true + "'");
-			ResultSet rs = query.executeQuery();
-			while (rs.next()) {
-
-			}
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "No connection to server",
-					"Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
 
 	}
 
@@ -304,17 +317,22 @@ public class ManageTag extends JFrame implements ActionListener {
 			ResultSet rs = query.executeQuery();
 			Object[] row = new Object[3];
 			int i = 1;
-			while (rs.next()) {
-				row[0] = rs.getString("Id");
-				row[1] = i;
-				row[2] = rs.getString("Name");
-				model.addRow(row);
-				i++;
+			if (!rs.isBeforeFirst()) {
+			} else {
+
+				while (rs.next()) {
+					row[0] = rs.getString("Id");
+					row[1] = i;
+					row[2] = rs.getString("Name");
+					model.addRow(row);
+					i++;
+				}
+				table.setModel(model);
+				table.getColumnModel().getColumn(0).setMinWidth(0);
+				table.getColumnModel().getColumn(0).setMaxWidth(0);
+				table.getColumnModel().getColumn(0).setWidth(0);
+
 			}
-			table.setModel(model);
-			table.getColumnModel().getColumn(0).setMinWidth(0);
-			table.getColumnModel().getColumn(0).setMaxWidth(0);
-			table.getColumnModel().getColumn(0).setWidth(0);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
